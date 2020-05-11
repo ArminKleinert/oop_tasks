@@ -35,7 +35,7 @@ if len(argv) < 3:
 # If one of the parameters can not be converted for some reason,
 # exit with error message.
 try:
-  a, b, c = map(int, argv)
+  a, b, c = map(float, argv)
 except ValueError as ve:
   print("One of the parameters could not be converted to an int.\n",
         file=sys.stderr)
