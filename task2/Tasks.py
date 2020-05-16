@@ -1,3 +1,4 @@
+# task 1
 def task_1(a, b, c):
     if a < b and b < c:
         return "Stark ansteigend"
@@ -6,7 +7,7 @@ def task_1(a, b, c):
     else:
         return "Weder noch."
 
-# task2
+# task 2
 def list_product(lst):
     if len(lst) == 0:
         return 0
@@ -18,13 +19,11 @@ def list_product(lst):
     return n
 
 # task 3
-# FIXME
-def weekday(year, month, day):
-    y0 = year - ((14 - month) / 12)
-    x = y0 + (y0 / 4) - (y0 / 100) + (y0 / 400)
-    m0 = month + (12 * ((14 - month) / 12)) - 2
-    n = (day + x + ((31 * m0) / 12)) % 7
-    n = int(n)
+def weekday(day, month, year):
+    y0 = year - ((14 - month) // 12)
+    x = y0 + (y0 // 4) - (y0 // 100) + (y0 // 400)
+    m0 = month + (12 * ((14 - month) // 12)) - 2
+    n = (day + x + ((31 * m0) // 12)) % 7
     days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
     return days[n]
 
@@ -51,10 +50,11 @@ def gluecksspieler(starting_money):
 def sum_of_divisors(num):
     return sum([i for i in range(1, num) if num % i == 0])
 
-# task5
+# task 5
 def amicable_numbers(m, n):
     return (sum_of_divisors(m) == n) and (m == sum_of_divisors(n))
 
+# task 6
 def word_for_speed_of_wind(knots):
     result = ""
     knots = int(knots)
@@ -106,10 +106,10 @@ def task_2_test():
     
 def task_3_test():
     print("Testfunction for task 3 (weekday)")
-    year  = int(input("Year:  "))
-    month = int(input("Month: "))
     day   = int(input("Day:   "))
-    print(weekday(year, month, day))
+    month = int(input("Month: "))
+    year  = int(input("Year:  "))
+    print(weekday(day, month, year))
 
 def task_4_test():
     print("Testfunction for task 4 (gluecksspieler)")
