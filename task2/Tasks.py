@@ -32,16 +32,16 @@ import random
 # task4
 def gluecksspieler(starting_money):
     spins = 0
-    currentMoney = starting_money
+    current_money = starting_money
 
-    while currentMoney > 0 and currentMoney < (starting_money * 2):
+    while current_money > 0 and current_money < (starting_money * 2):
         spins += 1
         if random.randint(0,1):
-            currentMoney -= 1
+            current_money -= 1
         else:
-            currentMoney += 1
+            current_money += 1
 
-    if currentMoney <= 0:
+    if current_money <= 0:
         print("You lost after " + str(spins) + " tries.")
     else:
         print("You doubled your money after " + str(spins) + " tries.")
