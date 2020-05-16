@@ -18,7 +18,7 @@ def triangleSurface(a, b, c):
   return res
 
 # Bind console args to a local variable.
-argv = sys.argv
+argv = sys.args
 
 # Linux uses the script name as the first argument, windows doesn't.
 # To make work easier, this code removes the script name.
