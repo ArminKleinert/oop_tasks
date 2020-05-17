@@ -1,9 +1,9 @@
 # task 1
 def task_1(a, b, c):
     if a < b and b < c:
-        return "Stark ansteigend"
+        return "Streng ansteigend"
     elif a > b and b > c:
-        return "Stark absteigend"
+        return "Streng absteigend"
     else:
         return "Weder noch."
 
@@ -127,3 +127,15 @@ def task_6_test():
     speed = int(input("Knots: "))
     print(word_for_speed_of_wind(speed))
 
+task_1_test()
+print()
+task_2_test()
+print()
+task_3_test()
+print()
+task_4_test()
+print()
+task_5_test()
+print()
+task_6_test()
+print()
