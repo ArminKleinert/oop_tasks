@@ -1,9 +1,9 @@
 # task 1
 def task_1(a, b, c):
     if a < b and b < c:
-        return "Stark ansteigend"
+        return "Streng ansteigend"
     elif a > b and b > c:
-        return "Stark absteigend"
+        return "Streng absteigend"
     else:
         return "Weder noch."
 
@@ -27,8 +27,8 @@ def weekday(day, month, year):
     days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
     return days[n]
 
-import random
 # task4
+import random
 def gluecksspieler(starting_money):
     spins = 0
     current_money = starting_money
@@ -47,10 +47,9 @@ def gluecksspieler(starting_money):
 
     return spins
 
+# task 5
 def sum_of_divisors(num):
     return sum([i for i in range(1, num) if num % i == 0])
-
-# task 5
 def amicable_numbers(m, n):
     return (sum_of_divisors(m) == n) and (m == sum_of_divisors(n))
 
@@ -127,3 +126,15 @@ def task_6_test():
     speed = int(input("Knots: "))
     print(word_for_speed_of_wind(speed))
 
+task_1_test()
+print()
+task_2_test()
+print()
+task_3_test()
+print()
+task_4_test()
+print()
+task_5_test()
+print()
+task_6_test()
+print()
