@@ -27,8 +27,8 @@ def weekday(day, month, year):
     days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
     return days[n]
 
-import random
 # task4
+import random
 def gluecksspieler(starting_money):
     spins = 0
     current_money = starting_money
@@ -47,10 +47,9 @@ def gluecksspieler(starting_money):
 
     return spins
 
+# task 5
 def sum_of_divisors(num):
     return sum([i for i in range(1, num) if num % i == 0])
-
-# task 5
 def amicable_numbers(m, n):
     return (sum_of_divisors(m) == n) and (m == sum_of_divisors(n))
 
