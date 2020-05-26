@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
+
 import random
 import time
+import itertools
 
 # Task 1
 
@@ -41,56 +44,88 @@ def repeats_dict(m, n):
     return list(map(lambda x: res[x], range(0, m+1)))
 
 # Task 3
-time.perf_counter()
+
 def iterative_linear_search(lst, elem):
-    return None
+    for i in lst:
+        if i == elem:
+            return True
+    return False
 
 def recursive_linear_search(lst, elem):
-    return None
+    if len(lst) == 0:
+        return False
+    elif lst[0] == elem:
+        return True
+    else:
+        return recursive_linear_search(lst[1:], elem)
 
 def iterative_binary_search(lst, elem):
-    return None
+    lowerBound = 0
+    upperBound = len(lst) - 1
+    
+    while lowerBound <= upperBound:
+        current = (lowerBound + upperBound) // 2
+        if nums[current] == key:
+            return True
+        else:
+            if nums[current] < key:
+                lowerBound = current + 1
+            else:
+                upperBound = current - 1
+    
+    return True
 
-def recursive_binary_search(lst, elem):
-    return None
+def recursive_binary_search(elem, lst):
+    if len(lst) > 1:
+        m = len(lst) // 2
+        if lst[m] == key:
+            return True
+        elif key < lst[m]:
+            return recursive_binary_search(elem, lst[0:m])
+        else:
+            return recursive_binary_search(elem, lst[(m+1):])
+    elif len(lst) == 1:
+        return lst[0] == elem
+    else:
+        return False
 
 def test_time_searches():
-    lst_size = 1000000
+    lst_size = 500
     range_last = lst_size-1
     lst = list(range(0, lst_size))
-    num_search_elem = 10000
+    num_search_elem = 1000
     
     ils_time1 = 0
     ils_time2 = 0
     average_time = 0
     
-    ils_time1 = time.perf_counter()
+    ils_time1 = time.time()
     for _ in itertools.repeat(None, num_search_elem):
         iterative_linear_search(lst, random.randint(0, range_last))
-    ils_time2 = time.perf_counter()
+    ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Iterative linear search: " + str(average_time) + " sec")
     
-    ils_time1 = time.perf_counter()
+    ils_time1 = time.time()
     for _ in itertools.repeat(None, num_search_elem):
         recursive_linear_search(lst, random.randint(0, range_last))
-    ils_time2 = time.perf_counter()
+    ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Recursive linear search: " + str(average_time) + " sec")
     
-    ils_time1 = time.perf_counter()
+    ils_time1 = time.time()
     for _ in itertools.repeat(None, num_search_elem):
         iterative_binary_search(lst, random.randint(0, range_last))
-    ils_time2 = time.perf_counter()
+    ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Iterative binary search: " + str(average_time) + " sec")
     
-    ils_time1 = time.perf_counter()
+    ils_time1 = time.time()
     for _ in itertools.repeat(None, num_search_elem):
         recursive_binary_search(lst, random.randint(0, range_last))
-    ils_time2 = time.perf_counter()
+    ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
-    print("Iterative binary search: " + str(average_time) + " sec")
+    print("Recursive binary search: " + str(average_time) + " sec")
 
 # Task 4
 
@@ -115,15 +150,57 @@ def apply_if(f, p, lst):
 
 # Task 5
 
-def revDigitsHelper(n, res):
-    res = (res * 10) + (n % 10)
-    if n < 10:
-        return res
-    else:
-        return revDigitsHelper(n // 10, res)
-
 def revDigits(n):
-    return revDigitsHelper(n, 0)
+
+    def rev_digits_helper(n, res):
+        res = (res * 10) + (n % 10)
+        if n < 10:
+            return res
+        else:
+            return rev_digits_helper(n // 10, res)
+        
+    return rev_digits_helper(n, 0)
 
 # Task 6
 
+import turtle
+
+def draw_star(x, y, size):
+    angle = 120
+    turtle.speed(0)
+    turtle.goto(x, y)
+    turtle.color("yellow")
+    turtle.fillcolor("yellow")
+    turtle.begin_fill()
+
+    for side in range(5):
+        turtle.forward(size)
+        turtle.right(angle)
+        turtle.forward(size)
+        turtle.right(72 - angle)
+        
+    turtle.end_fill()
+    return
+
+# Task 7
+
+def revDigitsIterative(n):
+    res = n % 10
+    
+    while n >= 10:
+        n = n // 10
+        res = (res * 10) + (n % 10)
+    
+    return res
+
+def comment():
+    print(turtle.pos())
+    draw_star(0, 0, 10)
+    draw_star(0, 40, 10)
+    draw_star(0, 80, 10)
+    draw_star(0, 100, 10)
+    draw_star(0, 120, 10)
+    draw_star(0, 140, 10)
+    print(turtle.pos())
+
+test_time_searches()
