@@ -196,25 +196,51 @@ def sky(n):
         size = random.randint(5, 25)
         paint_star(x, y, size)
 
-def squares():
+def squares_helper(mid_x, mid_y, size, step):
     turtle.penup()
     turtle.speed(0)
-    turtle.tracer()
+    turtle.tracer(None, None)
 
-    pos = -500
+    half_size = size / 2
+    iteration = 0
+    pos = -(size // 2)
 
-    for i in range(pos, 0, 10):
-        turtle.goto(i, i)
-        if i % 20 == 0:
-            turtle.color("red")
-        else:
-            turtle.color("black")
+    for i in range(pos, -pos, step):
+        col = "red" if (iteration % 2 == 0) else "black"
+        turtle.color(col)
+        x = mid_x
+        y = mid_y
+        sz = half_size - i
+        turtle.goto(x + sz, y + sz)
         turtle.pendown()
-        turtle.goto(-i, i)
-        turtle.goto(-i, -i)
-        turtle.goto(i, -i)
-        turtle.goto(i, i)
+        turtle.goto(x - sz, y + sz)
+        turtle.goto(x - sz, y - sz)
+        turtle.goto(x + sz, y - sz)
+        turtle.goto(x + sz, y + sz)
         turtle.penup()
+        iteration += 1
+
+    return None # just a marker for where the function ends
+
+def squares():
+    squares_helper(0, 0, 100, 10)
+
+def fract_squares_help(mid_x, mid_y, size, step, depth):
+    squares_helper(mid_x, mid_y, size, 10)
+
+    sz_halved = size // 2
+    tmp = size + sz_halved
+    newstep = step // 2
+    newdepth = depth - 1
+
+    if depth > 0:
+        fract_squares_help(mid_x + tmp, mid_y + tmp, sz_halved, newstep, newdepth)
+        fract_squares_help(mid_x - tmp, mid_y + tmp, sz_halved, newstep, newdepth)
+        fract_squares_help(mid_x - tmp, mid_y - tmp, sz_halved, newstep, newdepth)
+        fract_squares_help(mid_x + tmp, mid_y - tmp, sz_halved, newstep, newdepth)
+
+def fractal_squares():
+    fract_squares_help(0, 0, 150, 10, 2)
 
 # Task 7
 
@@ -227,14 +253,13 @@ def revDigitsIterative(n):
     
     return res
 
-def comment():
-    print(turtle.pos())
-    draw_star(0, 0, 10)
-    draw_star(0, 40, 10)
-    draw_star(0, 80, 10)
-    draw_star(0, 100, 10)
-    draw_star(0, 120, 10)
-    draw_star(0, 140, 10)
-    print(turtle.pos())
+# Task 8
 
-test_time_searches()
+def foldl(f, default, lst):
+    res = default
+    for e in lst:
+        res = f(res, e)
+    return res
+
+def foldr(f, default, lst):
+    return foldl(f, default, reversed(lst))
