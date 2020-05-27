@@ -289,7 +289,7 @@ def squares_helper(mid_x, mid_y, size, step):
 # The real function for task 6c. It just calls squares_helper using the 
 # middle of the screen as the middle of the squares.
 def squares():
-    squares_helper(0, 0, 100, 10)
+    squares_helper(0, 0, 500, 10)
 
 # SUBSECT Task 6d
 
@@ -344,3 +344,125 @@ def foldl(f, default, lst):
 # Uses foldl(...) but lst is reversed beforehand.
 def foldr(f, default, lst):
     return foldl(f, default, reversed(lst))
+
+## SECTION Task 9
+
+def mersenne_prime_test():
+    print("Test task 1")
+    seq = [2, 3, 5, 7, 13, 17, 31, 61, 89, 107, 521, 607, 1279, 2203, 2281, 3217, 4253, 4423, 9689, 9941, 11213, 19937]
+    
+    for n in seq:
+        res = ((2 ** n) - 1) == mersenne_prime(n)
+        print("  mersenne_prime(", str(n), "): ", str(res))
+
+def repeats_test():
+    print("Test task 2 (This is a bit hard, as it is based on random numbers)")
+    print("  Working...")
+    for n in range(100, 150):
+        m = n // 5
+        res = repeats(m, n)
+        if (len(res) == (m + 1)) and (sum(res) == n):
+            True # Success
+        else:
+            print("Failed  repeats(" + str(m) + ", " + str(n) + ")")
+            print("    Length correct?         " + str(len(res) == (m + 1)))
+            print("    Sum of numbers correct? " + str(sum(res) == n))
+            return
+    print("  Success!")
+
+def test_time_searches_test():
+    print("Test task 3")
+    for i in range(0, 3):
+        print("  Iteration", str(i))
+        test_time_searches()
+        
+        
+def apply_if_test():
+    print("Test task 4")
+    # Example from the pdf
+    res = apply_if(fact, odd, [2, 5, 7, 4, 9, 6]) == [2, 120, 5040, 4, 362880, 6]
+    print("  ", res)
+    # For positive numbers, turns the number into a string.
+    temp = apply_if(str, lambda n: n > 0, [-1, -15, 2, 5, 7, 4, 9, 6])
+    res = temp == [-1, -15, "2", "5", "7", "4", "9", "6"]
+    print("  ", res)
+
+def rev_digits_recursive_test():
+    print("Test task 5")
+    print("  ", revDigits(15) == 51)
+    print("  ", revDigits(51) == 15)
+    print("  ", revDigits(51) == revDigits(revDigits(revDigits(51))))
+    print("  ", revDigits(revDigits(51)) == 51)
+    print("  ", revDigits(115) == 511)
+    print("  ", revDigits(61000) == 16)
+    print("  ", revDigits(-15) == -51)
+    print("  ", revDigits(123456789) == 987654321)
+
+def rev_digits_iterative_test():
+    print("Test task 7")
+    print("  ", revDigitsIterative(15) == 51)
+    print("  ", revDigitsIterative(51) == 15)
+    print("  ", revDigitsIterative(51) == revDigitsIterative(revDigitsIterative(revDigitsIterative(51))))
+    print("  ", revDigitsIterative(revDigitsIterative(51)) == 51)
+    print("  ", revDigitsIterative(115) == 511)
+    print("  ", revDigitsIterative(61000) == 16)
+    print("  ", revDigitsIterative(-15) == -51)
+    print("  ", revDigitsIterative(123456789) == 987654321)
+
+def paint_star_test():
+    print("Test task 6a")
+    paint_star(0, 0, 100)
+
+def sky_test():
+    print("Test task 6b (Draw 25 stars)")
+    sky(25)
+
+def squares_test():
+    print("Test task 6c")
+    squares()
+
+def fractal_squares_test():
+    print("Test task 6c")
+    fractal_squares()
+    
+def foldl_foldr_test():
+    print("Test task 8")
+    print("  foldl")
+    print("    ", foldl(lambda x,y: x+y, 64, [7, 8, 9, 10]) == 98)
+    print("    ", foldl(lambda x,y: x/y, 64, [7, 8, 9, 10]) == 0.012698412698412698)
+    print("    ", foldl(lambda x,y: x + str(y), "", [7, 8, 9, 10]) == "78910")
+    print("  foldr")
+    print("    ", foldr(lambda x,y: x+y, 64, [7, 8, 9, 10]) == 98)
+    print("    ", foldr(lambda x,y: x/y, 64, [7, 8, 9, 10]) == 0.012698412698412698)
+    print("    ", foldr(lambda x,y: x + str(y), "", [7, 8, 9, 10]) == "10987")
+
+mersenne_prime_test()
+print()
+repeats_test()
+print()
+test_time_searches_test()
+print()
+apply_if_test()
+print()
+rev_digits_recursive_test()
+print()
+input("Press a button to start test for task 6a...")
+paint_star_test()
+print()
+input("Press a button to start test for task 6b...")
+turtle.clear()
+sky_test()
+print()
+input("Press a button to start test for task 6c...")
+turtle.clear()
+turtle.bgcolor("white")
+squares_test()
+print()
+input("Press a button to start test for task 6d...")
+turtle.clear()
+fractal_squares_test()
+input("")
+rev_digits_iterative_test()
+print()
+foldl_foldr_test()
+print()
