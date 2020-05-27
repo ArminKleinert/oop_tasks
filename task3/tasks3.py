@@ -2,7 +2,6 @@
 
 import random
 import time
-import itertools
 
 # Task 1
 
@@ -100,28 +99,28 @@ def test_time_searches():
     average_time = 0
     
     ils_time1 = time.time()
-    for _ in itertools.repeat(None, num_search_elem):
+    for _ in range(0, num_search_elem):
         iterative_linear_search(random.randint(0, range_last), lst)
     ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Iterative linear search: " + str(average_time) + " sec")
     
     ils_time1 = time.time()
-    for _ in itertools.repeat(None, num_search_elem):
+    for _ in range(0, num_search_elem):
         recursive_linear_search(random.randint(0, range_last), lst)
     ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Recursive linear search: " + str(average_time) + " sec")
     
     ils_time1 = time.time()
-    for _ in itertools.repeat(None, num_search_elem):
+    for _ in range(0, num_search_elem):
         iterative_binary_search(random.randint(0, range_last), lst)
     ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Iterative binary search: " + str(average_time) + " sec")
     
     ils_time1 = time.time()
-    for _ in itertools.repeat(None, num_search_elem):
+    for _ in range(0, num_search_elem):
         recursive_binary_search(random.randint(0, range_last), lst)
     ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
@@ -187,21 +186,35 @@ def paint_star(x, y, size):
     return
 
 def sky(n):
-    min_x, min_y = -500, -500
-    max_x, max_y = 500, 500
+    min_x, min_y = -450, -450
+    max_x, max_y = -min_x, -min_y
 
     turtle.bgcolor("black")
     for _ in range(0, n):
         x = random.randint(min_x, max_x)
         y = random.randint(min_y, max_y)
         size = random.randint(5, 25)
-        draw_star(x, y, size)
-
-    print("Done")
-    return None
+        paint_star(x, y, size)
 
 def squares():
-    
+    turtle.penup()
+    turtle.speed(0)
+    turtle.tracer()
+
+    pos = -500
+
+    for i in range(pos, 0, 10):
+        turtle.goto(i, i)
+        if i % 20 == 0:
+            turtle.color("red")
+        else:
+            turtle.color("black")
+        turtle.pendown()
+        turtle.goto(-i, i)
+        turtle.goto(-i, -i)
+        turtle.goto(i, -i)
+        turtle.goto(i, i)
+        turtle.penup()
 
 # Task 7
 
