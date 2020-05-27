@@ -45,30 +45,30 @@ def repeats_dict(m, n):
 
 # Task 3
 
-def iterative_linear_search(lst, elem):
+def iterative_linear_search(elem, lst):
     for i in lst:
         if i == elem:
             return True
     return False
 
-def recursive_linear_search(lst, elem):
+def recursive_linear_search(elem, lst):
     if len(lst) == 0:
         return False
     elif lst[0] == elem:
         return True
     else:
-        return recursive_linear_search(lst[1:], elem)
+        return recursive_linear_search(elem, lst[1:])
 
-def iterative_binary_search(lst, elem):
+def iterative_binary_search(elem, lst):
     lowerBound = 0
     upperBound = len(lst) - 1
     
     while lowerBound <= upperBound:
         current = (lowerBound + upperBound) // 2
-        if nums[current] == key:
+        if lst[current] == elem:
             return True
         else:
-            if nums[current] < key:
+            if lst[current] < elem:
                 lowerBound = current + 1
             else:
                 upperBound = current - 1
@@ -78,9 +78,9 @@ def iterative_binary_search(lst, elem):
 def recursive_binary_search(elem, lst):
     if len(lst) > 1:
         m = len(lst) // 2
-        if lst[m] == key:
+        if lst[m] == elem:
             return True
-        elif key < lst[m]:
+        elif elem < lst[m]:
             return recursive_binary_search(elem, lst[0:m])
         else:
             return recursive_binary_search(elem, lst[(m+1):])
@@ -101,28 +101,28 @@ def test_time_searches():
     
     ils_time1 = time.time()
     for _ in itertools.repeat(None, num_search_elem):
-        iterative_linear_search(lst, random.randint(0, range_last))
+        iterative_linear_search(random.randint(0, range_last), lst)
     ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Iterative linear search: " + str(average_time) + " sec")
     
     ils_time1 = time.time()
     for _ in itertools.repeat(None, num_search_elem):
-        recursive_linear_search(lst, random.randint(0, range_last))
+        recursive_linear_search(random.randint(0, range_last), lst)
     ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Recursive linear search: " + str(average_time) + " sec")
     
     ils_time1 = time.time()
     for _ in itertools.repeat(None, num_search_elem):
-        iterative_binary_search(lst, random.randint(0, range_last))
+        iterative_binary_search(random.randint(0, range_last), lst)
     ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Iterative binary search: " + str(average_time) + " sec")
     
     ils_time1 = time.time()
     for _ in itertools.repeat(None, num_search_elem):
-        recursive_binary_search(lst, random.randint(0, range_last))
+        recursive_binary_search(random.randint(0, range_last), lst)
     ils_time2 = time.time()
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Recursive binary search: " + str(average_time) + " sec")
@@ -165,12 +165,15 @@ def revDigits(n):
 
 import turtle
 
-def draw_star(x, y, size):
+def paint_star(x, y, size):
     angle = 120
+    turtle.penup()
     turtle.speed(0)
+    turtle.tracer()
     turtle.goto(x, y)
     turtle.color("yellow")
     turtle.fillcolor("yellow")
+    turtle.pendown()
     turtle.begin_fill()
 
     for side in range(5):
@@ -180,7 +183,25 @@ def draw_star(x, y, size):
         turtle.right(72 - angle)
         
     turtle.end_fill()
+    turtle.penup()
     return
+
+def sky(n):
+    min_x, min_y = -500, -500
+    max_x, max_y = 500, 500
+
+    turtle.bgcolor("black")
+    for _ in range(0, n):
+        x = random.randint(min_x, max_x)
+        y = random.randint(min_y, max_y)
+        size = random.randint(5, 25)
+        draw_star(x, y, size)
+
+    print("Done")
+    return None
+
+def squares():
+    
 
 # Task 7
 
