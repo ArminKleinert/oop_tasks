@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 
-import random
-import time
+import random # For multiple tasks
+import time # For task 3
+import turtle # For task 6
 
-# Task 1
+## SECTION Task 1
 
 """
-Decrement a number by 1
+Decrement a number by 1 using only binary operations &, ^, <<
 """
 def dec(x):
     m = 1
-  
+
     # Flip all the set bits 
     # until we find a 1 
     while ((x & m) == 0): 
         x = x ^ m 
         m = m << 1
-      
+
     # flip the rightmost 1 bit 
     x = x ^ m 
     return x 
@@ -25,16 +26,24 @@ def mersenne_prime(n):
     # Equivalent to (2**n)-1
     return dec(2 << dec(n))
 
-# Task 2a
+## SECTION Task 2
+
+# SUBSECT Task 2a
+
+# Generate a list of n random numbers between 0 and m
+# Then, another list is generates which stores the occurances of 
+# each number in the first list.
 def repeats(m, n):
     lst = list(map(lambda x: random.randint(0, m), range(0, n)))
     res = map(lambda x: lst.count(x), range(0, m+1))
     return list(res)
 
-# Task 2b
+# SUBSECT Task 2b
+
+# Does the same thing as repeats(...) but uses a dictionary instead.
 def repeats_dict(m, n):
     lst = list(map(lambda x: random.randint(0, m), range(0, n)))
-    res = {}
+    res = {} # Empty dictionary
     for x in lst:
         if x in res:
             res[x] += 1
@@ -42,7 +51,7 @@ def repeats_dict(m, n):
             res[x] = 1
     return list(map(lambda x: res[x], range(0, m+1)))
 
-# Task 3
+## SECTION Task 3
 
 def iterative_linear_search(elem, lst):
     for i in lst:
@@ -89,15 +98,18 @@ def recursive_binary_search(elem, lst):
         return False
 
 def test_time_searches():
+    # Set up the list, number of elements and so on
     lst_size = 500
     range_last = lst_size-1
     lst = list(range(0, lst_size))
     num_search_elem = 1000
     
+    # Variables that will help keep track of time
     ils_time1 = 0
     ils_time2 = 0
     average_time = 0
     
+    # Test Iterative linear search
     ils_time1 = time.time()
     for _ in range(0, num_search_elem):
         iterative_linear_search(random.randint(0, range_last), lst)
@@ -105,6 +117,7 @@ def test_time_searches():
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Iterative linear search: " + str(average_time) + " sec")
     
+    # Test Recursive linear search
     ils_time1 = time.time()
     for _ in range(0, num_search_elem):
         recursive_linear_search(random.randint(0, range_last), lst)
@@ -112,6 +125,7 @@ def test_time_searches():
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Recursive linear search: " + str(average_time) + " sec")
     
+    # Test Iterative binary search
     ils_time1 = time.time()
     for _ in range(0, num_search_elem):
         iterative_binary_search(random.randint(0, range_last), lst)
@@ -119,6 +133,7 @@ def test_time_searches():
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Iterative binary search: " + str(average_time) + " sec")
     
+    # Test Recursive binary search
     ils_time1 = time.time()
     for _ in range(0, num_search_elem):
         recursive_binary_search(random.randint(0, range_last), lst)
@@ -126,124 +141,189 @@ def test_time_searches():
     average_time = (ils_time2 - ils_time1) / num_search_elem
     print("Recursive binary search: " + str(average_time) + " sec")
 
-# Task 4
+## SECTION Task 4
 
+# Checks if a number is odd, return True or False
 def odd(n):
     return n % 2 == 1
 
+# Calculate factorial of a number using recursion
 def fact(n):
     if n == 0:
         return 1
     else:
         return n * fact(n-1)
 
+# Iterates over the list lst and runs the function f on each element
+# for which the predicate-function p is true.
+# The elements are then concatenated into a list again.
 def apply_if(f, p, lst):
+    # If the list is empty, return an empty list.
     if len(lst) == 0:
         return []
     
+    # Get the first element from the list, check p(e)
+    # and then maybe run f(e)
     e = lst[0]
     if p(e):
         e = f(e)
     
+    # Append e to the start of the result of a recursive call.
     return [e] + apply_if(f, p, lst[1:])
 
 # Task 5
 
+# Reverses the digits of an integer.
+# If the input is a negative integer, the output will be negative as well
 def revDigits(n):
 
+    # Tail-recursive helper-function
     def rev_digits_helper(n, res):
         res = (res * 10) + (n % 10)
         if n < 10:
             return res
         else:
             return rev_digits_helper(n // 10, res)
-        
-    return rev_digits_helper(n, 0)
+    
+    # Store a bool to tell if n is negative
+    negative = n < 0
+    if negative:
+        n *= -1 # If n was negative, make it positive
 
-# Task 6
+    # Use the helper funtion
+    abs_result = rev_digits_helper(n, 0)
+    
+    # Make the result positive or negative depending on the original value of n
+    result = (abs_result * -1) if negative else abs_result
+    
+    return result
 
-import turtle
+## SECTION Task 6
 
+# SUBSECT Task 6a
+
+# Draws a little star at the position x,y with a size.
+# The background is set to black.
 def paint_star(x, y, size):
     angle = 120
     turtle.penup()
+    
+    # Try to make turtle as fast as possible
     turtle.speed(0)
     turtle.tracer()
+    
+    # Go to the start
     turtle.goto(x, y)
+    
+    # Set up the color of the stars
     turtle.color("yellow")
     turtle.fillcolor("yellow")
+    
+    # Start drawing
     turtle.pendown()
     turtle.begin_fill()
 
+    # Draw the star's shape
     for side in range(5):
         turtle.forward(size)
         turtle.right(angle)
         turtle.forward(size)
         turtle.right(72 - angle)
-        
+    
+    # Stop drawing
     turtle.end_fill()
     turtle.penup()
-    return
 
+# SUBSECT Task 6b
+
+# Uses the paint_star(...) function n times at randomized positions.
 def sky(n):
+    # Set up a field of minimum and maximum coordinates.
+    # These will be used as boundries for the random positions.
     min_x, min_y = -450, -450
     max_x, max_y = -min_x, -min_y
 
+    # Put the lights out
     turtle.bgcolor("black")
+    
+    # Draw n stars at random positions with slightly randomized sizes.
     for _ in range(0, n):
         x = random.randint(min_x, max_x)
         y = random.randint(min_y, max_y)
         size = random.randint(5, 25)
         paint_star(x, y, size)
 
+# SUBSECT Task 6c
+
+# A helper function used by both squares(...) and fractal_squares(...)
 def squares_helper(mid_x, mid_y, size, step):
     turtle.penup()
     turtle.speed(0)
     turtle.tracer(None, None)
 
+    # Set up a bunch of short names and temporary variables
     half_size = size / 2
     iteration = 0
     pos = -(size // 2)
 
     for i in range(pos, -pos, step):
+        # Change the color with each 2nd iteration of the loop (red or black)
         col = "red" if (iteration % 2 == 0) else "black"
         turtle.color(col)
-        x = mid_x
-        y = mid_y
-        sz = half_size - i
-        turtle.goto(x + sz, y + sz)
-        turtle.pendown()
-        turtle.goto(x - sz, y + sz)
-        turtle.goto(x - sz, y - sz)
-        turtle.goto(x + sz, y - sz)
-        turtle.goto(x + sz, y + sz)
-        turtle.penup()
         iteration += 1
+        
+        # Temporary variable as a shortcut for half_size-1
+        sz = half_size - i
+        
+        # Go to starting position (Lower right)
+        turtle.goto(mid_x + sz, mid_y + sz)
+        turtle.pendown()
 
-    return None # just a marker for where the function ends
+        turtle.goto(mid_x - sz, mid_y + sz) # Upper left
+        turtle.goto(mid_x - sz, mid_y - sz) # Lower left
+        turtle.goto(mid_x + sz, mid_y - sz) # Upper right
+        turtle.goto(mid_x + sz, mid_y + sz) # Lower right
+        
+        turtle.penup()
 
+# The real function for task 6c. It just calls squares_helper using the 
+# middle of the screen as the middle of the squares.
 def squares():
     squares_helper(0, 0, 100, 10)
 
-def fract_squares_help(mid_x, mid_y, size, step, depth):
-    squares_helper(mid_x, mid_y, size, 10)
+# SUBSECT Task 6d
 
+# Helper function for task 6d
+# Calls squares_helper(...) using the given parameters.
+# It then calls itself again with different values for 
+# mid_x and mid_y, halved values for size and step and depth-1.
+# Once depth reaches 0, recursion stops
+def fract_squares_help(mid_x, mid_y, size, step, depth):
+    # Draw rectangles
+    squares_helper(mid_x, mid_y, size, step)
+
+    # Set up the new parameters
     sz_halved = size // 2
     tmp = size + sz_halved
     newstep = step // 2
     newdepth = depth - 1
 
+    # Recursive calls for each corner using the parameters.
     if depth > 0:
         fract_squares_help(mid_x + tmp, mid_y + tmp, sz_halved, newstep, newdepth)
         fract_squares_help(mid_x - tmp, mid_y + tmp, sz_halved, newstep, newdepth)
         fract_squares_help(mid_x - tmp, mid_y - tmp, sz_halved, newstep, newdepth)
         fract_squares_help(mid_x + tmp, mid_y - tmp, sz_halved, newstep, newdepth)
 
+# The actual function for task 6d. Calls fract_squares_help(...) using 
+# the middle of the screen and a depth value of 2.
 def fractal_squares():
     fract_squares_help(0, 0, 150, 10, 2)
 
-# Task 7
+## SECTION Task 7
 
+# A version of the algorithm from task 5 which uses 
+# iteration instead of recursion.
 def revDigitsIterative(n):
     res = n % 10
     
@@ -253,7 +333,7 @@ def revDigitsIterative(n):
     
     return res
 
-# Task 8
+## SECTION Task 8
 
 def foldl(f, default, lst):
     res = default
@@ -261,5 +341,6 @@ def foldl(f, default, lst):
         res = f(res, e)
     return res
 
+# Uses foldl(...) but lst is reversed beforehand.
 def foldr(f, default, lst):
     return foldl(f, default, reversed(lst))
