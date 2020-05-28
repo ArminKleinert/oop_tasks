@@ -10,6 +10,10 @@ import turtle # For task 6
 Decrement a number by 1 using only binary operations &, ^, <<
 """
 def dec(x):
+    # Handle the case that x is 0
+    if not x:
+        return -1
+    
     m = 1
 
     # Flip all the set bits 
@@ -18,7 +22,7 @@ def dec(x):
         x = x ^ m 
         m = m << 1
 
-    # flip the rightmost 1 bit 
+    # Flip the rightmost 1 bit 
     x = x ^ m 
     return x 
 
