@@ -322,7 +322,7 @@ def fract_squares_help(mid_x, mid_y, size, step, depth):
 # The actual function for task 6d. Calls fract_squares_help(...) using 
 # the middle of the screen and a depth value of 2.
 def fractal_squares():
-    fract_squares_help(0, 0, 150, 10, 2)
+    fract_squares_help(0, 0, 150, 12, 2)
 
 ## SECTION Task 7
 
@@ -450,13 +450,13 @@ apply_if_test()
 print()
 rev_digits_recursive_test()
 print()
-input("Press a button to start test for task 6a...")
-paint_star_test()
-print()
-input("Press a button to start test for task 6b...")
-turtle.clear()
-sky_test()
-print()
+#input("Press a button to start test for task 6a...")
+#paint_star_test()
+#print()
+#input("Press a button to start test for task 6b...")
+#turtle.clear()
+#sky_test()
+#print()
 input("Press a button to start test for task 6c...")
 turtle.clear()
 turtle.bgcolor("white")
