@@ -4,6 +4,7 @@ import random
 from functools import reduce
 import operator
 import math
+import statistics # In task 4 for statistics.median
 
 
 # SECTION Task 1
@@ -77,24 +78,51 @@ def test_sorted():
                 return None
 
 # 3c
-# Insertion-sort ist besser für kleine Sequenzen geeignet als
-# Quicksort. Das liegt daran, dass die übliche Implementation von
-# Quicksort unnötig viel Rekursion nutzt, während Intersionsort
-# ohne Rekursion läuft. Bei jeder Rekursion muss der Callstack
-# angepassst werden.
-# Als "kleine Sequenzen" bezeichne ich hier Sequenzen mit 10 oder
-# weniger Elementen.
-# Deshalb greifen weniger naive Quicksort-Varianten für die kleinen
-# Sequenzen, bei unweigerlich beim Quicksort zustande kommen, auf
-# Insertionsort zurück. (Lustig, genau das wird ja in 4f gemacht :D)
+"""
+Insertion-sort ist besser für kleine Sequenzen geeignet als
+Quicksort. Das liegt daran, dass die übliche Implementation von
+Quicksort unnötig viel Rekursion nutzt, während Intersionsort
+ohne Rekursion läuft. Bei jeder Rekursion muss der Callstack
+angepassst werden.
+Als "kleine Sequenzen" bezeichne ich hier Sequenzen mit 15 oder
+weniger Elementen.
+Deshalb greifen weniger naive Quicksort-Varianten für die kleinen
+Sequenzen, bei unweigerlich beim Quicksort zustande kommen, auf
+Insertionsort zurück. (Lustig, genau das wird ja in 4f gemacht :D)
+"""
 
 
 # SECTION Task 4
 
 # 4a
-# TODO Schreiben Sie eine Variante des Quicksort-Algorithmus aus der Vorlesung, die den Median-Wert (mittleren Wert) aus drei zufällig gewählten Elementen des zu sortierenden Teilarrays berechnet und diesen Wert als Pivot verwendet.
-def quicksort(lst):
-    return
+
+def quicksort(arr, start , stop): 
+    if(start < stop):
+        templst = arr[start:stop]
+        random.shuffle(templst)
+        randpivot = int(statistics.median(templst[0:2]))
+        
+        pivotindex = partitionrand(arr, randpivot, start, stop)
+        quicksort(arr , start , pivotindex - 1) 
+        quicksort(arr, pivotindex + 1, stop) 
+
+
+def partitionrand(arr, piv, start, stop):
+    randpivot = 0
+    i = start + 1
+    for j in range(start + 1, stop + 1): 
+        if arr[j] <= piv: 
+            arr[i] , arr[j] = arr[j] , arr[i] 
+            i = i + 1
+    piv, arr[i - 1] = arr[i - 1], piv
+    return i - 1
+
+
+lst = [1, 2, 4, 9, 10, 1, 1, 5, 6, 3, 2, 5, 8, 3, 4, 2, 1]
+#lst = [1, 2]
+print(lst)
+quicksort(lst, 0, len(lst)-1)
+print(lst)
 
 
 # 4b
@@ -153,7 +181,7 @@ def quick_insert(lst, low, high, k):
 
 # SECTION 5
 
-# TODO Make this work for any sequential type
+# TODO Complexity?
 def min_diff(seq):
     lst = list(seq)
     lst.sort()
@@ -171,6 +199,84 @@ def min_diff(seq):
 
 # TODO Make iterative Mergesort without producing more than 1 additional collection
 
+# Iterative mergesort function to 
+# sort arr[0...n-1]  
+def mergeSort(lst): 
+      
+    current_size = 1
+      
+    # Outer loop for traversing Each  
+    # sub array of current_size 
+    while current_size < len(lst) - 1: 
+          
+        left = 0
+        # Inner loop for merge call  
+        # in a sub array 
+        # Each complete Iteration sorts 
+        # the iterating sub array 
+        while left < len(a)-1: 
+              
+            # mid index = left index of  
+            # sub array + current sub  
+            # array size - 1 
+            mid = left + current_size - 1
+              
+            # (False result,True result) 
+            # [Condition] Can use current_size 
+            # if 2 * current_size < len(lst)-1 
+            # else len(lst)-1 
+            right = ((2 * current_size + left - 1, 
+                    len(lst) - 1)[2 * current_size  
+                          + left - 1 > len(lst)-1]) 
+                            
+            # Merge call for each sub array 
+            merge(a, left, mid, right) 
+            left = left + current_size*2
+              
+        # Increasing sub array size by 
+        # multiple of 2 
+        current_size = 2 * current_size 
+  
+# Merge Function 
+def merge(lst, l, m, r): 
+    n1 = m - l + 1
+    n2 = r - m 
+    L = [0] * n1 
+    R = [0] * n2 
+    for i in range(0, n1): 
+        L[i] = lst[l + i] 
+    for i in range(0, n2): 
+        R[i] = lst[m + i + 1] 
+  
+    i, j, k = 0, 0, l 
+    while i < n1 and j < n2: 
+        if L[i] > R[j]: 
+            lst[k] = R[j] 
+            j += 1
+        else: 
+            a[k] = L[i] 
+            i += 1
+        k += 1
+  
+    while i < n1: 
+        lst[k] = L[i] 
+        i += 1
+        k += 1
+  
+    while j < n2: 
+        lst[k] = R[j] 
+        j += 1
+        k += 1
+
+## Driver code 
+#a = [12, 11, 13, 5, 6, 7] 
+#print("Given array is ") 
+#print(a) 
+
+#mergeSort(a) 
+
+#print("Sorted array is ") 
+#print(a) 
 
 # SECTION Task 7
 

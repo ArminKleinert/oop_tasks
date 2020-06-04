@@ -28,7 +28,7 @@ def dec(x):
 
 def mersenne_prime(n):
     # Equivalent to (2**n)-1
-    return dec(2 << dec(n))
+    return dec(1 << n)
 
 ## SECTION Task 2
 
@@ -41,6 +41,15 @@ def repeats(m, n):
     lst = list(map(lambda x: random.randint(0, m), range(0, n)))
     res = map(lambda x: lst.count(x), range(0, m+1))
     return list(res)
+
+def repeats(n, m):
+    var = list(range(0, m))
+    for x in range(0, m):
+        var[x] = random.randint(0, n)
+    var2 = list(range(0, n+1))
+    for x in range(0, n+1):
+        var2[x] = var.count(x)
+    return var2
 
 # SUBSECT Task 2b
 
@@ -450,13 +459,13 @@ apply_if_test()
 print()
 rev_digits_recursive_test()
 print()
-#input("Press a button to start test for task 6a...")
-#paint_star_test()
-#print()
-#input("Press a button to start test for task 6b...")
-#turtle.clear()
-#sky_test()
-#print()
+input("Press a button to start test for task 6a...")
+paint_star_test()
+print()
+input("Press a button to start test for task 6b...")
+turtle.clear()
+sky_test()
+print()
 input("Press a button to start test for task 6c...")
 turtle.clear()
 turtle.bgcolor("white")
