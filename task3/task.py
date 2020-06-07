@@ -19,6 +19,7 @@ def random_list(ab, n):
     return list(map(lambda _: random.randint(a, b), range(0, n)))
 
 
+# op can any function that takes 2 args and returns True or False depending on a comparison of the operants
 def sorted(op, lst):
     if len(lst) <= 1:
         return True
@@ -36,19 +37,46 @@ def sorted(op, lst):
 
 # SECTION Task 2
 
-# TODO
+def rindex(mylist, myvalue):
+    return len(mylist) - mylist[::-1].index(myvalue) - 1
+
+def index(mlst, value):
+    return mlst.index(value)
+
+def bad_bubbles_helper(sorted_lst, element, new_index, starting_pos):
+    if sorted_lst[new_index] == element:
+        return 0
+    
+    # Going from high index to low index and not in range of matching indices in sorted list
+    if (starting_pos - new_index) > 0 and index(sorted_lst, element) > new_index:
+        return 1
+    
+    # Going from low index to high index and not in range of matching indices in sorted list
+    if (new_index - starting_pos) > 0 and rindex(sorted_lst, element) < new_index:
+        return 1
+    
+    return 0
+
 def bad_bubbles(lst):
+    lstcheck = lst[:]
+    lstcheck.sort()
+    num_bad_swaps = 0
+
     swap = True
     stop = len(lst) - 1
-    bad_steps = 0
+    print(lst)
     while swap:
         swap = False
         for i in range(stop):
             if lst[i] > lst[i+1]:
                 lst[i], lst[i+1] = lst[i+1], lst[i]
+                num_bad_swaps += bad_bubbles_helper(lstcheck, lst[i], i, i+1)
+                num_bad_swaps += bad_bubbles_helper(lstcheck, lst[i+1], i+1, i)
+                print(lst, lstcheck, num_bad_swaps)
                 swap = True
         stop = stop - 1
-    return lst
+
+    return num_bad_swaps
 
 
 # SECTION Task 3
@@ -98,6 +126,7 @@ Insertionsort zurück. (Lustig, genau das wird ja in 4f gemacht :D)
 
 def quicksort(arr, start , stop): 
     if(start < stop):
+        # Select 3 random elements and get the median
         templst = arr[start:stop]
         random.shuffle(templst)
         randpivot = int(statistics.median(templst[0:2]))
@@ -117,17 +146,24 @@ def partitionrand(arr, piv, start, stop):
     piv, arr[i - 1] = arr[i - 1], piv
     return i - 1
 
-
+"""
 lst = [1, 2, 4, 9, 10, 1, 1, 5, 6, 3, 2, 5, 8, 3, 4, 2, 1]
 #lst = [1, 2]
 print(lst)
 quicksort(lst, 0, len(lst)-1)
 print(lst)
-
+"""
 
 # 4b
 # TODO An Beispiel erklären, wieso der Quicksort aus der Vorlesung
 # nicht stabil ist.
+"""
+'Stabil' bedeutet, dass ein Sortier-Algorithmus niemals gleiche Elemente tauscht. 
+Dieses Verhalten kann für Probleme sorgen, wenn die Daten nicht einfache Zahlen oder Strings, sondern Nutzer-definierte Typen sind und die Reihenfolge Zählt.
+Außerdem sorgt das Vertauschen von gleichen Objekten für mehr Aufwand für das Programm.
+
+Die Standard-Implementation von Quicksort ist nicht stabil.
+"""
 
 
 # 4c
@@ -135,11 +171,51 @@ print(lst)
 
 
 # 4d
-# TODO Mit O-Notation den Overheaad dess Quick-sort in Haskell analysieren
 
+"""
+Tabelle zusätzlich erstellter Listen je nach Anzahl der Elemente in der zu sortierenden Liste:
+ 1  0
+ 2  3
+ 3  6
+ 4  9
+ 5 12
+ 6 15
+ 7 18
+ 8 21
+ 9 24
+10 27
+11 30
+12 33
+
+(n-1)*3
+=> O(n)
+
+
+Genutzter Testcode:
+count1 = 0
+
+def quick_sort(seq):
+    global count1
+    
+    if len(seq)>1:
+        q1 = [s for s in seq[1:] if s<seq[0]]
+        q2 = [s for s in seq[1:] if s>=seq[0]]
+        count1 += 3 # Both lines above and [seq[0]]
+        return quick_sort(q1) + [seq[0]] + quick_sort(q2)
+    else:
+        return seq
+
+seq = []
+for x in range(0, 12):
+    seq.append(x)
+    quick_sort(seq)
+    print(len(seq), count1)
+    count1 = 0
+"""
 
 # 4e
 # TODO Wie oft kann Quicksort das kleinste Element bewegen? (Begründen)
+
 
 # 4f
 def qi_partition(lst, low, high):
@@ -170,18 +246,19 @@ def quick_insert(lst, low, high, k):
         insertsort_low_high(lst, low, high)
     elif low < high:
         m = qi_partition(lst, low, high)
-        quick_insert(lst, low, m-1, k)
+        quick_insert(lst, low, m-1,  k)
         quick_insert(lst, m+1, high, k)
     return lst
 
 
-# 4g
-# TODO Can I even be bothered doing this???
-
-
 # SECTION 5
 
-# TODO Complexity?
+"""
+Complexity:
+n + log(n) + ((n-2)*ein haufen trivialer operationen)
+n + log(n) + (n-2)
+=> O(log(n))
+"""
 def min_diff(seq):
     lst = list(seq)
     lst.sort()
@@ -195,6 +272,7 @@ def min_diff(seq):
     return lst[md_index-1], lst[md_index]
 
 
+
 # SECTION Task 6
 
 # TODO Make iterative Mergesort without producing more than 1 additional collection
@@ -203,6 +281,7 @@ def min_diff(seq):
 # sort arr[0...n-1]  
 def mergeSort(lst): 
       
+    helper_lst = []
     current_size = 1
       
     # Outer loop for traversing Each  
@@ -230,7 +309,7 @@ def mergeSort(lst):
                           + left - 1 > len(lst)-1]) 
                             
             # Merge call for each sub array 
-            merge(a, left, mid, right) 
+            merge(a, left, mid, right, helper_lst) 
             left = left + current_size*2
               
         # Increasing sub array size by 
@@ -238,51 +317,51 @@ def mergeSort(lst):
         current_size = 2 * current_size 
   
 # Merge Function 
-def merge(lst, l, m, r): 
+def merge(lst, l, m, r, helper_lst): 
     n1 = m - l + 1
     n2 = r - m 
-    L = [0] * n1 
-    R = [0] * n2 
+    
+    # Hier werden neue Listen generiert!!!
+    L = [0] * n1
+    R = [0] * n2
+    
     for i in range(0, n1): 
-        L[i] = lst[l + i] 
+        L[i] = lst[l + i]
     for i in range(0, n2): 
-        R[i] = lst[m + i + 1] 
+        R[i] = lst[m + i + 1]
   
     i, j, k = 0, 0, l 
     while i < n1 and j < n2: 
         if L[i] > R[j]: 
-            lst[k] = R[j] 
+            lst[k] = R[j]
             j += 1
         else: 
-            a[k] = L[i] 
+            a[k] = L[i]
             i += 1
         k += 1
   
     while i < n1: 
-        lst[k] = L[i] 
+        lst[k] = L[i]
         i += 1
         k += 1
   
     while j < n2: 
-        lst[k] = R[j] 
+        lst[k] = R[j]
         j += 1
         k += 1
 
-## Driver code 
-#a = [12, 11, 13, 5, 6, 7] 
-#print("Given array is ") 
-#print(a) 
 
-#mergeSort(a) 
+#a = [12, 11, 13, 5, 6, 7]
+#print("Given array is ")
+#print(a)
 
-#print("Sorted array is ") 
-#print(a) 
+#mergeSort(a)
+
+#print("Sorted array is ")
+#print(a)
 
 # SECTION Task 7
 
-# TODO 
-# Gegeben seien zwei Listen mit jeweils n ganzen Zahlen. Entwerfen Sie einen
-# effizienten Algorithmus, der die Liste aller Elemente, die in beiden Listen
-# enthalten sind, berechnet. Die Ausgabe sollte in sortierter Reihenfolge erfolgen.
-# Ihr Algorithmus sollte mit einer O(n(log(n)) Komplexität ausgeführt werden. 
-
+# -> Erst sortieren -> je n*log(n) -> O(n*(log(n)) + n*(log(n))) = O((2*n)*log(n)) = O(n*log(n))
+# -> Dann binary-search -> je Element O(log(n)) -> O(n*log(n))
+# O(n*log(n)) + O(n*log(n)) = O(2n*log(n)) = O(n*log(n))
