@@ -144,7 +144,7 @@ angepassst werden.
 Als "kleine Sequenzen" bezeichne ich hier Sequenzen mit 15 oder
 weniger Elementen.
 Deshalb greifen weniger naive Quicksort-Varianten für die kleinen
-Sequenzen, bei unweigerlich beim Quicksort zustande kommen, auf
+Sequenzen, die unweigerlich beim Quicksort zustande kommen, auf
 Insertionsort zurück. (Lustig, genau das wird ja in 4f gemacht :D)
 """
 
@@ -322,9 +322,9 @@ Das erste solche Paar wird bevorzugt.
 min_diff((1, 2, 3, 4, 5, 6, 7)) # => (1, 2)
 
 Complexity:
-n + log(n) + ((n-2)*ein haufen trivialer operationen)
-n + log(n) + (n-2)
-=> O(log(n))
+n + n*log(n) + ((n-2)*ein haufen trivialer operationen)
+n + n*log(n) + (n-2)
+=> O(n*log(n))
 """
 def min_diff(seq):
     lst = list(seq)
@@ -337,7 +337,6 @@ def min_diff(seq):
             min_difference = md_2
             md_index = i
     return lst[md_index-1], lst[md_index]
-
 
 
 # SECTION Task 6
