@@ -97,7 +97,7 @@ def bad_bubbles(lst):
                 temp = bad_bubbles_helper(lstcheck, lst[i+1], i+1, i)
                 num_good_swaps += temp[0]
                 num_bad_swaps += temp[1]
-                #print(lst, lstcheck, num_bad_swaps) # Uncomment to see detailed information each step
+                #print(lst, lstcheck, num_good_swaps, num_bad_swaps) # Uncomment to see detailed information each step
                 swap = True
         stop = stop - 1
 
@@ -205,7 +205,7 @@ Die Standard-Implementation von Quicksort ist nicht stabil.
 In der Pivot-Funktion kommen diese Zeilen vor:
 
     for j in range(start + 1, stop + 1): 
-        if arr[j] <= piv: 
+        if arr[j] < piv: 
             arr[i] , arr[j] = arr[j] , arr[i] 
             i = i + 1
 
@@ -217,10 +217,10 @@ Per Definition ist Quicksort also instabil.
 
 
 # 4c
-# TODO Erklären, ob man Quicksort stabil machen kann.
 
 """
-Ja, denn 
+Ja. Dafür müsste ein System implementiert werden, das kontrolliert, in welche Richtung der nächste Swap geschehen muss / nicht geschehen darf.
+Das wäre einfacher für Quicksort-Varianten, die nicht in-place arbeiten.
 """
 
 
@@ -229,20 +229,20 @@ Ja, denn
 """
 Tabelle zusätzlich erstellter Listen je nach Anzahl der Elemente in der zu sortierenden Liste:
  1  0
- 2  3
- 3  6
- 4  9
- 5 12
- 6 15
- 7 18
- 8 21
- 9 24
-10 27
-11 30
-12 33
+ 2  4
+ 3  8
+ 4  12
+ 5 16
+ 6 20
+ 7 24
+ 8 28
+ 9 32
+10 36
+11 40
+12 44
 
-(n-1)*3
-=> O(n)
+Anzahl der generierten Listen: (n-1)*4
+Lösung => O(n)
 
 
 Genutzter Testcode:
@@ -254,7 +254,7 @@ def quick_sort(seq):
     if len(seq)>1:
         q1 = [s for s in seq[1:] if s<seq[0]]
         q2 = [s for s in seq[1:] if s>=seq[0]]
-        count1 += 3 # Both lines above and [seq[0]]
+        count1 += 4 # Both lines above and [seq[0]] and the additions
         return quick_sort(q1) + [seq[0]] + quick_sort(q2)
     else:
         return seq
@@ -268,7 +268,10 @@ for x in range(0, 12):
 """
 
 # 4e
-# TODO Wie oft kann Quicksort das kleinste Element bewegen? (Begründen)
+
+"""
+Das kleinste Elemeent kann maximal 2 mal geswappt.
+"""
 
 
 # 4f
@@ -309,12 +312,14 @@ def quick_insert(lst, low=0, high=None, k=15):
     if high is None:
         high = len(lst)-1 # Set up parameter high
 
-    if len(lst) <= k: # Check fallback
-        insertsort_low_high(lst, low, high)
-    elif low < high: # Do quicksort
+    if low < high: # Do quicksort
         m = qi_partition(lst, low, high)
-        quick_insert(lst, low, m-1,  k)
-        quick_insert(lst, m+1, high, k)
+        if ((m-1) < k):
+            insertsort_low_high(lst, low, m-1)
+            insertsort_low_high(lst, m+1, high)
+        else:
+            quick_insert(lst, low, m-1,  k)
+            quick_insert(lst, m+1, high, k)
 
     return lst
 
@@ -330,6 +335,10 @@ Das erste solche Paar wird bevorzugt.
 min_diff((1, 2, 3, 4, 5, 6, 7)) # => (1, 2)
 
 Complexity:
+list(seq) : n
+lst.sort() : n*log(n)
+for : n-2 iterations
+
 n + n*log(n) + ((n-2)*ein haufen trivialer operationen)
 n + n*log(n) + (n-2)
 => O(n*log(n))
@@ -373,14 +382,13 @@ def mergeSort(lst):
             # sub array + current sub  
             # array size - 1 
             mid = left + current_size - 1
-              
-            # (False result,True result) 
-            # [Condition] Can use current_size 
-            # if 2 * current_size < len(lst)-1 
-            # else len(lst)-1 
-            right = ((2 * current_size + left - 1, 
-                    len(lst) - 1)[2 * current_size  
-                          + left - 1 > len(lst)-1]) 
+
+
+            right = 0
+            if 2 * current_size + left - 1 > len(lst)-1:
+                right = len(lst) - 1
+            else:
+                right = 2 * current_size + left - 1
                             
             # Merge call for each sub array 
             merge(lst, left, mid, right, helper_lst) 
@@ -395,56 +403,48 @@ def merge(lst, l, m, r, helper_lst):
     n1 = m - l + 1
     n2 = r - m 
     
-    # Hier werden neue Listen generiert!!!
-    L = [0] * n1
-    R = [0] * n2
+    helper_lst.clear()
     
     for i in range(0, n1): 
-        L[i] = lst[l + i]
+        helper_lst[i] = lst[l + i]
     for i in range(0, n2): 
-        R[i] = lst[m + i + 1]
+        helper_lst[i+n1] = lst[m + i + 1]
   
     i, j, k = 0, 0, l 
     while i < n1 and j < n2: 
-        if L[i] > R[j]: 
-            lst[k] = R[j]
+        if helper_lst[i] > helper_lst[j+n1]: 
+            lst[k] = helper_lst[j+n1]
             j += 1
         else: 
-            lst[k] = L[i]
+            lst[k] = helper_lst[i]
             i += 1
         k += 1
   
     while i < n1: 
-        lst[k] = L[i]
+        lst[k] = helper_lst[i]
         i += 1
         k += 1
   
     while j < n2: 
-        lst[k] = R[j]
+        lst[k] = helper_lst[j+n1]
         j += 1
         k += 1
 
 
-#a = [12, 11, 13, 5, 6, 7]
-#print("Given array is ")
-#print(a)
-
-#mergeSort(a)
-
-#print("Sorted array is ")
-#print(a)
 
 # SECTION Task 7
 
 """
--> Erst sortieren -> je n*log(n) -> O(n*(log(n)) + n*(log(n))) = O((2*n)*log(n)) = O(n*log(n))
+-> Erst sortieren -> je n*log(n) -> je O(n*(log(n))
 -> Dann binary-search -> je Element O(log(n)) -> O(n*log(n))
 
-Gesamt: O(n*log(n)) + O(n*log(n)) = O(2n*log(n))
+Gesamt: O((n*log(n)) + (n*log(n)) + (n*log(n))) = O(3n*log(n))
 Ergebnis = O(n*log(n))
 
 
 Theoretischer Beispielcode unten:
+Dieser Code sollte nicht zur Bewertung genutzt werden.
+Er ist nur als Gedankenstütze gedacht.
 """
 
 from bisect import bisect_left
