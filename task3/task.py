@@ -163,6 +163,18 @@ Dieses Verhalten kann für Probleme sorgen, wenn die Daten nicht einfache Zahlen
 Außerdem sorgt das Vertauschen von gleichen Objekten für mehr Aufwand für das Programm.
 
 Die Standard-Implementation von Quicksort ist nicht stabil.
+
+In der Pivot-Funktion kommen diese Zeilen vor:
+
+    for j in range(start + 1, stop + 1): 
+        if arr[j] <= piv: 
+            arr[i] , arr[j] = arr[j] , arr[i] 
+            i = i + 1
+
+Bei der Liste [5, 2, 1, 1, 7]
+Würde die mittlere 1 (Index 2) als Pivot gewählt. Die zweite 1 (Index 3) würde 
+nun an einen niedrigeren Index verschoben. Also wurden zwei gleiche Werte getauscht. 
+Per Definition ist Quicksort also instabil.
 """
 
 
