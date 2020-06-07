@@ -156,7 +156,6 @@ Sequenzen, die unweigerlich beim Quicksort zustande kommen, auf
 Insertionsort zurück. (Lustig, genau das wird ja in 4f gemacht :D)
 """
 
-
 # SECTION Task 4
 
 # 4a
@@ -197,41 +196,60 @@ print(lst)
 # 4b
 """
 'Stabil' bedeutet, dass ein Sortier-Algorithmus niemals gleiche Elemente tauscht. 
-Dieses Verhalten kann für Probleme sorgen, wenn die Daten nicht einfache Zahlen oder Strings, sondern Nutzer-definierte Typen sind und die Reihenfolge Zählt.
+Dieses Verhalten kann für Probleme sorgen, wenn die Daten nicht einfache Zahlen oder Strings, sondern Nutzer-definierte Typen sind und die Reihenfolge zählt.
 Außerdem sorgt das Vertauschen von gleichen Objekten für mehr Aufwand für das Programm.
 
 Die Standard-Implementation von Quicksort ist nicht stabil.
 
-In der Pivot-Funktion kommen diese Zeilen vor:
+In der Partition-Funktion kommen diese Zeilen vor:
 
     for j in range(start + 1, stop + 1): 
         if arr[j] < piv: 
             arr[i] , arr[j] = arr[j] , arr[i] 
             i = i + 1
 
-Bei der Liste [5, 2, 1, 1, 7]
-Würde die mittlere 1 (Index 2) als Pivot gewählt. Die zweite 1 (Index 3) würde 
-nun an einen niedrigeren Index verschoben. Also wurden zwei gleiche Werte getauscht. 
-Per Definition ist Quicksort also instabil.
+Zu sortieren sei die Liste [5, 5, 1]
+(Von hier an geschrieben als [5(0), 5(1), 1(2)] mit den ursprünglichen Indizes in Klammern)
+In den meisten Implementationen wir entweder das mittlere oder das erste Element als Pivot gewählt. Hier wähle ich das erste Element (5 an Index 0) als Pivot.
+Als erstes werden der Pivot 5(0). Die 5-en 5(0) und 5(1) werden nicht getauscht, aber der Pivot 5(0) und das Element 1(2).
+Nach dem ersten Aufruf der Partition-Funktion sieht die Liste also wie folgt aus:
+    [1(1), 5(2), 5(0)]
+Das erste Element 5(0) steht nun also hinter dem Element 5(2). Die Reihenfolge hat sich geändert. Per Definition ist diese Implementation also instabil.
 """
-
 
 # 4c
 
 """
-Ja. Dafür müsste ein System implementiert werden, das kontrolliert, in welche Richtung der nächste Swap geschehen muss / nicht geschehen darf.
-Das wäre einfacher für Quicksort-Varianten, die nicht in-place arbeiten.
+Ein stabiler Quicksort, der in-place arbeitet, ist schwer umzusetzen.
+Andernfalls ist es relativ simpel:
+- Wenn nur 0 oder 1 Elemente verbleiben, return input
+- Erstellt 2 neue Listen für Elemente < Pivot und Elemente > Pivot
+- Iteriere von vorn nach hinten durch die Liste und ordne die Elemente je nach ihrem Verhältnis zum Pivot:
+  - Element < Pivot -> Liste für kleine Elemente
+  - Element > Pivot -> Liste für große Elemente
+  - Element == Pivot -> Entscheide nach der relativen Position zum Pivot
+- Erstelle eine neue Liste, die nur den Pivot endhält
+- Doppelt-rekusiver Aufruf:
+  quicksort(smaller) + [pivot] + quicksort(bigger)
+
+Dieser Code ist stabil aber nicht in-place und läuft langsamer als die übliche Implementation.
+Außerdem hat er den Overhead der Haskell-Variante, die in 4d beschrieben wird.
 """
 
 
 # 4d
 
 """
+Die in der Vorlesung gegebene Python-Variante der Haskell-Variante von Quicksort erstellt 4 neue Listen pro Iteration, wenn die Liste mehr als 1 Element hat.
+- 2 Listen durch Listen-Generatoren
+- 1 Liste speziell für den Pivot
+- 1 weitere Liste für das Concatinieren der 3 Listen
+
 Tabelle zusätzlich erstellter Listen je nach Anzahl der Elemente in der zu sortierenden Liste:
  1  0
  2  4
  3  8
- 4  12
+ 4 12
  5 16
  6 20
  7 24
@@ -270,7 +288,15 @@ for x in range(0, 12):
 # 4e
 
 """
-Das kleinste Elemeent kann maximal 2 mal geswappt.
+Das kleinste Element kann maximal
+    floot(square_root(n)) - 1
+Male bewegt werden.
+(Also die Quadratwurzel aus n abgerundet und um 1 dekrementiert.)
+
+- Ist das kleinste Element der Pivot, dann wird es nicht bewegt
+- Steht das kleinste Element alleine in einer Sub-Liste, dann wird des in der nächsten Iteration zum Pivot
+- Solange n (Anzahl Elemente) > 3 kann das kleinste Element potentiell mit jedem Aufruf von Partition ein mal bewegt werden.
+- Mit jedem Aufruf von Partition wird n halbiert.
 """
 
 
