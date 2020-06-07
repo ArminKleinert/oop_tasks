@@ -52,32 +52,36 @@ def index(mlst, value):
 
 # Helper function.
 # Checks if the movement of an element was in the wrong direction.
-# If the move is bad, 1 is returned. Otherwise, 0 is returned.
+# If the move is bad, (0,1) is returned. Otherwise, (1,0) is returned.
 # This way, the result can simply be added to a counter.
 def bad_bubbles_helper(sorted_lst, element, new_index, starting_pos):
     # The new index is the destination => ok
     if sorted_lst[new_index] == element:
-        return 0
+        return 1, 0
     
     # Going from high index to low index and not in range of matching indices in sorted list => bad
     if (starting_pos - new_index) > 0 and index(sorted_lst, element) > new_index:
-        return 1
+        return 0, 1
     
     # Going from low index to high index and not in range of matching indices in sorted list => bad
     if (new_index - starting_pos) > 0 and rindex(sorted_lst, element) < new_index:
-        return 1
+        return 0, 1
     
     # Ok
-    return 0
+    return 1, 0
 
 # Sorts a list lst using the bubblesort-algorithm and checks how 
 # often elements were moved into the wrong direction.
 #
 # The comments were left in intentionally for your enjoyment.
+#
+# Returns a pair of numbers (good swaps first, then bad swaps)
 def bad_bubbles(lst):
     lstcheck = lst[:]
     lstcheck.sort()
     num_bad_swaps = 0
+    num_good_swaps = 0
+    temp = (0,0)
 
     swap = True
     stop = len(lst) - 1
@@ -87,13 +91,17 @@ def bad_bubbles(lst):
         for i in range(stop):
             if lst[i] > lst[i+1]:
                 lst[i], lst[i+1] = lst[i+1], lst[i]
-                num_bad_swaps += bad_bubbles_helper(lstcheck, lst[i], i, i+1)
-                num_bad_swaps += bad_bubbles_helper(lstcheck, lst[i+1], i+1, i)
+                temp = bad_bubbles_helper(lstcheck, lst[i], i, i+1)
+                num_good_swaps += temp[0]
+                num_bad_swaps += temp[1]
+                temp = bad_bubbles_helper(lstcheck, lst[i+1], i+1, i)
+                num_good_swaps += temp[0]
+                num_bad_swaps += temp[1]
                 #print(lst, lstcheck, num_bad_swaps) # Uncomment to see detailed information each step
                 swap = True
         stop = stop - 1
 
-    return num_bad_swaps
+    return (num_good_swaps, num_bad_swaps)
 
 
 # SECTION Task 3
@@ -161,7 +169,7 @@ def quicksort(arr, start, stop):
         e0 = arr[random.randint(start, stop)]
         e1 = arr[random.randint(start, stop)]
         e2 = arr[random.randint(start, stop)]
-        randpivot = int(statistics.median((e0, e1, e2))
+        randpivot = int(statistics.median((e0, e1, e2)))
 
         pivotindex = partition(arr, randpivot, start, stop)
         quicksort(arr, start, pivotindex - 1) 
@@ -561,8 +569,8 @@ Liste                           Ergebnis                        Vs
 def test_bad_bubbles():
     lst = [3, 10, 6, 9, 5, 1, 2, 7, 6, 8]
     print("Testing bad_bubbles")
-    print("  Expecting result 5 for list", lst)
-    print("  Result:", 5)
+    print("  Expecting result (39,5) for list", lst)
+    print("  Result:", bad_bubbles(lst))
 
 def test_insertsort():
     print("Testing insertsort")
