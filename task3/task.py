@@ -134,6 +134,7 @@ def test_sorted():
     return True # Success
 
 # 3c
+
 """
 Insertion-sort ist besser für kleine Sequenzen geeignet als
 Quicksort. Das liegt daran, dass die übliche Implementation von
@@ -154,13 +155,14 @@ Insertionsort zurück. (Lustig, genau das wird ja in 4f gemacht :D)
 
 # A quicksort-variant which uses the median of 3 random numbers and calculates 
 # the median. The result iss then used as the pivot.
-def quicksort(arr, start , stop): 
+def quicksort(arr, start, stop): 
     if(start < stop):
         # Select 3 random elements and get the median
-        templst = arr[start:stop]
-        random.shuffle(templst)
-        randpivot = int(statistics.median(templst[0:2]))
-        
+        e0 = arr[random.randint(start, stop)]
+        e1 = arr[random.randint(start, stop)]
+        e2 = arr[random.randint(start, stop)]
+        randpivot = int(statistics.median((e0, e1, e2))
+
         pivotindex = partition(arr, randpivot, start, stop)
         quicksort(arr, start, pivotindex - 1) 
         quicksort(arr, pivotindex + 1, stop) 
