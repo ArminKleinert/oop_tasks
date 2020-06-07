@@ -358,29 +358,16 @@ def min_diff(seq):
 
 # SECTION Task 6
 
-# TODO Make iterative Mergesort without producing more than 1 additional collection
-
-# Iterative mergesort function to 
-# sort arr[0...n-1]  
-def mergeSort(lst): 
+# Iterative mergesort function using only one additional list
+def mergesort(lst): 
       
-    helper_lst = []
+    helper_lst = [0 for x in lst] # Helper-list filled with zeroes
     current_size = 1
-      
-    # Outer loop for traversing Each  
-    # sub array of current_size 
+
     while current_size < len(lst) - 1: 
           
         left = 0
-        # Inner loop for merge call  
-        # in a sub array 
-        # Each complete Iteration sorts 
-        # the iterating sub array 
         while left < len(lst)-1: 
-              
-            # mid index = left index of  
-            # sub array + current sub  
-            # array size - 1 
             mid = left + current_size - 1
 
 
@@ -389,27 +376,30 @@ def mergeSort(lst):
                 right = len(lst) - 1
             else:
                 right = 2 * current_size + left - 1
-                            
-            # Merge call for each sub array 
+
+            # Call merge for sub-list
             merge(lst, left, mid, right, helper_lst) 
             left = left + current_size*2
-              
-        # Increasing sub array size by 
-        # multiple of 2 
+
         current_size = 2 * current_size 
-  
-# Merge Function 
+
+# Helper-function for mergeSo
 def merge(lst, l, m, r, helper_lst): 
+    # n1 is the size of the first part of the helper-list
+    # and also the offset for the second part
     n1 = m - l + 1
+    
+    # n2 is the size of the second part of the helper-list
     n2 = r - m 
-    
-    helper_lst.clear()
-    
+
+    # Re-fill helper-list with data from lst (no, a direct code will not work)
     for i in range(0, n1): 
         helper_lst[i] = lst[l + i]
     for i in range(0, n2): 
         helper_lst[i+n1] = lst[m + i + 1]
   
+    # Do the merging.
+    
     i, j, k = 0, 0, l 
     while i < n1 and j < n2: 
         if helper_lst[i] > helper_lst[j+n1]: 
@@ -658,27 +648,27 @@ def test_min_diff():
     res = min_diff(seq)
     print("  In=", seq, "Out=", res, "Correct? ", res == (15, 17))
     
-def test_mergeSort():
+def test_mergesort():
     print("Test mergesort")
     lst = [3, 10, 6, 9, 5, 1, 2, 7, 6, 8, 1, 2, 7]
     
     res = lst[:]
-    mergeSort(res)
+    mergesort(res)
     print("  In=", lst, "Out=", res, "Sorted=", sorted(operator.le, res))
     
     random.shuffle(lst)
     res = lst[:]
-    mergeSort(res)
+    mergesort(res)
     print("  In=", lst, "Out=", res, "Sorted=", sorted(operator.le, res))
     
     random.shuffle(lst)
     res = lst[:]
-    mergeSort(res)
+    mergesort(res)
     print("  In=", lst, "Out=", res, "Sorted=", sorted(operator.le, res))
     
     random.shuffle(lst)
     res = lst[:]
-    mergeSort(res)
+    mergesort(res)
     print("  In=", lst, "Out=", res, "Sorted=", sorted(operator.le, res))
 
 def test_task_7():
@@ -742,7 +732,7 @@ print("-------------------- Test task 5\n")
 test_min_diff()
 print()
 print("-------------------- Test task 6\n")
-test_mergeSort()
+test_mergesort()
 print()
 print("-------------------- Test task 7\n")
 test_task_7()
