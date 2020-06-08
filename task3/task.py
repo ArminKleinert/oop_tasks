@@ -451,6 +451,23 @@ def merge(lst, l, m, r, helper_lst):
 # SECTION Task 7
 
 """
+Unser erster Ansatz:
+-> Wandle beide Listen in HashSets um -> je O(n) -> O(2n)
+-> Nutze eine optimierte "intersection"-Funktion für die Sets aus -> O(n)
+-> Wandle das neue Set in eine Liste um -> O(n)
+Gesamt: O(n*4) -> O(n)
+Problem: Je nach Implementation ist die Ergebnis-Liste vielleicht nicht sortiert und muss separat sortiert werden, was eine eigene Komplexität von O(n*log(n)) hat.
+
+In Jython 2.7.1 (list(set) ist richtig sortiert): O(n*4) -> O(n)
+In Cython 3.7.4 (und den meisten anderen): O(n*3 + n*log(n)) -> O(n + nlogn)
+
+https://stackoverflow.com/questions/44144187/what-is-the-time-complexity-of-initializing-an-hashset-using-a-populated-arrayli
+https://stackoverflow.com/questions/4642172/computing-set-intersection-in-linear-time
+https://stackoverflow.com/questions/61098519/time-complexity-in-sorting-a-list-by-converting-it-to-a-set-and-back-into-a-list
+
+-----------------------------------------------------
+
+Unser finaler Ansatz:
 -> Erst sortieren -> je n*log(n) -> je O(n*(log(n))
 -> Dann binary-search -> je Element O(log(n)) -> O(n*log(n))
 -> Einfügen der Elemente in Ergebnis-Liste je O(1).
@@ -458,6 +475,22 @@ def merge(lst, l, m, r, helper_lst):
 
 Gesamt: O((n*log(n)) + (n*log(n)) + (n*log(n)) + n/2) = O(3n*log(n) + n/2) = O(3n*log(n))
 Ergebnis = O(n*log(n))
+
+Pseudocode:
+
+def f(list1, list2)
+  quicksort(list1)              # O(nlogn)
+  quicksort(list2)              # O(nlogn)
+  result := []                  # O(1)
+  for x in list1                # 
+    if binary_search(list2, x)  # O(logn) -> O(nlogn)
+        append x to result      # O(1) -> O(n/2)
+  return result                 # O(1)
+                                # ---------------------
+                                # O(nlogn + nlogn + 1 + nlogn + n/2 + 1)
+                                # O(3nlogn + n/2 + 2)
+                                # O(3nlogn + n/2)
+                                # O(nlogn)
 """
 
 ##################################################
