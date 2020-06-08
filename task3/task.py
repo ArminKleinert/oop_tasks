@@ -453,43 +453,12 @@ def merge(lst, l, m, r, helper_lst):
 """
 -> Erst sortieren -> je n*log(n) -> je O(n*(log(n))
 -> Dann binary-search -> je Element O(log(n)) -> O(n*log(n))
+-> Einfügen der Elemente in Ergebnis-Liste je O(1).
+   Durchschnittlich wird jedes 2. Element eingefügt, also O(n/2)
 
-Gesamt: O((n*log(n)) + (n*log(n)) + (n*log(n))) = O(3n*log(n))
+Gesamt: O((n*log(n)) + (n*log(n)) + (n*log(n)) + n/2) = O(3n*log(n) + n/2) = O(3n*log(n))
 Ergebnis = O(n*log(n))
-
-
-Theoretischer Beispielcode unten:
-Dieser Code sollte nicht zur Bewertung genutzt werden.
-Er ist nur als Gedankenstütze gedacht.
 """
-
-from bisect import bisect_left
-
-# Eine binary-search Variante aus dem Internet, modifiziert um True oder False zurückzugeben:
-def binary_search(a, x, lo=0, hi=None):
-    hi = hi if hi is not None else len(a)
-    pos = bisect_left(a, x, lo, hi)
-    return pos != hi and a[pos] == x
-
-# Die eigentliche Funktion
-
-def list_intersection(lst1, lst2):
-    lst1.sort() # Nutzt build-in, in-place sort mit geschätzter Komplexität O(nlog(n))
-    lst2.sort() # Same
-    
-    result = [] # Variable für das Ergebnis
-
-    # Safe-guard, mit dem Elemente nicht doppelt gecheckt werden
-    last_checked = None
-
-    # Iteration über Elemente von Liste 1
-    for x in lst1:
-        if last_checked is not x: # Element wurde noch nicht kontrolliert
-            if binary_search(lst2, x): # Ist das Element auch in Liste 2?
-                result.append(x) # Ja -> Hinzufügen zum Ergebnis
-            last_checked = x
-
-    return result
 
 ##################################################
 # SECTION Tests                                  #
