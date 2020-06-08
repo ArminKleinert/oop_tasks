@@ -467,29 +467,72 @@ https://stackoverflow.com/questions/61098519/time-complexity-in-sorting-a-list-b
 
 -----------------------------------------------------
 
-Unser finaler Ansatz:
--> Erst sortieren -> je n*log(n) -> je O(n*(log(n))
--> Dann binary-search -> je Element O(log(n)) -> O(n*log(n))
--> Einfügen der Elemente in Ergebnis-Liste je O(1).
-   Durchschnittlich wird jedes 2. Element eingefügt, also O(n/2)
+Unser zweiter Ansatz:
+-> Erstelle ein HashSet -> O(1)
+-> Füge beide Listen dem HashSet hinzu -> je O(n) -> O(2n)
+-> Wandle das neue Set in eine Liste um -> O(n)
+Gesamt: O(n*3) -> O(n)
+Ergebnis: O(n) oder O(n + nlogn)
+Problem: Das selbe wie oben
 
-Gesamt: O((n*log(n)) + (n*log(n)) + (n*log(n)) + n/2) = O(3n*log(n) + n/2) = O(3n*log(n))
+-----------------------------------------------------
+
+Unser dritter Ansatz:
+-> Erst sortieren (zB. Mergesort mit worst case O(n*log(n))) -> je O(n*log(n)) -> O(n*(log(n))
+-> Dann binary-search -> je Element O(log(n)) -> O(n*log(n))
+-> Für Elemente werden nur kontrolliert, wenn sie noch nicht kontrolliert wurden
+-> Einfügen der Elemente in Ergebnis-Liste je O(1).
+
+Gesamt: O((n*log(n)) + (n*log(n)) + (n*log(n)) + n) = O(3n*log(n) + n) = O(3n*log(n))
 Ergebnis = O(n*log(n))
 
 Pseudocode:
 
 def f(list1, list2)
-  quicksort(list1)              # O(nlogn)
-  quicksort(list2)              # O(nlogn)
+  sortiere list1                 # O(nlogn)
+  sortiere list2                 # O(nlogn)
+  result := []                   # O(1)
+  _checked := None               # O(1)
+  for x in list1                 # 
+    if not _checked              # O(1) -> O(n)
+      if binary_search(list2, x) # O(logn) -> O(nlogn)
+        append x to result       # O(1) -> O(n)
+      _checked = x               # O(1) -> O(n)
+  return result                  # O(1)
+                                 # ---------------------
+                                 # O(nlogn + nlogn + 1 + n + nlogn + n + n + 1)
+                                 # O(3nlogn + n*3 + 1)
+                                 # O(3nlogn + n)
+                                 # O(nlogn)
+
+Problem: Es sieht zwar effizienter aus, aber läuft schlechter wenn jede Zahl in der
+ersten Liste einzigartig ist. Außerdem wird die Komplexität schlechter.
+
+-----------------------------------------------------
+
+Unser vierter Ansatz:
+-> Erst sortieren (zB. Mergesort mit worst case O(n*log(n))) -> je O(n*log(n)) -> O(n*(log(n))
+-> Dann binary-search -> je Element O(log(n)) -> O(n*log(n))
+-> Einfügen der Elemente in Ergebnis-Liste je O(1).
+   Durchschnittlich wird jedes 2. Element eingefügt, also O(n)
+
+Gesamt: O((n*log(n)) + (n*log(n)) + (n*log(n)) + n) = O(3n*log(n) + n) = O(3n*log(n))
+Ergebnis = O(n*log(n))
+
+Pseudocode:
+
+def f(list1, list2)
+  sortiere list1                # O(nlogn)
+  sortiere list1                # O(nlogn)
   result := []                  # O(1)
   for x in list1                # 
     if binary_search(list2, x)  # O(logn) -> O(nlogn)
-        append x to result      # O(1) -> O(n/2)
+        append x to result      # O(1) -> O(n)
   return result                 # O(1)
                                 # ---------------------
-                                # O(nlogn + nlogn + 1 + nlogn + n/2 + 1)
-                                # O(3nlogn + n/2 + 2)
-                                # O(3nlogn + n/2)
+                                # O(nlogn + nlogn + 1 + nlogn + n + 1)
+                                # O(3nlogn + n + 2)
+                                # O(3nlogn + n)
                                 # O(nlogn)
 """
 
