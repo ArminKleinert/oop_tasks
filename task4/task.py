@@ -490,6 +490,15 @@ def ensure_sorting_works(sorting_fn_name, sorting_fn):
         sorting_fn(l)
         show_message(l)
         n *= 10
+    
+    print("  Testing on shuffled lists (including < 0).")
+    n = 10
+    while n <= 10000:
+        l = [random.randint(-(n//2), n//2) for _ in range(0, n)]
+        random.shuffle(l)
+        sorting_fn(l)
+        show_message(l)
+        n *= 10
 
     print("  Testing on pre-sorted lists of uniques.")
     n = 10
@@ -547,7 +556,7 @@ def test_shellsort_with_magic():
     print("  Sorted:", shellsort_ops(l))
     random.shuffle(l)
     print("  Shuffled:", shellsort_ops(l))
-    
+
 def test_shellsort_ops():
     ensure_sorting_works("Shellsort without magic", shellsort_ops)
 
@@ -564,7 +573,7 @@ def test_comp_shellsort_insertionsort_ops():
     comp_shellsort_insertionsort_ops(list(range(-1000, 0)))
 
 def test_counting_sort_in_place():
-    lm = lambda l: counting_sort_in_place(l, len(l))
+    lm = lambda l: counting_sort_in_place(l, 100000)
     ensure_sorting_works("Counting sort in place", lm)
     
 def test_pigeonhole_sort():
@@ -579,6 +588,6 @@ test_insertion_sort_ops()
 print("")
 test_comp_shellsort_insertionsort_ops()
 print("\n### Testing task 3 ###")
-#test_counting_sort_in_place()
+test_counting_sort_in_place()
 print("\n### Testing task 4 ###")
 test_pigeonhole_sort()
