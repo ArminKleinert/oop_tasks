@@ -158,7 +158,6 @@ list afte tested too.
 """
 def comp_shellsort_insertionsort_ops(lst):
     is_ops, ss_ops = comp_shellsort_insertionsort_ops_helper(lst)
-    print(ss_ops, is_ops)
     print("             | Shellsort | Insertion")
     print("-------------+-----------+----------")
     print("original     | {:9d} | {:9d}".format(ss_ops, is_ops))
@@ -329,9 +328,11 @@ Beim Test von vollen 32-Bit Zahlen gaben unsere Python3-Implementationen leider 
 
 Während das Internet Radix-Sort bevorzugt, konnte bei uns also nur Pigeonholesort die Anforderungen erfüllen.
 
-Ein Problem beim Pigeonhole Sort ist, dass er
+Probleme beim Pigeonhole Sort sind, dass er
   1. Sehr stark von der Differenz zwischen den Werten abhängig ist
   2. Bei sortierten Listen keinen Vorteil bietet. (Auch hier domiert 1.)
+  3. Bei leeren Listen nicht funktioniert
+     (Dieses Problem ist hier unwichtig und ist leicht zu beheben)
 """
 
 num_min = int(-(2**28) * 1.5) #int(-(2**28) * 1.5)
@@ -353,7 +354,7 @@ def pigeonhole_sort(a):
   
     holes = [0] * size 
   
-    for x in a: 
+    for x in a:
         holes[x - my_min] += 1
   
     i = 0
@@ -393,6 +394,7 @@ def pigeonhole_sort(a):
                                       # O(n+m)
 """
 
+"""
 lst = [random.randint(num_min, num_max) for _ in r]
 t0 = time.time()
 lst = pigeonhole_sort(lst)
@@ -426,51 +428,157 @@ lst = pigeonhole_sort(lst)
 t1 = time.time()
 print("pigeonhole_sort:", t1-t0)
 print("  Sorted?", is_sorted(operator.le, lst))
+"""
 
-#####
-# SECTION Tests
+##################################################
+# SECTION Tests                                  #
+##################################################
+
+"""
+Helper function for sorting algorithms that work on full numbers.
+It tests a variety of 
+"""
+def ensure_sorting_works(sorting_fn_name, sorting_fn):
+    """
+    def esw_sub(n_min, n_max, rng, shuffler):
+        l = []
+        if rng:
+            l = [random.randint(n_min, n_max) for _ in range(n_min, n_max)]
+        else:
+            l = list(range(n_min, n_max))
+        
+        if shuffler is not None:
+            shuffler(l)
+
+        if is_in_place:
+            sorting_fn(l)
+        else:
+            l = sorting_fn(l)
+        print("    Size:", len(l), "Sorted?", is_sorted(operator.le, l))
+    """
+    
+    def show_message(l):
+        print("    Size:", len(l), "Sorted?", is_sorted(operator.le, l))
+    
+    print("Testing algorithm:", sorting_fn_name)
+    print("----------------------------------------------")
+    
+    print("  Testing on simple lists.")
+    
+    #l = []
+    #sorting_fn(l)
+    #show_message(l)
+    
+    l = [17]
+    sorting_fn(l)
+    show_message(l)
+    
+    print("  Testing on shuffled lists of uniques.")
+    n = 10
+    while n <= 10000:
+        l = list(range(0, n))
+        random.shuffle(l)
+        sorting_fn(l)
+        show_message(l)
+        n *= 10
+    
+    print("  Testing on shuffled lists.")
+    n = 10
+    while n <= 10000:
+        l = [random.randint(0, n) for _ in range(0, n)]
+        random.shuffle(l)
+        sorting_fn(l)
+        show_message(l)
+        n *= 10
+
+    print("  Testing on pre-sorted lists of uniques.")
+    n = 10
+    while n <= 10000:
+        l = list(range(0, n))
+        sorting_fn(l)
+        show_message(l)
+        n *= 10
+
+    print("  Testing on pre-sorted lists.")
+    n = 10
+    while n <= 10000:
+        l = [random.randint(0, n) for _ in range(0, n)]
+        sorting_fn(l)
+        show_message(l)
+        n *= 10
+
+    print("  Testing on list with first and last swapped.")
+    n = 10
+    while n <= 10000:
+        l = list(range(0, n))
+        l[0], l[-1] = l[-1], l[0]
+        sorting_fn(l)
+        show_message(l)
+        n *= 10
+
+    print("  Testing on reversed list.")
+    n = 10
+    while n <= 10000:
+        l = list(reversed(range(0, n)))
+        l[0], l[-1] = l[-1], l[0]
+        sorting_fn(l)
+        show_message(l)
+        n *= 10
 
 def test_shellsort_with_magic():
-    print("Testing shellsort with magic-list.")
-    
+    ensure_sorting_works("Shellsort with magic", shellsort)
+    print("Operations needed for 0 Elements:")
     l = []
-    print("  Size   ", 0)
+    print("  Sorted:", shellsort_ops(l))
     random.shuffle(l)
-    shellsort(l)
-    print("  Sorted?", is_sorted(operator.le, l))
-
-    l = list(range(0, 1))
-    print("  Size   ", len(l))
-    random.shuffle(l)
-    shellsort(l)
-    print("  Sorted?", is_sorted(operator.le, l))
-
+    print("  Shuffled:", shellsort_ops(l))
+    print("Operations needed for 10 Elements:")
     l = list(range(0, 10))
-    print("  Size   ", len(l))
+    print("  Sorted:", shellsort_ops(l))
     random.shuffle(l)
-    shellsort(l)
-    print("  Sorted?", is_sorted(operator.le, l))
+    print("  Shuffled:", shellsort_ops(l))
+    print("Operations needed for 1024 Elements:")
+    l = list(range(0, 1024))
+    print("  Sorted:", shellsort_ops(l))
+    random.shuffle(l)
+    print("  Shuffled:", shellsort_ops(l))
+    print("Operations needed for 2048 Elements:")
+    l = list(range(0, 2048))
+    print("  Sorted:", shellsort_ops(l))
+    random.shuffle(l)
+    print("  Shuffled:", shellsort_ops(l))
+    
+def test_shellsort_ops():
+    ensure_sorting_works("Shellsort without magic", shellsort_ops)
 
-    l = list(range(0, 100))
-    print("  Size   ", len(l))
-    random.shuffle(l)
-    shellsort(l)
-    print("  Sorted?", is_sorted(operator.le, l))
+def test_insertion_sort_ops():
+    ensure_sorting_works("Insertionsort", insertion_sort_ops)
 
-    l = list(range(0, 1000))
-    print("  Size   ", len(l))
-    random.shuffle(l)
-    shellsort(l)
-    print("  Sorted?", is_sorted(operator.le, l))
+def test_comp_shellsort_insertionsort_ops():
+    print("Testing comp_shellsort_insertionsort_ops")
+    print("Numbers 0...1000:")
+    comp_shellsort_insertionsort_ops(list(range(0, 1000)))
+    print("Numbers -100...1000:")
+    comp_shellsort_insertionsort_ops(list(range(-1000, 1000)))
+    print("Numbers -1000...0:")
+    comp_shellsort_insertionsort_ops(list(range(-1000, 0)))
 
-    l = list(range(0, 10000))
-    print("  Size   ", len(l))
-    random.shuffle(l)
-    shellsort(l)
-    print("  Sorted?", is_sorted(operator.le, l))
+def test_counting_sort_in_place():
+    lm = lambda l: counting_sort_in_place(l, len(l))
+    ensure_sorting_works("Counting sort in place", lm)
+    
+def test_pigeonhole_sort():
+    ensure_sorting_works("Pigeonhole Sort", pigeonhole_sort)
 
-    l = list(range(0, 100000))
-    print("  Size   ", len(l))
-    random.shuffle(l)
-    shellsort(l)
-    print("  Sorted?", is_sorted(operator.le, l))
+print("\n### Testing task 1a ###")
+test_shellsort_with_magic()
+print("\n### Testing task 1b ###")
+test_shellsort_ops()
+print("\n### Testing task 1c ###")
+test_insertion_sort_ops()
+print("")
+test_comp_shellsort_insertionsort_ops()
+print("\n### Testing task 3 ###")
+#test_counting_sort_in_place()
+print("\n### Testing task 4 ###")
+test_pigeonhole_sort()
