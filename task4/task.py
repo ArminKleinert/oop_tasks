@@ -260,7 +260,7 @@ def reorder_for_last_message(pqueue):
     index = heap_size(pqueue)
     par_idx = parent(index)
     #while index > 1 and (pqueue[par_idx][0] < pqueue[index][0] or (pqueue[par_idx][0] == pqueue[index][0] and pqueue[par_idx][1] < pqueue[index][1])):
-    while index > 1 and prio(pqueue[par_idx], pqueue[index]):
+    while index > 1 and prio(pqueue[par_idx], pqueue[index]) < 0:
         pqueue[index], pqueue[par_idx] = pqueue[par_idx], pqueue[index]
         index = par_idx
         par_idx = parent(index)
@@ -310,6 +310,7 @@ def sort_messages(pqueue):
         gap //= 2
 
     pqueue[1:hsize] = cpqueue
+    
     return pqueue
 
 # SUBSECT 2d
@@ -715,7 +716,6 @@ def test_pigeonhole_sort():
     ensure_sorting_works("Pigeonhole Sort", pigeonhole_sort)
 
 if __name__ == '__main__':
-    """
     print("\n### Testing task 1a ###")
     test_shellsort_with_magic()
     print("\n### Testing task 1b ###")
@@ -724,7 +724,6 @@ if __name__ == '__main__':
     test_insertion_sort_ops()
     print("")
     test_comp_shellsort_insertionsort_ops()
-    """
     print("\n### Testing task 2b ###")
     test_next_message()
     print("\n### Testing task 2c ###")
