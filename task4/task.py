@@ -187,12 +187,11 @@ def comp_shellsort_insertionsort_ops(lst):
 # TODO Zeigen, dass Heapsort nicht stabil ist
 
 # SUBSECT 2b
-# TODO Mit yield bei jedem Aufruf eine Nachricht mit Priority und Zeitstempel generieren
 def next_message():
     while True:
-        priority = random.randint(1, 50)
+        priority = random.randint(0, 1) # O(log(N)) where N is the number of bits in 50; But depends on implementation
         timestamp = time.time()
-        yield (priority, timestamp, "New message.")
+        yield (priority, timestamp, "")
 
 # SUBSECT 2c
 
@@ -204,6 +203,9 @@ def  heap_size(H):
 def  dec_heap_size(H):
     H[0] = H[0]-1
 
+def  inc_heap_size(H):
+    H[0] = H[0]+1
+
 def parent(i):
     return i//2
 
@@ -213,15 +215,31 @@ def left(i):
 def right(i):
     return i*2+1
 
+"""
+Comparison function for 2 message-tuples.
+
+if the priorities (at m1[0] and m2[0]) are equal, the timestamps (at m1[1] and m2[1]) are compared.
+"""
+def prio(m1, m2):
+    if m1[0] == m2[0]:
+        if m1[1] == m2[1]:
+            return 0
+        else:
+            return -1 if m1[1] < m2[1] else 1
+    else:
+        return -1 if m1[0] < m2[0] else 1
+
 def max_heapify(H, pos):
     left_t = left(pos)
     right_t = right(pos)
-    if left_t <= heap_size(H) and H[left_t] > H[pos]:
+    #if left_t <= heap_size(H) and (H[left_t][0] > H[pos][0] or (H[left_t][0] == H[pos][0] and H[right_t][1] > H[pos][1])):
+    if left_t <= heap_size(H) and prio(H[left_t], H[pos]) > 0:
         biggest = left_t
     else:
         biggest = pos
     
-    if right_t <= heap_size(H) and H[right_t] > H[biggest]:
+    #if right_t <= heap_size(H) and (H[right_t][0] > H[pos][0] or (H[right_t][0] == H[pos][0] and H[right_t][1] > H[pos][1])):
+    if right_t <= heap_size(H) and prio(H[right_t], H[pos]) > 0:
         biggest = right_t
         
     if biggest != pos:
@@ -233,49 +251,75 @@ def build_max_heap(H):
     for i in range(heap_size(H) // 2, 0, -1):
         max_heapify(H, i)
 
-# Complexity = O(n*log(n))
-def heapsort(H):
-    build_max_heap(H)
-    for i in range(heap_size(H), 1, -1):
-        H[i], H[1] = H[1], H[i]
-        dec_heap_size(H)
-        max_heapify(H, 1)
-    dec_heap_size(H)
+def peek(pqueue):
+    if is_empty(pqueue):
+        return None
+    return pqueue[1]
 
-# Complexity = O(n*log(n))
-def heapsort(H):
-    build_max_heap(H)
-    for i in range(heap_size(H), 1, -1):
-        H[i], H[1] = H[1], H[i]
-        dec_heap_size(H)
-        max_heapify(H, 1)
-    dec_heap_size(H)
+def reorder_for_last_message(pqueue):
+    index = heap_size(pqueue)
+    par_idx = parent(index)
+    #while index > 1 and (pqueue[par_idx][0] < pqueue[index][0] or (pqueue[par_idx][0] == pqueue[index][0] and pqueue[par_idx][1] < pqueue[index][1])):
+    while index > 1 and prio(pqueue[par_idx], pqueue[index]):
+        pqueue[index], pqueue[par_idx] = pqueue[par_idx], pqueue[index]
+        index = par_idx
+        par_idx = parent(index)
 
 # SUBSECT Priority-queue functions
 
 """
 message is a Tuple of priority and timestamp
 """
-def insert(priority_queue, message):
-    priority_queue.append(message)
-    return priority_queue
+def insert(pqueue, message):
+    pqueue.append(message)
+    inc_heap_size(pqueue)
+    pqueue[heap_size(pqueue)] = message
+    reorder_for_last_message(pqueue)
+    return pqueue
 
-# TODO
-def is_empty(priority_queue):
-    return heap_size(priority_queue) == 0
+def is_empty(pqueue):
+    return heap_size(pqueue) == 0
 
-# TODO
-def delete(priority_queue):
-    return None
+def delete(pqueue):
+    if is_empty(pqueue):
+        return None
 
-# TODO As heapsort
-def sort_messages(priority_queue):
-    return priority_queue
+    result = pqueue[1]
+    pqueue[1] = pqueue[heap_size(pqueue)]
+    dec_heap_size(pqueue)
+    max_heapify(pqueue, 1)
+    return result
+
+# Messagess are sorted on insertion or deletion.
+def sort_messages(pqueue):
+    hsize = heap_size(pqueue)
+    
+    if hsize < 2:
+        return pqueue
+
+    cpqueue = pqueue[1:hsize]
+    gap = hsize// 2
+    while gap > 0:
+        for i in range(gap, hsize-1):
+            temp = cpqueue[i]
+            j = i
+            while j >= gap and prio(cpqueue[j-gap], temp) < 0:
+                cpqueue[j] = cpqueue[j-gap]
+                j -= gap
+            cpqueue[j] = temp
+        gap //= 2
+
+    pqueue[1:hsize] = cpqueue
+    return pqueue
 
 # SUBSECT 2d
 
 # TODO
-def sim_message_traffix():
+def sim_message_traffic():
+    
+    time.sleep(random.random())
+    
+    
     return None
 
 # SUBSECT 2e
@@ -572,6 +616,97 @@ def test_comp_shellsort_insertionsort_ops():
     print("Numbers -1000...0:")
     comp_shellsort_insertionsort_ops(list(range(-1000, 0)))
 
+def test_next_message():
+    generator = next_message()
+    num_msgs = 500
+
+    print("Now generating", num_msgs, "messages.")
+    msgs = [next(generator) for _ in range(0, num_msgs)]
+    print("Number of elements correct?   ", len(msgs) == num_msgs)
+    msg_types_correct = all(isinstance(m, tuple) for m in msgs)
+    prio_type_correct = all(isinstance(m[0], int) for m in msgs)
+    time_type_correct = all(isinstance(m[1], float) for m in msgs)
+    text_type_correct = all(isinstance(m[2], str) for m in msgs)
+    print("  Type is correct?            ", msg_types_correct)
+    print("  Type of priority is correct?", prio_type_correct)
+    print("  Type of time is correct?    ", time_type_correct)
+    print("  Type of text is correct?    ", text_type_correct)
+
+"""
+test_peek()
+test_reorder_for_last_message()
+test_insert()
+test_is_empty()
+test_delete()
+test_sort_messages()
+"""
+def test_priority_queue_functions():
+    print("Initializing empty queue.")
+    pqueue = [0 for _ in range(0, 500)]
+    print("  Size  =", heap_size(pqueue))
+    print("  Empty?=", is_empty(pqueue))
+    print("  Peek  =", peek(pqueue))
+    print("  Delete=", delete(pqueue))
+    pq2 = pqueue[:]
+    sort_messages(pq2)
+    print("  Sorted?", pqueue == pq2)
+    
+    msg_generator = next_message()
+    
+    print("Insert 5 new messages")
+    for _ in range(0, 5):
+        insert(pqueue, next(msg_generator))
+    
+    print("Current:")
+    print(pqueue[0:heap_size(pqueue)])
+
+    print("  Size  =", heap_size(pqueue))
+    print("  Empty?=", is_empty(pqueue))
+    print("  Peek  =", peek(pqueue))
+    pq2 = pqueue[:]
+    sort_messages(pq2)
+    print("  Sorted?", pqueue == pq2)
+    
+    print("Deleting first element:")
+    print("  Delete=", delete(pqueue))
+    print("  Size  =", heap_size(pqueue))
+    print("  Empty?=", is_empty(pqueue))
+    print("  Peek  =", peek(pqueue))
+    print("Deleting second element:")
+    print("  Delete=", delete(pqueue))
+    print("  Size  =", heap_size(pqueue))
+    print("  Empty?=", is_empty(pqueue))
+    print("  Peek  =", peek(pqueue))
+    print("Deleting third element:")
+    print("  Delete=", delete(pqueue))
+    print("  Size  =", heap_size(pqueue))
+    print("  Empty?=", is_empty(pqueue))
+    print("  Peek  =", peek(pqueue))
+    pq2 = pqueue[:]
+    sort_messages(pq2)
+    print("  Sorted?", pqueue == pq2)
+    
+    print("Insert 5 new messages")
+    for _ in range(0, 5):
+        insert(pqueue, next(msg_generator))
+    
+    print("Current:")
+    print(pqueue[0:heap_size(pqueue)])
+    
+    print("  Size  =", heap_size(pqueue))
+    print("  Empty?=", is_empty(pqueue))
+    print("  Peek  =", peek(pqueue))
+    print("  Delete=", delete(pqueue))
+    pq2 = pqueue[:]
+    sort_messages(pq2)
+    print("  Sorted?", pqueue == pq2)
+    
+    print(pq2[0:heap_size(pqueue)])
+    print(pqueue[0:heap_size(pqueue)])
+
+def test_sim_message_traffic():
+    sim_message_traffic()
+
 def test_counting_sort_in_place():
     lm = lambda l: counting_sort_in_place(l, 100000)
     ensure_sorting_works("Counting sort in place", lm)
@@ -579,15 +714,24 @@ def test_counting_sort_in_place():
 def test_pigeonhole_sort():
     ensure_sorting_works("Pigeonhole Sort", pigeonhole_sort)
 
-print("\n### Testing task 1a ###")
-test_shellsort_with_magic()
-print("\n### Testing task 1b ###")
-test_shellsort_ops()
-print("\n### Testing task 1c ###")
-test_insertion_sort_ops()
-print("")
-test_comp_shellsort_insertionsort_ops()
-print("\n### Testing task 3 ###")
-test_counting_sort_in_place()
-print("\n### Testing task 4 ###")
-test_pigeonhole_sort()
+if __name__ == '__main__':
+    """
+    print("\n### Testing task 1a ###")
+    test_shellsort_with_magic()
+    print("\n### Testing task 1b ###")
+    test_shellsort_ops()
+    print("\n### Testing task 1c ###")
+    test_insertion_sort_ops()
+    print("")
+    test_comp_shellsort_insertionsort_ops()
+    """
+    print("\n### Testing task 2b ###")
+    test_next_message()
+    print("\n### Testing task 2c ###")
+    test_priority_queue_functions()
+    print("\n### Testing task 2d ###")
+    test_sim_message_traffic()
+    print("\n### Testing task 3  ###")
+    test_counting_sort_in_place()
+    print("\n### Testing task 4  ###")
+    test_pigeonhole_sort()
