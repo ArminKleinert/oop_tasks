@@ -190,9 +190,9 @@ def comp_shellsort_insertionsort_ops(lst):
 # TODO Mit yield bei jedem Aufruf eine Nachricht mit Priority und Zeitstempel generieren
 def next_message():
     while True:
-        priority = random.randint(1, 51)
+        priority = random.randint(1, 50)
         timestamp = time.time()
-        yield (priority, timestamp)
+        yield (priority, timestamp, "New message.")
 
 # SUBSECT 2c
 
