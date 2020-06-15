@@ -1,6 +1,5 @@
 import random
 import operator
-import math
 import time
 
 """
@@ -86,7 +85,6 @@ def shellsort(lst):
 """
 
 
-
 # SUBSECT 1b
 
 """
@@ -131,7 +129,7 @@ def insertion_sort_ops(lst):
     for i in range(1, len(lst)):
         key = lst[i]
         j = i-1
-        while j >=0 and key < lst[j] :
+        while j >= 0 and key < lst[j] :
             ops += 2
             lst[j+1] = lst[j]
             j -= 1
@@ -181,32 +179,41 @@ def comp_shellsort_insertionsort_ops(lst):
 # SECTION task 2
 
 # SUBSECT 2a
-# Heapsort lässt sich aufteilen in die Erstellung des Heaps und das Einfügen
-# in einen neuen Array.
-# 1. Teil:
-#   Input: [1, 5, 2(2), 3, 2(4), 6, 2(6)] (Zahlen in Klammern bezeichnen 
-#   den Index im Input)
-#   Nach der Erstellung des Heaps wird die Liste so aussehe:
-#   [1, 2(4), 2(2), 3, 5, 6, 2(6)]
-#   2(2) und 2(4) wurden hier schon vertauscht. Wichtiger ist aber, 
-#   ob sie im 2. Teil wieder die richtige Reihenfolge erhalten.
-# 2. Teil
-#   Das kleinste Element (hier 1) wird mit dem letzten Element vertauscht 
-#   und in einen zusätzlichen Array gepackt.
-#   [2(6), 2(4), 2(2), 3, 5, 6]
-#   Das wird nun mit jedem Element wirderholt und ergibt am Ende
-#   [1, 2(6), 2(4), 2(2), 3, 5, 6]
-#   Das ist auch die Ausgabe.
-# Da die Reihenfolge von 2(2), 2(4) und 2(6) sich geändert hat, ist Heapsort instabil.
+"""
+Heapsort lässt sich aufteilen in die Erstellung des Heaps und das Einfügen
+in einen neuen Array.
+1. Teil:
+  Input: [1, 5, 2(2), 3, 2(4), 6, 2(6)] (Zahlen in Klammern bezeichnen 
+  den Index im Input)
+  Nach der Erstellung des Heaps wird die Liste so aussehe:
+  [1, 2(4), 2(2), 3, 5, 6, 2(6)]
+  2(2) und 2(4) wurden hier schon vertauscht. Wichtiger ist aber, 
+  ob sie im 2. Teil wieder die richtige Reihenfolge erhalten.
+2. Teil
+  Das kleinste Element (hier 1) wird mit dem letzten Element vertauscht 
+  und in einen zusätzlichen Array gepackt.
+  [2(6), 2(4), 2(2), 3, 5, 6]
+  Das wird nun mit jedem Element wirderholt und ergibt am Ende
+  [1, 2(6), 2(4), 2(2), 3, 5, 6]
+  Das ist auch die Ausgabe.
+Da die Reihenfolge von 2(2), 2(4) und 2(6) sich geändert hat, ist Heapsort instabil.
+"""
 
 # SUBSECT 2b
+
+"""
+random priority -> O(log(N)) where N is the number of bits in an integer
+timestamp       -> O(1)
+tuple creation  -> O(3)
+                => O(log(N))
+"""
 def next_message():
     while True:
         # Random priority of 0 to 5 (inclusive). We chose this number so 
         # that some priority collisions can be seen in the tests.
-        priority = random.randint(0, 5) # O(log(N)) where N is the number of bits in 50; But depends on implementation
-        timestamp = time.time()
-        yield (priority, timestamp, "")
+        priority = random.randint(0, 5) # O(log(N)) where N is the number of bits in 5; But depends on implementation
+        timestamp = time.time()         # O(1)
+        yield (priority, timestamp, "") # O(n) (n = 3)
 
 # SUBSECT 2c
 
@@ -215,36 +222,50 @@ def next_message():
 def heap_size(H):
     return H[0]
 
+"""
+O(1+1)
+= O(1)
+"""
 def dec_heap_size(H):
     H[0] = H[0]-1
 
+# O(1) # Same as above
 def inc_heap_size(H):
     H[0] = H[0]+1
 
+# O(1)
 def parent(i):
     return i//2
 
+# O(1)
 def left(i):
     return i*2
 
+# O(1)
 def right(i):
     return i*2+1
 
 """
 Comparison function for 2 message-tuples.
 
-if the priorities (at m1[0] and m2[0]) are equal, the timestamps (at m1[1] and m2[1]) are compared.
+If the priorities (at m1[0] and m2[0]) are equal, the timestamps (at m1[1] and m2[1]) are compared.
+
+Complexity: O(1)
 """
 def prio(m1, m2):
-    if m1[0] == m2[0]:
-        if m1[1] == m2[1]:
+    if m1[0] == m2[0]: # O(1)
+        if m1[1] == m2[1]: # O(1)
             return 0
         else:
-            return -1 if m1[1] < m2[1] else 1
+            return -1 if m1[1] < m2[1] else 1 # O(1)
     else:
-        return -1 if m1[0] < m2[0] else 1
+        return -1 if m1[0] < m2[0] else 1 # O(1)
 
-# Typical max_heapify modified to use the function prio(...) from above 
+"""
+Typical max_heapify modified to use the function prio(...) from above 
+
+Complexity: O(n)
+"""
 def max_heapify(H, pos):
     left_t = left(pos)
     right_t = right(pos)
@@ -252,24 +273,47 @@ def max_heapify(H, pos):
         biggest = left_t
     else:
         biggest = pos
-    
+
     if right_t <= heap_size(H) and prio(H[right_t], H[pos]) > 0:
         biggest = right_t
-        
+
     if biggest != pos:
         H[pos], H[biggest] = H[biggest], H[pos]
         max_heapify(H, biggest)
 
+"""
+max_heapify is ran n/2 times, where n is the result of heap_size(H)
+
+(n/2) * max_heapify
+O((n/2) * n)
+= O(n)
+"""
 def build_max_heap(H):
     H[0] = len(H) - 1
     for i in range(heap_size(H) // 2, 0, -1):
         max_heapify(H, i)
 
+"""
+2 Operationen:
+- is_empty -> O(1)
+- pqueue[1] -> O(1)
+O(1)
+"""
 def peek(pqueue):
     if is_empty(pqueue):
         return None
     return pqueue[1]
 
+"""
+The while-loop runs a maximum of n/2 times.
+index starts at the heap_size(pqueue) (which I will call n for convenience).
+With each iteration, index is halved (by setting it to the parent index).
+
+All other operations are trivial.
+
+Complexity: O(n/2)
+= O(n)
+"""
 def reorder_for_last_message(pqueue):
     index = heap_size(pqueue)
     par_idx = parent(index)
@@ -282,80 +326,95 @@ def reorder_for_last_message(pqueue):
 
 """
 message is a Tuple of priority and timestamp
+
+O(n+n) for re-ordering and 1 call to max_heapify
+Complexity: O(n)
 """
 def insert(pqueue, message):
-    pqueue.append(message)
-    inc_heap_size(pqueue)
-    pqueue[heap_size(pqueue)] = message
-    reorder_for_last_message(pqueue)
-    max_heapify(pqueue, 1)
+    pqueue.append(message) # O(1)
+    inc_heap_size(pqueue) # O(1)
+    pqueue[heap_size(pqueue)] = message # O(1)
+    reorder_for_last_message(pqueue) # O(n)
+    max_heapify(pqueue, 1) # O(n)
     return pqueue
 
+"""
+O(1+1) # Array access and comparison
+Complexity: O(1)
+"""
 def is_empty(pqueue):
     return heap_size(pqueue) == 0
 
+"""
+Complexity: O(n) where n is heap_size(pqueue)
+"""
 def delete(pqueue):
-    if is_empty(pqueue):
+    if is_empty(pqueue): # O(1)
         return None
 
-    result = pqueue[1]
-    pqueue[1] = pqueue[heap_size(pqueue)]
-    dec_heap_size(pqueue)
-    max_heapify(pqueue, 1)
+    result = pqueue[1] # O(1)
+    pqueue[1] = pqueue[heap_size(pqueue)] # O(1+1+1)
+    dec_heap_size(pqueue) # O(1)
+    max_heapify(pqueue, 1) # O(n)
     return result
 
-# Messagess are sorted on insertion or deletion.
+"""
+Messagess are sorted on insertion or deletion.
+This function can be used to re-sort a queue if it was corrupted
+by evil programmers.
+
+Complexity: O(n)
+"""
 def sort_messages(pqueue):
-    hsize = heap_size(pqueue)
+    hsize = heap_size(pqueue) # O(1)
     
-    if hsize < 2:
-        return pqueue
+    # Return if there is no sorting to be done
+    if hsize < 2:             # O(1)
+        return pqueue         # ignored for worst case
 
-    """
-    cpqueue = pqueue[1:hsize]
-    gap = hsize// 2
-    while gap > 0:
-        for i in range(gap, hsize-1):
-            temp = cpqueue[i]
-            j = i
-            while j >= gap and prio(cpqueue[j-gap], temp) < 0:
-                cpqueue[j] = cpqueue[j-gap]
-                j -= gap
-            cpqueue[j] = temp
-        gap //= 2
+    # Do the sorting
+    max_heapify(pqueue, 1)    # O(n)
 
-    pqueue[1:hsize] = cpqueue
-    """
-    max_heapify(pqueue, 1)
-    
     return pqueue
 
 # SUBSECT 2d
 
+"""
+Generates 30 random actions (insertion or removal of messages) on a priority queue.
+For each action, a random number between 0 and 2 (inclusive) is generated.
+On a 0 or 1, a new message is inserted. On a 2, the first message is deleted.
+After each action, a bit of information about the current state of the queue is
+shown.
+There is a random delay of 0 to 1 seconds in between each action.
+
+Complexity: O(N + M + n)
+N is the number of bits in a float
+M is the number of bits in an int
+n is the size of the heap.
+"""
 def sim_message_traffic():
     # Setup generator aand queue
-    generator = next_message()
-    pqueue = [0 for _ in range(50)]
+    generator = next_message() # O(1)
+    pqueue = [0]               # O(1)
     
     actions = 30 # Do 30 actions, each can be insertion or deletioon
     
     for _ in range(actions):
         # Wait random time between 0 and 1 seconds
-        time.sleep(random.random())
+        time.sleep(random.random()) # O(N) where N is the number of bits in float)
         
         # Insertion should be done 2 thirds of the time to show a little traffic
         if random.randint(0, 2) < 2:
-            m = next(generator)
-            insert(pqueue, m)
+            m = next(generator) # O(M)
+            insert(pqueue, m) # O(n)
             print("Inserting", m)
         else:
-            m = delete(pqueue)
+            m = delete(pqueue) # O(n)
             print("Deleting", m)
         
-        # Show information about the current state
-        print("        Size:", heap_size(pqueue), "Empty?", is_empty(pqueue), "Next:", peek(pqueue))
+        # Show information about the current state.
+        print("  Size:", heap_size(pqueue), "Empty?", is_empty(pqueue), "Next:", peek(pqueue))
 
-    
     # Uncomment to clear the queue and show each action
     #while not is_empty(pqueue):
         #m = delete(pqueue)
@@ -367,12 +426,12 @@ def sim_message_traffic():
 
 # SUBSECT 2e
 
-# TODO Complexity of next_message
-# TODO Complexity of insert
-# TODO Complexity of is_empty
-# TODO Complexity of delete
-# TODO Complexity of sort_messages
-# TODO Complexity of sim_message_traffix
+# Complexity of next_message        O(log(N))
+# Complexity of insert              O(n)
+# Complexity of is_empty            O(1)
+# Complexity of delete              O(n)
+# Complexity of sort_messages       O(n)
+# Complexity of sim_message_traffic O(N + M + n)
 
 
 # SECTION task 3
@@ -380,27 +439,35 @@ def sim_message_traffic():
 # SUBSECT 3a
 
 def counting_sort_in_place(lst, k):
-    C = [0] * k               # k
-    for a in lst:
-        C[a] += 1             # n*2
-    i = 0
-    for a in range(k):
-        for c in range(C[a]):
-            lst[i] = a        # n*k*2
-            i += 1            # n*k*1
+    C = [0 for i in range(0, k+1)] # k
+    x = 0                          # 1
+    for a in lst: 
+        C[a] += 1                  # n
+        
+    # Die Bedingung von while begrenzt die maximale
+    # Anzahl der Iterationen der Loops auf len(lst)
+    # insgesamt.
+    # Das kommt daher, dass x bei 0 beginnt, bis len(lst)
+    # steigt und bei jeder iteration um 1 inkrementiert
+    # wird.
+    # Alle anderen Operationen sind trivial. Damit
+    # kommt dieser Code-Abschnitt auf O(n)
+    for i in range(0, k):
+        while C[i] > 0 and x < len(lst):
+            lst[x] = i
+            x += 1
+            C[i] -= 1
 
 # SUBSECT 3b
 
 """
 Komplexität:
 Von oben zusammengezählt:
-  k + n*(1+1) + n*k*(1+1) + n*k*1
-  k + 2*n + 2*(k*n) + n*k
-  k + 2*n + 3*(k*n)
-  3*k*n
-  O(3*k*n)
+  O(k + 1 + n + n)
+  O(k + 2*n)
+  O(k+n)
   
-  Ergebnis: O(k*n)
+  Ergebnis: O(k+n)
 """
 
 # SECTION task 4
@@ -421,11 +488,6 @@ Probleme beim Pigeonhole Sort sind, dass er
   3. Bei leeren Listen nicht funktioniert
      (Dieses Problem ist hier unwichtig und ist leicht zu beheben)
 """
-
-#num_min = int(-(2**28) * 1.5) #int(-(2**28) * 1.5)
-#num_max = -num_min #0x7FFFFFFF
-#k = 10000000
-#r = range(0, k) # range(0, 1000000)
 
 """
 Pigeonhole Sort.
@@ -474,17 +536,17 @@ def pigeonhole_sort(a):
   
     i = 0                             # 1
     for count in range(size):       # m
-        while holes[count] > 0:     # k
-            holes[count] -= 1         # m * k * 2
-            a[i] = count + my_min     # m * k * 2
-            i += 1                    # m * k * 1
+        while holes[count] > 0:     # k (m im worst case)
+            holes[count] -= 1         # m * k * 2 -> m*m * 2
+            a[i] = count + my_min     # m * k * 2 -> m*m * 2
+            i += 1                    # m * k * 1 -> m*m * 1
     return a
     
                                       # O(2n + 5 + 3n + 5mk)
                                       # O(5 + 5n + 5mk)
                                       # O(n + mk)
-                                      # O(n + m) (da m in m*k der dominierende Ausdruck ist)
-                                      # O(n+m)
+                                      # O(n + m*m) (da im Worst case k == m ist)
+                                      # O(n + m**2)
 """
 
 ##################################################
@@ -493,27 +555,14 @@ def pigeonhole_sort(a):
 
 """
 Helper function for sorting algorithms that work on full numbers.
-It tests a variety of 
+It tests a variety of possible compositions of values a numeric list might have-
 """
 def ensure_sorting_works(sorting_fn_name, sorting_fn):
-    """
-    def esw_sub(n_min, n_max, rng, shuffler):
-        l = []
-        if rng:
-            l = [random.randint(n_min, n_max) for _ in range(n_min, n_max)]
-        else:
-            l = list(range(n_min, n_max))
-        
-        if shuffler is not None:
-            shuffler(l)
-
-        if is_in_place:
-            sorting_fn(l)
-        else:
-            l = sorting_fn(l)
-        print("    Size:", len(l), "Sorted?", is_sorted(operator.le, l))
-    """
     
+    """
+    Helper function. Shows the size of the list and whether or not it is sorted.
+    (lowest to highest).
+    """
     def show_message(l):
         print("    Size:", len(l), "Sorted?", is_sorted(operator.le, l))
     
@@ -526,6 +575,7 @@ def ensure_sorting_works(sorting_fn_name, sorting_fn):
     #sorting_fn(l)
     #show_message(l)
     
+    # 1 Element
     l = [17]
     sorting_fn(l)
     show_message(l)
@@ -655,7 +705,7 @@ test_sort_messages()
 """
 def test_priority_queue_functions():
     print("Initializing empty queue.")
-    pqueue = [0 for _ in range(0, 500)]
+    pqueue = [0] # [0 for _ in range(0, 500)]
     print("  Size  =", heap_size(pqueue))
     print("  Empty?=", is_empty(pqueue))
     print("  Peek  =", peek(pqueue))
@@ -713,9 +763,6 @@ def test_priority_queue_functions():
     pq2 = pqueue[:]
     sort_messages(pq2)
     print("  Sorted?", pqueue == pq2)
-    
-    print(pq2[0:heap_size(pqueue)])
-    print(pqueue[0:heap_size(pqueue)])
 
 def test_sim_message_traffic():
     pqueue = sim_message_traffic()
@@ -727,6 +774,57 @@ def test_counting_sort_in_place():
     
 def test_pigeonhole_sort():
     ensure_sorting_works("Pigeonhole Sort", pigeonhole_sort)
+
+def test_million_sort():
+    print("Testing 1,000,000 numbers")
+    print("----------------------------------------------")
+    
+    # Our python3 implementations couldn't handle numbers bigger than this.
+    n_max = int((2**28) * 1.5)
+    n_min = int((2**28) * 1.5)-1
+    
+    print("1,000,000 non-unique shuffled\n  Creating...")
+    l = [random.randint(n_min, n_max) for _ in range(0, 1000000)]
+    print("  Sorting...")
+    t1 = time.time()
+    pigeonhole_sort(l)
+    t2 = time.time()
+    print("  Size:", len(l), "Time:", t2-t1, "Sorted?", is_sorted(operator.le, l))
+    
+    print("1,000,000 unique sorted\n  Creating...")
+    l = [x for x in range(0, 1000000)]
+    print("  Sorting...")
+    t1 = time.time()
+    pigeonhole_sort(l)
+    t2 = time.time()
+    print("  Size:", len(l), "Time:", t2-t1, "Sorted?", is_sorted(operator.le, l))
+    
+    print("1,000,000 unique shuffled\n  Creating...")
+    l = [x for x in range(0, 1000000)]
+    random.shuffle(l)
+    print("  Sorting...")
+    t1 = time.time()
+    pigeonhole_sort(l)
+    t2 = time.time()
+    print("  Size:", len(l), "Time:", t2-t1, "Sorted?", is_sorted(operator.le, l))
+    
+    print("1,000,000 non-unique sorted\n  Creating...")
+    l = [random.randint(n_min, n_max) for _ in range(0, 1000000)]
+    l.sort()
+    print("  Sorting...")
+    t1 = time.time()
+    pigeonhole_sort(l)
+    t2 = time.time()
+    print("  Size:", len(l), "Time:", t2-t1, "Sorted?", is_sorted(operator.le, l))
+    
+    # 100 million because why not?
+    print("100,000,000 non-unique shuffled (this will take a while)\n  Creating...")
+    l = [random.randint(n_min, n_max) for _ in range(0, 100000000)]
+    print("  Sorting...")
+    t1 = time.time()
+    pigeonhole_sort(l)
+    t2 = time.time()
+    print("  Size:", len(l), "Time:", t2-t1, "Sorted?", is_sorted(operator.le, l))
 
 if __name__ == '__main__':
     print("\n### Testing task 1a ###")
@@ -747,3 +845,5 @@ if __name__ == '__main__':
     test_counting_sort_in_place()
     print("\n### Testing task 4  ###")
     test_pigeonhole_sort()
+    print("")
+    test_million_sort()
