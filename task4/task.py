@@ -180,16 +180,31 @@ def comp_shellsort_insertionsort_ops(lst):
 
 # SECTION task 2
 
-# TODO
-# Funktionen in task 2 sollen mit einer Heap-Struktur eine Priority-Queue simulieren.
-
 # SUBSECT 2a
-# TODO Zeigen, dass Heapsort nicht stabil ist
+# Heapsort lässt sich aufteilen in die Erstellung des Heaps und das Einfügen
+# in einen neuen Array.
+# 1. Teil:
+#   Input: [1, 5, 2(2), 3, 2(4), 6, 2(6)] (Zahlen in Klammern bezeichnen 
+#   den Index im Input)
+#   Nach der Erstellung des Heaps wird die Liste so aussehe:
+#   [1, 2(4), 2(2), 3, 5, 6, 2(6)]
+#   2(2) und 2(4) wurden hier schon vertauscht. Wichtiger ist aber, 
+#   ob sie im 2. Teil wieder die richtige Reihenfolge erhalten.
+# 2. Teil
+#   Das kleinste Element (hier 1) wird mit dem letzten Element vertauscht 
+#   und in einen zusätzlichen Array gepackt.
+#   [2(6), 2(4), 2(2), 3, 5, 6]
+#   Das wird nun mit jedem Element wirderholt und ergibt am Ende
+#   [1, 2(6), 2(4), 2(2), 3, 5, 6]
+#   Das ist auch die Ausgabe.
+# Da die Reihenfolge von 2(2), 2(4) und 2(6) sich geändert hat, ist Heapsort instabil.
 
 # SUBSECT 2b
 def next_message():
     while True:
-        priority = random.randint(0, 1) # O(log(N)) where N is the number of bits in 50; But depends on implementation
+        # Random priority of 0 to 5 (inclusive). We chose this number so 
+        # that some priority collisions can be seen in the tests.
+        priority = random.randint(0, 5) # O(log(N)) where N is the number of bits in 50; But depends on implementation
         timestamp = time.time()
         yield (priority, timestamp, "")
 
@@ -197,13 +212,13 @@ def next_message():
 
 # SUBSECT Helpers for heap-structure
 
-def  heap_size(H):
+def heap_size(H):
     return H[0]
 
-def  dec_heap_size(H):
+def dec_heap_size(H):
     H[0] = H[0]-1
 
-def  inc_heap_size(H):
+def inc_heap_size(H):
     H[0] = H[0]+1
 
 def parent(i):
@@ -229,16 +244,15 @@ def prio(m1, m2):
     else:
         return -1 if m1[0] < m2[0] else 1
 
+# Typical max_heapify modified to use the function prio(...) from above 
 def max_heapify(H, pos):
     left_t = left(pos)
     right_t = right(pos)
-    #if left_t <= heap_size(H) and (H[left_t][0] > H[pos][0] or (H[left_t][0] == H[pos][0] and H[right_t][1] > H[pos][1])):
     if left_t <= heap_size(H) and prio(H[left_t], H[pos]) > 0:
         biggest = left_t
     else:
         biggest = pos
     
-    #if right_t <= heap_size(H) and (H[right_t][0] > H[pos][0] or (H[right_t][0] == H[pos][0] and H[right_t][1] > H[pos][1])):
     if right_t <= heap_size(H) and prio(H[right_t], H[pos]) > 0:
         biggest = right_t
         
@@ -259,7 +273,6 @@ def peek(pqueue):
 def reorder_for_last_message(pqueue):
     index = heap_size(pqueue)
     par_idx = parent(index)
-    #while index > 1 and (pqueue[par_idx][0] < pqueue[index][0] or (pqueue[par_idx][0] == pqueue[index][0] and pqueue[par_idx][1] < pqueue[index][1])):
     while index > 1 and prio(pqueue[par_idx], pqueue[index]) < 0:
         pqueue[index], pqueue[par_idx] = pqueue[par_idx], pqueue[index]
         index = par_idx
@@ -275,6 +288,7 @@ def insert(pqueue, message):
     inc_heap_size(pqueue)
     pqueue[heap_size(pqueue)] = message
     reorder_for_last_message(pqueue)
+    max_heapify(pqueue, 1)
     return pqueue
 
 def is_empty(pqueue):
@@ -297,6 +311,7 @@ def sort_messages(pqueue):
     if hsize < 2:
         return pqueue
 
+    """
     cpqueue = pqueue[1:hsize]
     gap = hsize// 2
     while gap > 0:
@@ -310,18 +325,45 @@ def sort_messages(pqueue):
         gap //= 2
 
     pqueue[1:hsize] = cpqueue
+    """
+    max_heapify(pqueue, 1)
     
     return pqueue
 
 # SUBSECT 2d
 
-# TODO
 def sim_message_traffic():
+    # Setup generator aand queue
+    generator = next_message()
+    pqueue = [0 for _ in range(50)]
     
-    time.sleep(random.random())
+    actions = 30 # Do 30 actions, each can be insertion or deletioon
     
+    for _ in range(actions):
+        # Wait random time between 0 and 1 seconds
+        time.sleep(random.random())
+        
+        # Insertion should be done 2 thirds of the time to show a little traffic
+        if random.randint(0, 2) < 2:
+            m = next(generator)
+            insert(pqueue, m)
+            print("Inserting", m)
+        else:
+            m = delete(pqueue)
+            print("Deleting", m)
+        
+        # Show information about the current state
+        print("        Size:", heap_size(pqueue), "Empty?", is_empty(pqueue), "Next:", peek(pqueue))
+
     
-    return None
+    # Uncomment to clear the queue and show each action
+    #while not is_empty(pqueue):
+        #m = delete(pqueue)
+        #print("Deleting", m)
+        #print("        Size:", heap_size(pqueue), "Empty?", is_empty(pqueue), "Next:", peek(pqueue))
+
+    # Return the queue.
+    return pqueue
 
 # SUBSECT 2e
 
@@ -367,7 +409,7 @@ Von oben zusammengezählt:
 Als erstes fällt auf, dass für so große Mengen an ganzen Zahlen vergleichslose Sortier-Algorithmen eignen. 
 
 Aus einem kurzen, wenig wissenschaftlichen Test, haben wir anhand von 2048 Zahlen (im Bereich 0 bis 1000) die Algorithmen "Counting Sort", "Pigeonhole Sort" und "Radix Sort" getestet.
-Alle Algorithmen schnitten gut ab. Bei Erhöhung der Zahlenmenge auf eine Millionen Elementemit einem höheren Zahlenbereich stürzten Counting Sort und Radix Sort aber bald ab. Eine alternative Implementation von Radix Sort, die bei Listen bis zu 2000 Elementen auch gut war, funktionierte, benötigte aber zu lange.
+Alle Algorithmen schnitten gut ab. Bei Erhöhung der Zahlenmenge auf eine Millionen Elemente mit einem höheren Zahlenbereich stürzten Counting Sort und Radix Sort aber bald ab. Eine alternative Implementation von Radix Sort, die bei Listen bis zu 2000 Elementen auch gut war, funktionierte, benötigte aber zu lange.
 Schon bei einer Listen-Größe von einer Million Elementen im Bereich -2**28 bis 2**28 funktionierte also nur noch Pigeonholesort (auch wenn es ein paar Sekunden benötigte).
 Beim Test von vollen 32-Bit Zahlen gaben unsere Python3-Implementationen leider auf.
 
@@ -380,15 +422,20 @@ Probleme beim Pigeonhole Sort sind, dass er
      (Dieses Problem ist hier unwichtig und ist leicht zu beheben)
 """
 
-num_min = int(-(2**28) * 1.5) #int(-(2**28) * 1.5)
-num_max = -num_min #0x7FFFFFFF
-k = 10000000
-r = range(0, k) # range(0, 1000000)
+#num_min = int(-(2**28) * 1.5) #int(-(2**28) * 1.5)
+#num_max = -num_min #0x7FFFFFFF
+#k = 10000000
+#r = range(0, k) # range(0, 1000000)
 
 """
 Pigeonhole Sort.
+Dieser Algorithmus kommt nicht in den Vorlesungen vor.
+Wir haben ihn in einem YouTube-Video von Musicombo im Vergleich zu Counting-Sort
+und den Radix-Sort Varianten gesehen.
+(wahrscheinlich dieses: https://youtu.be/wVLeC4B76jk )
+Der Code kommt aus einem Projekt von Armins Arbeit bei jService.
 Input:
-    a Multible sequential collection
+    a Sequential collection of integral values
 Output:
     Sorted list (a is sorted in-place)
 """
@@ -401,7 +448,7 @@ def pigeonhole_sort(a):
   
     for x in a:
         holes[x - my_min] += 1
-  
+
     i = 0
     for count in range(size):
         while holes[count] > 0:
@@ -417,8 +464,8 @@ Die Space-Komplexität ist ebenso auch O(n+m), da eine neue Liste der Größe m 
 Komplexität: O(n+m)
 
 def pigeonhole_sort(a): 
-    my_min = min(a)                   # 1
-    my_max = max(a)                   # 1
+    my_min = min(a)                   # n
+    my_max = max(a)                   # n
     size = my_max - my_min + 1        # 2
     holes = [0] * size                # 2 (Time complexity O(2) aber Space O(m))
   
@@ -433,46 +480,11 @@ def pigeonhole_sort(a):
             i += 1                    # m * k * 1
     return a
     
-                                      # O(6 + 3n + 5mk)
+                                      # O(2n + 5 + 3n + 5mk)
+                                      # O(5 + 5n + 5mk)
                                       # O(n + mk)
                                       # O(n + m) (da m in m*k der dominierende Ausdruck ist)
                                       # O(n+m)
-"""
-
-"""
-lst = [random.randint(num_min, num_max) for _ in r]
-t0 = time.time()
-lst = pigeonhole_sort(lst)
-t1 = time.time()
-print("pigeonhole_sort:", t1-t0)
-print("  Sorted?", is_sorted(operator.le, lst))
-
-t0 = time.time()
-lst = pigeonhole_sort(lst)
-t1 = time.time()
-print("pigeonhole_sort:", t1-t0)
-print("  Sorted?", is_sorted(operator.le, lst))
-
-lst = [random.randint(0, num_max) for _ in r]
-t0 = time.time()
-lst = pigeonhole_sort(lst)
-t1 = time.time()
-print("pigeonhole_sort:", t1-t0)
-print("  Sorted?", is_sorted(operator.le, lst))
-
-lst = [random.randint(num_min, 0) for _ in r]
-t0 = time.time()
-lst = pigeonhole_sort(lst)
-t1 = time.time()
-print("pigeonhole_sort:", t1-t0)
-print("  Sorted?", is_sorted(operator.le, lst))
-
-lst = [0 for _ in r]
-t0 = time.time()
-lst = pigeonhole_sort(lst)
-t1 = time.time()
-print("pigeonhole_sort:", t1-t0)
-print("  Sorted?", is_sorted(operator.le, lst))
 """
 
 ##################################################
@@ -706,7 +718,8 @@ def test_priority_queue_functions():
     print(pqueue[0:heap_size(pqueue)])
 
 def test_sim_message_traffic():
-    sim_message_traffic()
+    pqueue = sim_message_traffic()
+    print("Output:", pqueue)
 
 def test_counting_sort_in_place():
     lm = lambda l: counting_sort_in_place(l, 100000)
