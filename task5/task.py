@@ -98,7 +98,7 @@ def binaryDigits1(Zahl):
     assert hilf >= 0 and (binaryDigits(hilf) + bits == binaryDigits(Zahl) + 1)
     return bits
 
-
+"""
 def binaryDigits2(Zahl):
     hilf = Zahl
     bits = 1
@@ -123,10 +123,7 @@ def binaryDigits3(Zahl):
         bits = bits + 1
     assert hilf >= 0 and (binaryDigits(hilf) + bits == binaryDigits(Zahl) + bits)
     return bits
-
-binaryDigits1(37)
-binaryDigits2(37)
-binaryDigits3(37)
+"""
 
 # SUBSECT 4a
 """
@@ -178,6 +175,34 @@ zu.
 
 # SUBSECT 5a
 
+def insertsort (seq): 
+    j = 1
+    r = range(1, len(seq))
+    # {INV} = {j >= 1 ^ j < len(seq) ^ len(seq) == (len(r)+1)}
+    assert j >= 1 and j < len(seq) and len(seq) == len(r) + 1
+    while j in r:
+        key = seq[j]
+        k = j-1
+        # {INV} = {k < j and k >= 0 and key is not None}
+        assert k < j and k >= 0 and key is not None
+        while k>=0 and seq[k]>key:
+            seq[k+1] = seq[k]
+            k = k-1
+            seq[k+1] = key
+        # {INV} = {k < j and k >= 0 and key is not None}
+        assert k < j and k >= 0 and key is not None
+        j += 1
+        assert j >= 1 and j < len(seq) and len(seq) == len(r) + 1
+    # {INV} = {j >= 1 ^ j < len(seq) ^ len(seq) == (len(r)+1)}
+    assert j >= 1 and j < len(seq) and len(seq) == len(r) + 1
+    
+import random
+
+arr = list(range(0, 1000))
+random.shuffle(arr)
+print(arr)
+insertsort(arr)
+print(arr)
 
 # SUBSECT 5b
 
