@@ -260,8 +260,35 @@ print(arr)
 
 # SUBSECT 6a
 
+"""
+Die wichtigste Invariante ist, dass sich der pivot während der Bearbeitung
+der Schleife konstant verhält.
+
+{INV} = {pivot == A[low]}
+
+Dieser Check ist möglich, da low und high ebenfalls konstante Werte sind.
+"""
+
+def partition(A, low, high):
+    pivot = A[low]
+    i = low
+    #{INV} = {pivot == A[low]}
+    for j in range(low+1, high+1):
+        if (A[j] < pivot):
+            i = i + 1
+            A[i], A[j] = A[j], A[i]
+    #{INV} = {pivot == A[low]}
+    A[i], A[low] = A[low], A[i]
+    return i
 
 # SUBSECT 6b
 
+"""
+Die Implementation der Funktion verlässt sich für den Vergleich der Elemente 
+mit dem Pivot darauf, dass sich der Pivot nicht verändert.
 
+---
+Oder es ist eine Fangfrage, weil in der Aufgabe eine for-Schleife statt einer
+while-Schleife genutzt wird.
+"""
 
