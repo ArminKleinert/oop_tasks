@@ -1,4 +1,4 @@
-package task6;
+package u6;
 
 import u6.StdDraw;
 

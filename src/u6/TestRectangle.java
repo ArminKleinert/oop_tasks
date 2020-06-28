@@ -5,8 +5,6 @@ package u6;
  * @version 1.0
  */
 
-import task6.Rectangle;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;

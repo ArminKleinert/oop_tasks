@@ -1,4 +1,4 @@
-package task6;
+package u6;
 
 public class Rectangle {
     
