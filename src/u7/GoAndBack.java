@@ -17,8 +17,11 @@ public class GoAndBack implements Shape, Animation {
 
     public GoAndBack() {
         this.radius = 25;
-        this.color = Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random());
         this.center = new Point();
+
+        // Random color
+        color = Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random());
+        // Random direction (50/50 chance of going left or right)
         goRight = Math.random() < 0.5;
     }
 
