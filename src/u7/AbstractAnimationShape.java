@@ -1,8 +1,11 @@
 package u7;
 
 import java.awt.*;
+import java.util.Random;
 
 public abstract class AbstractAnimationShape implements Animation, Shape {
+
+    protected static final Random rand = new Random();
 
     protected final Point center;
     protected ShapesWorld shapesWorld;

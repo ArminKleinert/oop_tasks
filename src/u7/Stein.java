@@ -1,6 +1,7 @@
 package u7;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * Author Armin Kleinert
@@ -22,9 +23,9 @@ public class Stein extends AbstractAnimationShape {
             center.y = y;
             startY = y;
 
-            velocityY = -Math.random() * 10;
-            double temp = Math.random() * 5;
-            velocityX = (Math.random() < 0.5) ? temp : -temp;
+            velocityY = -AbstractAnimationShape.rand.nextDouble() * 10;
+            double temp = AbstractAnimationShape.rand.nextDouble() * 5;
+            velocityX = (AbstractAnimationShape.rand.nextDouble() < 0.5) ? temp : -temp;
 
             ticksUntilFall = ((int) Math.abs(velocityY));
         }
@@ -58,13 +59,23 @@ public class Stein extends AbstractAnimationShape {
     }
 
     @Override
+    public void setShapesWorld(ShapesWorld theWorld) {
+        super.setShapesWorld(theWorld);
+        if (center.x == 0.0) {
+            double additionX = AbstractAnimationShape.rand.nextInt(shapesWorld.getMax_X() - shapesWorld.getMin_X());
+            center.x = shapesWorld.getMin_X() + additionX;
+            center.y = shapesWorld.getMin_Y();
+        }
+    }
+
+    @Override
     public void play() {
-        if (getCenter().y >= shapesWorld.getMax_Y() - 15) {
-            center.y = shapesWorld.getMax_Y() - 15;
+        if (getCenter().y >= shapesWorld.getMax_Y() - 10) {
+            center.y = shapesWorld.getMax_Y() - 10;
             shatter();
         } else {
             velocityY += 0.01;
-            velocityY *= 1.01;
+            velocityY *= 1.1;
             moveTo(center.x + velocityX, center.y + velocityY);
         }
     }

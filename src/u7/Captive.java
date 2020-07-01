@@ -18,7 +18,7 @@ public class Captive extends AbstractAnimationShape {
         setRandomVelocity();
         collisionRect = new Rectangle();
         shapesWorldRectangle = new Rectangle();
-        resetCollisionRectangle();
+        updateCollisionRectangle();
     }
 
     @Override
@@ -57,15 +57,15 @@ public class Captive extends AbstractAnimationShape {
     @Override
     public void moveTo(double x, double y) {
         super.moveTo(x, y);
-        resetCollisionRectangle();
+        updateCollisionRectangle();
     }
 
     private void setRandomVelocity() {
-        velocityX = (Math.random() - 0.5) * 5;
-        velocityY = (Math.random() - 0.5) * 5;
+        velocityX = (AbstractAnimationShape.rand.nextDouble() - 0.5) * 5;
+        velocityY = (AbstractAnimationShape.rand.nextDouble() - 0.5) * 5;
     }
 
-    private void resetCollisionRectangle() {
+    private void updateCollisionRectangle() {
         double collRecX = (getCenter().x - getRadius() / 2);
         double collRecY = (getCenter().y - getRadius() * 0.6);
         collisionRect.setBounds((int) collRecX, (int) collRecY,
