@@ -5,35 +5,15 @@ import java.awt.*;
 /**
  * Author Armin Kleinert
  */
-public class GoAndBack implements Shape, Animation {
+public class GoAndBack extends AbstractAnimationShape {
 
-    private final double radius;
-    private final Point center;
-
-    private final Color color;
     private ShapesWorld shapesWorld;
 
     private boolean goRight;
 
     public GoAndBack() {
-        this.radius = 25;
-        this.center = new Point();
-
-        // Random color
-        color = Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random());
-        // Random direction (50/50 chance of going left or right)
-        goRight = Math.random() < 0.5;
-    }
-
-    @Override
-    public Color getColor() {
-        return color;
-    }
-
-    @Override
-    public void moveTo(double x, double y) {
-        center.x = (int) x;
-        center.y = (int) y;
+        super(new Point(), Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random()), 25);
+        goRight = Math.random() < 0.5; // Random direction (50/50 chance of going left or right)
     }
 
     @Override
@@ -43,13 +23,10 @@ public class GoAndBack implements Shape, Animation {
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(color);
-        g.fillOval((int) (center.x - radius / 2), (int) (center.y - radius / 2), (int) radius, (int) radius);
-    }
-
-    @Override
-    public Point getCenter() {
-        return center;
+        g.setColor(getColor());
+        g.fillOval((int) (getCenter().x - getRadius() / 2),
+                (int) (getCenter().y - getRadius() / 2),
+                (int) getRadius(), (int) getRadius());
     }
 
     @Override
@@ -57,36 +34,19 @@ public class GoAndBack implements Shape, Animation {
         goRight = !goRight;
     }
 
-    @Override
-    public void userTyped(char key) {
-        System.out.println("key");
-    }
-
     // implement the Animation-Interface
     @Override
     public void play() {
-        if ((center.x + radius / 2) >= shapesWorld.getMax_X() || (center.x - radius / 2) <= shapesWorld.getMin_X()) {
+        if ((getCenter().x + getRadius() / 2) >= shapesWorld.getMax_X()
+                || (getCenter().x - getRadius() / 2) <= shapesWorld.getMin_X()) {
             goRight = !goRight;
         }
         int velocity = 3;
         if (goRight) {
-            center.x = center.x + velocity;
+            getCenter().x += velocity;
         } else {
-            center.x = center.x - velocity;
+            getCenter().x -= velocity;
         }
-    }
-
-    @Override
-    public boolean contains(double x, double y) {
-        return !(x < (center.x - radius))
-                && !(x > center.x + radius)
-                && !(y < (center.y - radius))
-                && !(y > (center.y + radius));
-    }
-
-    @Override
-    public double getRadius() {
-        return radius;
     }
 
 }

@@ -6,9 +6,14 @@ import java.awt.*;
  * Author Armin Kleinert
  * TODO: Implementation!
  */
-public class Stein implements Animation, Shape {
+public class Stein extends AbstractAnimationShape {
 
-    private static class MiniStein implements Animation, Shape{
+    private static class MiniStein extends AbstractAnimationShape {
+
+        public MiniStein() {
+            super(new Point(), Color.lightGray, 12.5);
+        }
+
         @Override
         public void play() {
 
@@ -18,46 +23,10 @@ public class Stein implements Animation, Shape {
         public void draw(Graphics g) {
 
         }
+    }
 
-        @Override
-        public boolean contains(double x, double y) {
-            return false;
-        }
-
-        @Override
-        public double getRadius() {
-            return 0;
-        }
-
-        @Override
-        public Color getColor() {
-            return null;
-        }
-
-        @Override
-        public Point getCenter() {
-            return null;
-        }
-
-        @Override
-        public void setShapesWorld(ShapesWorld theWorld) {
-
-        }
-
-        @Override
-        public void userClicked(double at_X, double at_Y) {
-
-        }
-
-        @Override
-        public void userTyped(char key) {
-
-        }
-
-        @Override
-        public void moveTo(double x, double y) {
-
-        }
+    public Stein() {
+        super(new Point(), Color.lightGray, 25);
     }
 
     @Override
@@ -67,46 +36,6 @@ public class Stein implements Animation, Shape {
 
     @Override
     public void draw(Graphics g) {
-
-    }
-
-    @Override
-    public boolean contains(double x, double y) {
-        return false;
-    }
-
-    @Override
-    public double getRadius() {
-        return 0;
-    }
-
-    @Override
-    public Color getColor() {
-        return null;
-    }
-
-    @Override
-    public Point getCenter() {
-        return null;
-    }
-
-    @Override
-    public void setShapesWorld(ShapesWorld theWorld) {
-
-    }
-
-    @Override
-    public void userClicked(double at_X, double at_Y) {
-
-    }
-
-    @Override
-    public void userTyped(char key) {
-
-    }
-
-    @Override
-    public void moveTo(double x, double y) {
 
     }
 }
