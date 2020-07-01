@@ -12,7 +12,7 @@ public class ShapesWorld_Main {
 	 */
 	public static void main(String[] args) 
 	{
-		args = new String[] {"GoAndBack", "Around", "Captive"};
+		args = new String[] {"GoAndBack", "Around", "Captive", "Stein"};
 		if (args.length==0) {
 			System.err.println("Bitte Shape-Klassennamen als Argumente eingeben");
 		}
