@@ -39,25 +39,16 @@ public class Captive extends AbstractAnimationShape {
         double oldY = getCenter().y;
         moveTo(getCenter().x + velocityX, getCenter().y + velocityY);
 
-        if (!shapesWorldRectangle.contains(collisionRect)) {
-            moveTo(oldX, oldY);
-            setRandomVelocity();
-        }
-    }
-
-    @Override
-    public void setShapesWorld(ShapesWorld shapesWorld) {
-        super.setShapesWorld(shapesWorld);
+        updateCollisionRectangle();
         shapesWorldRectangle.setBounds(
                 shapesWorld.getMin_X(), shapesWorld.getMin_Y(),
                 shapesWorld.getMax_X() - shapesWorld.getMin_X(),
                 shapesWorld.getMax_Y() - shapesWorld.getMin_Y());
-    }
 
-    @Override
-    public void moveTo(double x, double y) {
-        super.moveTo(x, y);
-        updateCollisionRectangle();
+        if (!shapesWorldRectangle.contains(collisionRect)) {
+            moveTo(oldX, oldY);
+            setRandomVelocity();
+        }
     }
 
     private void setRandomVelocity() {

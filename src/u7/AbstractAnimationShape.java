@@ -9,7 +9,7 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
 
     protected final Point center;
     protected ShapesWorld shapesWorld;
-    protected final Color color;
+    protected Color color;
     protected final double radius;
 
     public AbstractAnimationShape(Point center, Color color, double radius) {
@@ -59,5 +59,15 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
     @Override
     public double getRadius() {
         return radius;
+    }
+
+    protected final double randomXInWorld() {
+        double temp = AbstractAnimationShape.rand.nextInt(shapesWorld.getMax_X() - shapesWorld.getMin_X());
+        return shapesWorld.getMin_X() + temp;
+    }
+
+    protected final double randomYInWorld() {
+        double temp = AbstractAnimationShape.rand.nextInt(shapesWorld.getMax_Y() - shapesWorld.getMin_Y());
+        return shapesWorld.getMin_Y() + temp;
     }
 }
