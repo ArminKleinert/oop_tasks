@@ -1,0 +1,380 @@
+Was sind Assertions
+	// TODO
+
+
+Was ist das Hoare-Kalkül
+	// TODO
+
+
+Was ist partielle Korrektheit von Programmen
+	// TODO
+
+
+Was bedeutet Terminiertheit von Programmen
+	// TODO
+
+
+Was sind primitive Datentypen
+	// TODO
+
+
+Was sind zusammengesetzte Datentypen
+	// TODO
+
+
+Was sind Methoden
+	// TODO
+
+
+Was sind Parameter
+	// TODO
+
+
+Was ist Methoden-Überladung
+	// TODO
+
+Was sind Klassen
+	// TODO
+
+
+Was sind Objekte
+	// TODO
+
+V3 Folie 34
+Was sind Module
+	Ein Modul ist eine Datei, die Python-Definitionen und -Anweisungen beinhaltet.
+
+Was sind Klassenhierarchien
+	// TODO
+
+
+Was ist Vererbung
+	// TODO
+
+
+Was sind abstrakte Klassen
+	// TODO
+
+
+Was sind Schnittstellen
+	// TODO
+
+
+Was ist Polymorphie
+	// TODO
+
+
+Was sind Exceptions
+	// TODO
+
+
+Was ist Rekursion
+	// TODO
+
+
+Was ist Tail-Rekursion
+	// TODO
+
+
+Wie wandelt man rekursive Funktionen in iterative Funktionen um
+	// TODO
+
+Was ist die O-Notation
+	// TODO
+
+
+Wie analysiert man die Komplexität von Such- und Sortieralgorithmen
+	// TODO
+
+Wie iteriert man über eine Liste
+	Man durchläuft in einer Schleife über die Indizes oder Werte der Liste.
+	Bei Linked Lists muss man die Referenzen der einzelnen Nodes ablaufen.
+
+
+Wie iteriert man über ein Set
+
+
+	Man wandelt das Set in eine Liste um oder in eine Map und itertiert dann über die Werte.
+
+
+Wie iteriert man über eine Map
+	Man durchläuft die Key-Value-Paare wie eine Liste.
+
+Was sind universelle Registermaschinen
+	// TODO
+
+
+Was sind Datentypen
+	// TODO
+
+
+Was sind Anweisungen
+	// TODO
+
+
+Was sind Kontrollstrukturen
+	// TODO
+
+
+Was sind Unterprogramme
+	// TODO
+
+
+Was sind Zeigertypen
+	// TODO
+
+
+Was sind Referenztypen
+	// TODO
+
+
+Was ist Kapselung
+	// TODO
+
+
+Was ist Polymorphie
+	// TODO
+
+
+Was ist Datenabstraktion
+	// TODO
+
+V4 Folie 45
+Was bewirken die Anweisungen "from", "global", "is", "pass", "exec" und "yield" in Python
+	from - Teil einer import-Anweisung
+	global - Verlegung einer Variablen in den globalen Namensraum
+	is - test auf Identität
+	pass - Platzhalter, führt nichts aus, verhindert Einrückungsfehler
+	exec - Ausführung von Programmcode
+	yield - Ausführung von Programmcode
+
+V4 Folie 41
+Wie funktioniert "yield" in Python
+	- Die yield-Anweisung innerhalb einer Funktion f verursacht einen Rücksprung in die aufrufende Funktion und der Wert hinter der yield-Anweisung wird als Ergebnis zurückgegeben.
+	- Im Unterschied zur return-Anweisung werden die aktuelle Position innerhalb der Funktion f und ihre lokalen Variablen zwischengespeichert.
+	- Beim nächsten Aufruf der Funktion f springt Python hinter dem zuletzt ausgeführten yield weiter und kann wieder auf die alten lokalen Variablen von f zugreifen.
+	- Wenn das Ende der Funktion f erreicht wird, wird diese endgültig beendet.
+
+V1 Folie 13
+Nenne Fakten über GOTO
+	Die GOTO-Anweisung ist die meist umstrittene Kontroll-Anweisung in der Welt der höheren Programmiersprachen.
+	Theoretisch kann jeder GOTO nach vorne mit einer if-else-Anweisung und jeder GOTO nach hinten mit einer while-Schleife ersetzt werden.
+	Assembler-Befehle haben keine if-else- oder while-Anweisungen sondern nur bedingte oder unbedingte GOTOs.
+	Die Äquivalenz ist klar, sonst gäbe es keine Übersetzer.
+	C hat GOTOs, und Java hat beschränkte GOTOs.
+	Python hat keine GOTO-Anweisung
+
+
+Was ist der Unterschied zwischen der Deklaration und der Definition einer Variable
+	// TODO
+
+
+Was gehört zu einer Variable in funktionalen Sprachen
+	Symbolischer Name eines Wertes oder ein Ausdruck, der zu einem Wert ausgewertet werden kann.
+
+
+Was gehört zu einer Variable in imperativen Sprachen
+	Typ
+	Name
+	Wert
+	Adresse
+
+V4 Folie 3
+Was bedeuten Wert- und Referenz-Semantik und welche wird von Python genutzt
+	Wert-Semantik
+	Ein Ausdruck wird ausgewertet und das Ergebnis direkt in eine Variablen-Adresse gespeichert.
+	Referenz-Semantik (Python)
+	Ein Ausdruck wird zu einem Objekt ausgewertet, dessen Speicheradresse in einer Variablen-Adresse gespeichert wird.
+
+V4 Folie 21
+Was sind Zeiger- und Referenzdatentypen
+	Zeigervariablen und Referenzvariablen in imperativen Programmiersprachen stellen Variablen, die Speicheradressen beinhalten, dar.
+	Zeiger- und Referenz-Variablen haben die Macht der Indirekten Adressierung.
+	Mit Hilfe von Zeiger- und Referenz-Datentypen können dynamische Datenstrukturen erzeugt werden.
+	Dynamische Datenstrukturen, die erst zur Laufzeit entstehen, befinden sich in dem heap-Bereich eines Prozesses (Programm in Ausführung).
+
+V4 Folie 22-23
+Was bedeuten call-by-value, call-by-reference und call-by-object
+	call-by-value
+	- Ausdrücke werden zuerst ausgewertet und dann nur der Ergebniswert an die Funktionen übergeben.
+	- Einzelne Variablen werden kopiert und nur eine Kopie als Parameter weitergegeben.
+	- Der Inhalt der originalen Variablen des Aufrufers bleibt unverändert.
+	call-by-reference 
+	- Variablen werden bei der Parameterübergabe an Funktionen nicht kopiert.
+	- Ein Zeiger (Reference) auf die Variable wird übergeben.
+	- Alle Änderungen der Variablen innerhalb der Funktion bleiben nach der Ausführung der Funktion erhalten.
+	call-by-object
+	- Wird auch "Call by Object Reference" oder "Call by sharing" genannt
+	- Beim Aufruf eine Funktion wird in Python nur eine Kopie der Referenzender jeweiligen Parameter-Objekte übergeben.
+	- Innerhalb der Funktionen werden die Objekte mittels ihrer Referenzen für die Berechnungen  verwendet.
+	- Zuweisungen auf nicht veränderbare Variablen verursachen das Erzeugen von neuen Objekten.
+	- Zuweisungen auf veränderbare Variablen haben Auswirkung auf die originalen Variablen des aufrufenden Programmteils.
+
+V1 Folie 5
+Was ist Python
+	Eine Skriptsprache aus den frühen 90er Jahren mit einem Fokus auf Simplizität, Lesbarkeit und Orthogonalität
+
+V1 Folie 16
+Welche Paradigmen unterstützt Python
+	Imperativ
+	Strukturiert
+	Reflektiv
+	Funktional
+	Objektorientiert
+	Aspektorientiert
+
+V1 Folie 26
+Wie ist Python typisiert
+	Streng, Dynamisch
+
+V1 Folie 35
+Was sind die grundlegenden Datentypen von Python und was ist deren Sinn
+	int - Ganze Zahlen
+	float - Reelle Zahlen
+	boolean - Wahrheitswert (True/False)
+	Complex - Komplexe Zahlen
+	String - Zeichenketten
+	List - Veränderbare, geordnete, dynamische, sequentielle Kollektion von Daten
+	Tuple - Unveränderbare, geordnete, sequentielle Kollektion von Daten
+	Dictionary - Eine Kollektion von Schlüssel-Wert-Paaren
+
+V1 Folie 40
+Was sind die wichtigsten Module in Python
+	math - exp, sin, sqrt, pow
+	string - digits, whitespace
+	sys - stdin, stderr, argv
+	os - system, path
+	re - split, math
+
+V1 Folie 37
+Was sind die grundlegenden Arithmetischen Operatoren von Python und Java
+	+ - Unäres Vorzeichen für Zahlen, das nichts tut
+	- - Unäre Negierung von Zahlen
+	** - Binäre Power-Of Operation
+	* - Binäre Multiplikation
+	+ - Binäre Addition
+	- - Binäre Subtraktion
+	/ - Binäre Division
+	% - Binäres Modulo (Restbildung)
+	// - Binäre, ganzzahlige Division (Nur in Python)
+
+V1 Folie 44
+Was sind die grundlegenden Pperatoren für Strings, Listen und Tupels von Python 
+	+ - Verkettung
+	* - Wiederholung
+	in - Prüft, ob die Kollektion einen bestimmten Wert enthält
+	not in - Gegenteil von in
+	x[i] - Indizierung, liefert das Element aus der Kollektion (x) an der Position (Index) i
+	x[i:j] - Liefert aus x die Elemente von i bis j-1 zurück
+
+V1 Folie 49
+Was sind die grundlegenden Vergleichsoperatoren von Python und Java
+	<  - Kleiner als
+	>  - Größer
+	<= - Kleiner oder gleich
+	>= - Größer oder gleich
+	== - Gleichheit
+	!= - Ungleichheit
+
+V2 Folie 7
+Was sind die grundlegenden logischen Operatoren von Python und Java
+	not - Unäre negierung eines Wertes
+	or - Binäres logisches oder
+	and - Binäres logisches und
+
+V3 Folie 9
+Was bedeutet "Zuweisung" in der imperativen Programmierung
+	Speicherinhalte werden verändert und damit der Zustand der gesamten Maschine.
+
+V3 Folie 10
+Was machen die "break" und "continue" Anweisungen
+	Die break-Anweisung wird verwendet, um die Ausführung einer Schleife vorzeitig zu beenden.
+	Die continue-Anweisung wird verwendet, um die restlichen Anweisungen der aktuellen Schleife zu überspringen und direkt mit dem nächsten Schleifen-Durchlauf fortzufahren
+
+V3 Folie 27
+Aus welchen Komponenten besteht eine Funktion in Python
+	"def"-Schlüsselwort
+	Funktionsname
+	Argumente
+	"return"-Anweisung (Gibt das Ergebnis der Funktion zurück)
+
+V3 Folie 30-32
+Was ist eine "saubere" Funktion
+	Eine Funktion, die Parameter entgegen nimmt, einen Wert zurückliefert und keine Seiteneffekte haben. Zwischendurch darf keine Ein- oder Ausgabe verwendet werden. Funktionen sollen daher nur lokale Variablen benutzen.
+	(Auch "pure" genannt)
+
+V3 Folie 32
+Wie nennt man Funktionen, die nicht "sauber" sind
+	Subroutinen, Prozeduren, Methoden
+
+V3 Folie 34
+Was beuten Geltungsbereich und Lebenszeit von Variablen
+	Der Geltungsbereich einer Variablen ist der Bereich innerhalb des Programms, in dem diese sichtbar ist.
+	Lebenszeit ist die Zeit, die eine Variable im Speicher existiert.
+
+V3 Folie 41
+Was für Arten von Gültigkeitsbereichen von Variablen gibt es in Python
+	Lokal - Variablennamen sind innerhalb einer Methode oder Funktion definiert.
+	Modul - Die Variablen sind innerhalb eines Moduls (Skriptdatei).
+	Eingebaut/Vordefiniert - Innerhalb der Python-Interpreter vordefinierte Namen, die immer gültig sind.
+
+V2 Folie 7
+V3 Folie 2
+Was sind die grundlegenden Bit-Operatoren von Python und Java
+	~ - Unäre bitweise Inversion (Negation)
+	<< - Binärer Bitshift nach links
+	>> - Binärer Bitshift nach rechts
+	& - Binäres bitweises UND (AND)
+	| - Binäres bitweises ODER (OR)
+	^ - Binäres bitweises exklusives ODER (XOR)
+
+V2 Folie 9
+Was sind die grundlegenden Kontrollfluss-Anweisungen der imperativen Programmierung und wie sind sie unterteilt
+	- Bedingte Sprünge: if-else, for, while
+	- Unbedingte Sprünge: GOTO, break, return
+
+V1 Folie 22
+V2 Folie 12
+Was sind die grundlegenden Elemente von imperativen Programmen
+	Definitionen von Datentypen
+	Deklaration von Variablen unter Verwendung vordefinierter Datentypen
+	Zuweisungen
+	Ausdrücke
+	Anweisungen für den Kontrollfluss innerhalb des Programmes
+	Gültigkeitsbereich von Variablen (Locality of reference)
+	Definition von Prozeduren
+	Parameter-Übergabe
+
+V2 Folie 13
+Was bedeutet call-by-value in Python
+	call-by-value
+	Beim Aufruf der Funktion wird nur eine Kopie der Referenz zum Objekt (Parameter) übergeben.
+	Innerhalb der Funktionen werden die Objekte mittels ihrer Referenzen für die Berechnungen verwendet.
+	Zuweisungen auf nicht veränderbare Variablen verursachen das Erzeugen neuer Objekte.
+	Zuweisungen auf veränderbare Variablen haben Auswirkung auf die originalen Variablen des aufrufenden Programmteils.
+
+V1 Folie 33
+Was ist der Unterschied zwischen L-Values und R-Values
+	L-Values stehen bei einer Zuweisung auf der linken Seite. L-Values müssen Variablennamen sein. R-Values stehen auf der rechten Seite. Sie können Variablennamen, Expressions (Ausdrücke) oder Literale sein.
+
+V1 Folie 7
+Was sind die Vorteile von Skriptsprachen
+	Schnell erlernbar
+	Schnelles Prototyping
+	Kleiner Fehlersuche-Zyklus
+	Kleinere Programme und schnellere Entwicklung
+	Unterstützung von vielen modernen Paradigmen
+	Breite Verwendung in der Software-Industrie
+
+V1 Folie 7
+Was sind die Nachteile von Skriptsprachen
+	Speicherverbrauch ist größer
+	Langsamer
+	Keine statische Typkontrolle
+	Für bestimmte Anwendungen nicht geeignet
+
+V1 Folie 25
+Was sind die Konzepte imperativer Programmierung
+	If-then Anweisungen
+	Loops (for, while)
+	Subroutines (Funktionen)
