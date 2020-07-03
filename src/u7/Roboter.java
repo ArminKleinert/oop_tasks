@@ -13,7 +13,7 @@ public class Roboter extends AbstractAnimationShape {
 
     public Roboter() {
         super(new Point(), Color.lightGray, 50, true);
-        velocity = 1;
+        velocity = 0.5;
         moving = true;
     }
 
@@ -41,34 +41,36 @@ public class Roboter extends AbstractAnimationShape {
 
     @Override
     public void draw(Graphics g) {
-        //Body
+        // Body
         g.setColor(color);
-        g.fillRect((int) center.x, (int) center.y, (int) radius / 2, (int) ((radius / 3) * 2));
-
-        //Body
-        int headX = (int) (center.x + (radius / 8));
-        int headY = (int) (center.y - (radius / 4));
-        int headWidth = (int) (radius / 4);
-        int headHeight = (int) (radius / 4);
-        g.setColor(color);
-        g.fillRect(headX, headY, headWidth, headHeight);
+        double bodyX = center.x - (radius / 2);
+        double bodyY = center.y - (radius / 2);
+        double bodyWidth = radius / 2;
+        double bodyHeight = radius * 0.66;
+        g.fillRect((int) bodyX, (int) bodyY, (int) bodyWidth, (int) bodyHeight);
 
         // Arms
-        int armWidth = (int) (radius / 3);
+        double armWidth = (radius / 4);
         int armHeight = (int) (radius / 4);
-        g.setColor(Color.RED);
-        g.fillRect((int) (center.x + (radius / 2) - 1), (int) center.y, armWidth, armHeight);
-        g.setColor(Color.BLUE);
-        g.fillRect((int) (center.x - (radius / 3)), (int) center.y, armWidth, armHeight);
+        g.fillRect((int) (bodyX - armWidth), (int) bodyY, (int) armWidth, armHeight);
+        g.fillRect((int) (bodyX + bodyWidth), (int) bodyY, (int) armWidth, armHeight);
 
         // Legs
-        int legsY = (int) (center.y + ((radius / 3) * 2));
-        int legsHeight = (int) (radius / 4);
-        int legsWidth = (int) (radius / 5);
-        g.setColor(Color.YELLOW);
-        g.fillRect((int) center.x, legsY, legsWidth, legsHeight);
-        g.setColor(Color.GREEN);
-        g.fillRect((int) (center.x + ((radius / 5) * 1.5)), legsY, legsWidth, legsHeight);
+        double legsY = bodyY + bodyHeight;
+        double legsHeight = radius / 4;
+        double legsWidth = radius / 5;
+        g.fillRect((int) bodyX, (int) legsY, (int) legsWidth, (int) legsHeight);
+        g.fillRect((int) (bodyX + bodyWidth - legsWidth), (int) legsY, (int) legsWidth, (int) legsHeight);
+
+        // Head
+        double headWidth = radius / 4;
+        double headHeight = radius / 4;
+        double headX = center.x - (radius / 4) - (radius / 8);
+        double headY = center.y - (radius / 2) - (radius / 4);
+        g.fillRect((int) headX, (int) headY, (int) headWidth, (int) headHeight);
+        g.setColor(Color.RED);
+        int eyesY = (int) (headY + headHeight * 0.25);
+        g.fillRect((int) headX, eyesY, (int) headWidth, (int)(headHeight / 4));
     }
 
     @Override

@@ -2,6 +2,7 @@ package u7;
 
 import java.awt.*;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Armin Kleinert
@@ -78,12 +79,12 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
 
     protected final double randomXInWorld(double radius) {
         double temp = AbstractAnimationShape.rand.nextInt((int) (shapesWorld.getMax_X() - shapesWorld.getMin_X() - radius));
-        return shapesWorld.getMin_X() + temp;
+        return Math.max(shapesWorld.getMin_X() + temp, shapesWorld.getMin_X() + radius);
     }
 
     protected final double randomYInWorld(double radius) {
         double temp = AbstractAnimationShape.rand.nextInt((int) (shapesWorld.getMax_Y() - shapesWorld.getMin_Y() - radius));
-        return shapesWorld.getMin_Y() + temp;
+        return Math.max(shapesWorld.getMin_Y() + temp, shapesWorld.getMin_Y() + radius);
     }
 
     protected final boolean isWithinWorldBounds() {
