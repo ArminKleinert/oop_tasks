@@ -14,7 +14,7 @@ public class Scared extends AbstractAnimationShape {
     private static final Color shakingColor = Color.green; // Color when scared
 
     private static final double normalRadius = 25;
-    private static final double scareRadius = 50; // The radius within which the object starts being scared.
+    private static final double scareRadius = 40; // The radius within which the object starts being scared.
 
     private boolean explodeOnNextCollision = false; // See onCollision()
     private double shakeVelocity; // How fast the object shakes left and right when in proximity to another object.
@@ -63,8 +63,8 @@ public class Scared extends AbstractAnimationShape {
         } else {
             // Teleport the object
             explodeOnNextCollision = true;
-            center.x = randomXInWorld();
-            center.y = randomYInWorld();
+            center.x = randomXInWorld(radius);
+            center.y = randomYInWorld(radius);
 
             // Call play(). If the object collides again directly,
             // play() will run onCollision() recursively and the above case will be run.

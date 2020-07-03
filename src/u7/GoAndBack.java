@@ -41,8 +41,7 @@ public class GoAndBack extends AbstractAnimationShape {
     @Override
     public void play() {
         // When the screen-boundry is reached, change direction
-        if ((getCenter().x + getRadius() / 2) >= shapesWorld.getMax_X()
-                || (getCenter().x - getRadius() / 2) <= shapesWorld.getMin_X()) {
+        if (!isWithinWorldBounds()) {
             goRight = !goRight;
         }
 

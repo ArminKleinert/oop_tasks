@@ -106,7 +106,7 @@ public class Stein extends AbstractAnimationShape {
     public void setShapesWorld(ShapesWorld theWorld) {
         super.setShapesWorld(theWorld);
         if (resetYOnWorldChange) {
-            center.x = randomXInWorld();
+            center.x = randomXInWorld(radius);
             center.y = shapesWorld.getMin_Y();
     }}
 }

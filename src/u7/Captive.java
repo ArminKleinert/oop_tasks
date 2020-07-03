@@ -51,6 +51,7 @@ public class Captive extends AbstractAnimationShape {
         double oldY = getCenter().y;
         moveTo(getCenter().x + velocityX, getCenter().y + velocityY);
 
+        /*
         // Update collision rectangles for the object with its new x and y coordinates
         updateCollisionRectangle();
 
@@ -59,9 +60,9 @@ public class Captive extends AbstractAnimationShape {
                 shapesWorld.getMin_X(), shapesWorld.getMin_Y(),
                 shapesWorld.getMax_X() - shapesWorld.getMin_X(),
                 shapesWorld.getMax_Y() - shapesWorld.getMin_Y());
-
+*/
         // If the object is outside the world, move it back and set a new random direction and speed.
-        if (!shapesWorldRectangle.contains(collisionRect)) {
+        if (!isWithinWorldBounds()) {
             moveTo(oldX, oldY);
             setRandomVelocity();
         }

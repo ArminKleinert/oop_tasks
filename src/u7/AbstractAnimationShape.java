@@ -45,8 +45,8 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
         boolean isNewWorld = shapesWorld != theWorld;
         this.shapesWorld = theWorld;
         if (isNewWorld && spawnAtRandomPosition) {
-            center.x = randomXInWorld();
-            center.y = randomYInWorld();
+            center.x = randomXInWorld(radius);
+            center.y = randomYInWorld(radius);
         }
     }
 
@@ -61,7 +61,6 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
 
     @Override
     public void userTyped(char key) {
-        System.out.println(key);
     }
 
     @Override
@@ -77,13 +76,21 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
         return radius;
     }
 
-    protected final double randomXInWorld() {
-        double temp = AbstractAnimationShape.rand.nextInt(shapesWorld.getMax_X() - shapesWorld.getMin_X());
+    protected final double randomXInWorld(double radius) {
+        double temp = AbstractAnimationShape.rand.nextInt((int) (shapesWorld.getMax_X() - shapesWorld.getMin_X() - radius));
         return shapesWorld.getMin_X() + temp;
     }
 
-    protected final double randomYInWorld() {
-        double temp = AbstractAnimationShape.rand.nextInt(shapesWorld.getMax_Y() - shapesWorld.getMin_Y());
+    protected final double randomYInWorld(double radius) {
+        double temp = AbstractAnimationShape.rand.nextInt((int) (shapesWorld.getMax_Y() - shapesWorld.getMin_Y() - radius));
         return shapesWorld.getMin_Y() + temp;
+    }
+
+    protected final boolean isWithinWorldBounds() {
+        return (center.x + radius) <= shapesWorld.getMax_X()
+                && (center.x - radius) >= shapesWorld.getMin_X()
+                && (center.y + radius) <= shapesWorld.getMax_Y()
+                && (center.y - radius) >= shapesWorld.getMin_Y();
+
     }
 }
