@@ -18,8 +18,10 @@ public class Feuerwerk extends AbstractAnimationShape {
             super(new Point(x, y), randomColor(), 10, false);
 
             // Set random velocity and direction
-            velocityY = -(AbstractAnimationShape.rand.nextDouble() * 5 + 4.5);
-            double temp = AbstractAnimationShape.rand.nextDouble() * 7 + 0.45;
+            double temp = -(AbstractAnimationShape.rand.nextDouble() * 5 + 4.5);
+            velocityY = (AbstractAnimationShape.rand.nextInt() % 2 == 0) ? temp : -temp;
+            // velocityY = temp; // Uncomment to make flairs always go up.
+            temp = AbstractAnimationShape.rand.nextDouble() * 7 + 0.45;
             // 50/50 change of going right or left
             velocityX = (AbstractAnimationShape.rand.nextInt() % 2 == 0) ? temp : -temp;
         }
