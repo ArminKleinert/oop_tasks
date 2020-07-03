@@ -36,15 +36,15 @@ public class Stein extends AbstractAnimationShape {
          */
         @Override
         public void play() {
-            if (getCenter().y < minY || ticksUntilFall > 0) {
+            if (center.y < shapesWorld.getMax_Y() - radius || ticksUntilFall > 0) {
                 if (ticksUntilFall > 0) { // Rise upwards
                     ticksUntilFall--;
                     velocityY *= 0.99;
                 } else { // Fall down
                     velocityY = Math.abs(velocityY) * 1.1; // Fall down faster and faster
-                    if (getCenter().y > minY) {
+                    if (!isWithinWorldBounds()) {
                         // The stone reached the bottom.
-                        getCenter().y = minY;
+                        center.y = shapesWorld.getMax_Y() - radius;
                         ticksUntilFall = 0;
                     }
                 }
@@ -62,6 +62,13 @@ public class Stein extends AbstractAnimationShape {
         super(new Point(), Color.lightGray, radius, false);
         velocityY = 0.0;
         resetYOnWorldChange = true;
+    }
+
+    public Stein(double startX, double startY, double radius) {
+        this(radius);
+        center.x = startX;
+        center.y = startY;
+        resetYOnWorldChange = false;
     }
 
     public Stein() {

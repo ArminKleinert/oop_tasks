@@ -85,6 +85,8 @@ public class Scared extends AbstractAnimationShape {
             ms.setShapesWorld(shapesWorld);
             shapesWorld.addShape(ms);
         }
+        Stein stein = new Stein(center.x, center.y, radius / 2);
+        shapesWorld.addShape(stein);
         // Remove the original object
         shapesWorld.removeShape(this);
     }
