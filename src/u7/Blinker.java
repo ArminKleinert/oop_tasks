@@ -3,8 +3,8 @@ package u7;
 import java.awt.*;
 
 /**
- * Author Armin Kleinert
- * TODO: Implementation!
+ * @author Armin Kleinert
+ * @version 1.0
  * Bonus-Klasse für Bonuspunkte
  */
 public class Blinker extends AbstractAnimationShape {

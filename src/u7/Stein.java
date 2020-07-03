@@ -3,8 +3,8 @@ package u7;
 import java.awt.*;
 
 /**
- * Author Armin Kleinert
- * TODO: Implementation!
+ * @author Armin Kleinert
+ * @version 1.0
  */
 public class Stein extends AbstractAnimationShape {
 
@@ -13,8 +13,8 @@ public class Stein extends AbstractAnimationShape {
 
     static class MiniStein extends Stein {
 
-        int ticksUntilFall;
-        double minY;
+        private int ticksUntilFall; // The time that the stone rises
+        private final double minY; // The minimum y coordinate the stone can fall to
 
         MiniStein(double x, double y, double minY, double radius) {
             super(radius);
@@ -29,16 +29,19 @@ public class Stein extends AbstractAnimationShape {
             ticksUntilFall = ((int) Math.abs(velocityY));
         }
 
+        /**
+         * New MiniStein objects are thrust upwards for a time and then fall down.
+         */
         @Override
         public void play() {
-            //System.out.println(getCenter().y + " " + startY + " " + ticksUntilFall);
             if (getCenter().y < minY || ticksUntilFall > 0) {
-                if (ticksUntilFall > 0) {
+                if (ticksUntilFall > 0) { // Rise upwards
                     ticksUntilFall--;
                     velocityY *= 0.99;
-                } else {
-                    velocityY = Math.abs(velocityY) * 1.1;
+                } else  { // Fall down
+                    velocityY = Math.abs(velocityY) * 1.1; // Fall down faster and faster
                     if (getCenter().y > minY) {
+                        // The stone reached the bottom.
                         getCenter().y = minY;
                         ticksUntilFall = 0;
                     }
@@ -48,9 +51,14 @@ public class Stein extends AbstractAnimationShape {
         }
     }
 
+    /**
+     * Helper constructor for Ministein.
+     * @param radius
+     */
     protected Stein(double radius) {
-        super(new Point(), Color.lightGray, radius);
+        super(new Point(), Color.lightGray, radius, true);
         velocityY = 0.0;
+        center.y = shapesWorld.getMin_Y();
     }
 
     public Stein() {
@@ -58,27 +66,22 @@ public class Stein extends AbstractAnimationShape {
     }
 
     @Override
-    public void setShapesWorld(ShapesWorld theWorld) {
-        super.setShapesWorld(theWorld);
-        if (center.x == 0.0 && center.y == 0.0) {
-            double additionX = AbstractAnimationShape.rand.nextInt(shapesWorld.getMax_X() - shapesWorld.getMin_X());
-            center.x = randomXInWorld();
-            center.y = randomYInWorld();
-        }
-    }
-
-    @Override
     public void play() {
         if (getCenter().y >= shapesWorld.getMax_Y() - 10) {
+            // When the stone reaches the bottom of the screen
             center.y = shapesWorld.getMax_Y() - 10;
             shatter();
         } else {
+            // When the stone is still falling
             velocityY += 0.01;
-            velocityY *= 1.1;
+            velocityY *= 1.1; // Make the stone fall faster
             moveTo(center.x + velocityX, center.y + velocityY);
         }
     }
 
+    /**
+     *  Shatter the stone and creates 5 Ministein objects.
+     */
     private void shatter() {
         MiniStein ms;
         for (int i = 0; i < 5; i++) {

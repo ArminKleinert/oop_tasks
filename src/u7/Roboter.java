@@ -3,13 +3,13 @@ package u7;
 import java.awt.*;
 
 /**
- * Author Armin Kleinert
- * TODO: Implementation!
+ * @author Armin Kleinert
+ * @version 1.0
  */
 public class Roboter extends AbstractAnimationShape {
 
     public Roboter() {
-        super(new Point(), Color.lightGray, 25);
+        super(new Point(), Color.lightGray, 25, true);
     }
 
     @Override

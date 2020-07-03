@@ -5,37 +5,36 @@ import u6.Rectangle;
 import java.awt.*;
 
 /**
- * Author Armin Kleinert
- * TODO: Implementation!
+ * @author Armin Kleinert
+ * @version 1.0
  */
 public class Scared extends AbstractAnimationShape {
 
     private static final Color normalColor = Color.blue;
-    private static final Color shakingColor = Color.green;
+    private static final Color shakingColor = Color.green; // Color when scared
 
     private static final double normalRadius = 25;
-    private static final double scareRadius = 50;
+    private static final double scareRadius = 50; // The radius within which the object starts being scared.
 
-    private boolean explodeOnNextCollision = false;
-    private boolean scared = false;
-
-    private static double shakeVelocity;
+    private boolean explodeOnNextCollision = false; // See onCollision()
+    private double shakeVelocity;// How fast the object shakes left and right when in proximity to another object.
 
     public Scared() {
-        super(new Point(), normalColor, normalRadius);
+        super(new Point(), normalColor, normalRadius, true);
         explodeOnNextCollision = false;
-        scared = false;
         shakeVelocity = 5;
     }
 
     @Override
     public void play() {
         Shape closest = shapesWorld.getClosestShape(this);
+
+        // If there is no other object, the object won't be scaredd
         if (closest == null) {
-            scared = false;
             return;
         }
 
+        // Calculate distance to other object.
         Point p = closest.getCenter();
         double dist_x = Math.abs(p.x - this.center.x);
         double dist_y = Math.abs(p.y - this.center.y);
@@ -44,44 +43,41 @@ public class Scared extends AbstractAnimationShape {
         if (dist < (radius + closest.getRadius())) { // If nearest intersects with normalRadius
             onCollision();
         } else if (dist < scareRadius + closest.getRadius()) { // If nearest intersects with scareRadius
-            color = shakingColor;
-            scared = true;
-            shakeVelocity = -shakeVelocity;
-            moveTo(center.x + shakeVelocity, center.y + shakeVelocity);
+            color = shakingColor; // Change color
+            shakeVelocity = -shakeVelocity; // If the object was shaking right, it now shakes left or the other way around
+            moveTo(center.x + shakeVelocity, center.y + shakeVelocity); // The object shakes
         } else { // No collision
-            color = normalColor;
-            scared = false;
+            color = normalColor; // Change color to normal color
         }
     }
 
-    /*
-    private boolean collidesWithAny() {
-        Shape closest = shapesWorld.getClosestShape(this);
-        if (closest != null) {
-            Point p = closest.getCenter();
-            double dist_x = Math.abs(p.x - this.center.x);
-            double dist_y = Math.abs(p.y - this.center.y);
-            double dist = Math.sqrt(dist_x * dist_x + dist_y * dist_y);
-            if (dist < (radius + closest.getRadius())) {
-                // Collision
-            }
-        }
-    }
+    /**
+     * If the object collides with another, it is randomly teleported. If it was teleported
+     * onto another object, it explodes and is removed.
      */
-
     private void onCollision() {
         if (explodeOnNextCollision) {
+            // The object has already collided with another object.
+            // Now, after being teleported, it is on top of another object, it explodes.
             shatter();
-            shapesWorld.removeShape(this);
         } else {
+            // Teleport the object
             explodeOnNextCollision = true;
             center.x = randomXInWorld();
             center.y = randomYInWorld();
+
+            // Call play(). If the object collides again directly,
+            // play() will run onCollision() recursively and the above case will be run.
             play();
+
+            // If the object still exists, make it not explode on direct teleport-
             explodeOnNextCollision = false;
         }
     }
 
+    /**
+     * If the object shatters, it spawns 5 small stones
+     */
     private void shatter() {
         Stein.MiniStein ms;
         for (int i = 0; i < 5; i++) {
@@ -89,6 +85,7 @@ public class Scared extends AbstractAnimationShape {
             ms.setShapesWorld(shapesWorld);
             shapesWorld.addShape(ms);
         }
+        // Remove the original object
         shapesWorld.removeShape(this);
     }
 
@@ -98,15 +95,5 @@ public class Scared extends AbstractAnimationShape {
         g.fillOval((int) (getCenter().x - getRadius() / 2),
                 (int) (getCenter().y - getRadius() / 2),
                 (int) getRadius(), (int) getRadius());
-    }
-
-    @Override
-    public void setShapesWorld(ShapesWorld theWorld) {
-        super.setShapesWorld(theWorld);
-        if (center.x == 0.0 && center.y == 0.0) {
-            double additionX = AbstractAnimationShape.rand.nextInt(shapesWorld.getMax_X() - shapesWorld.getMin_X());
-            center.x = shapesWorld.getMin_X() + additionX;
-            center.y = shapesWorld.getMin_Y();
-        }
     }
 }

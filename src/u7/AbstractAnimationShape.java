@@ -3,6 +3,11 @@ package u7;
 import java.awt.*;
 import java.util.Random;
 
+/**
+ * @author Armin Kleinert
+ * @version 1.0
+ * Helper class for all my classes that implement Animation and Shaape since many methods just do the same thing.
+ */
 public abstract class AbstractAnimationShape implements Animation, Shape {
 
     protected static final Random rand = new Random();
@@ -11,11 +16,13 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
     protected ShapesWorld shapesWorld;
     protected Color color;
     protected final double radius;
+    private final boolean spawnAtRandomPosition;
 
-    public AbstractAnimationShape(Point center, Color color, double radius) {
+    public AbstractAnimationShape(Point center, Color color, double radius, boolean spawnAtRandomPosition) {
         this.center = center;
         this.color = color;
         this.radius = radius;
+        this.spawnAtRandomPosition = spawnAtRandomPosition;
     }
 
     @Override
@@ -31,6 +38,19 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
 
     @Override
     public void setShapesWorld(ShapesWorld theWorld) {
+        // If the world is changed and the position of new object should be randomized, then randomize it.
+        // Otherwise, just set the new world.
+        // The position can't be randomized before the world is initialized because the bounds are not known.
+        if (shapesWorld != theWorld && spawnAtRandomPosition) {
+            /*
+            double additionX = AbstractAnimationShape.rand.nextInt(theWorld.getMax_X() - theWorld.getMin_X());
+            center.x = theWorld.getMin_X() + additionX;
+            center.y = theWorld.getMin_Y();
+             */
+            center.x = randomXInWorld();
+            center.y = randomYInWorld();
+        }
+
         this.shapesWorld = theWorld;
     }
 
@@ -45,7 +65,6 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
 
     @Override
     public void userTyped(char key) {
-        System.out.println(key);
     }
 
     @Override
