@@ -27,6 +27,7 @@ public class Captive extends AbstractAnimationShape {
 
     /**
      * Draws a vaguely human shape (head and body.
+     *
      * @param g
      */
     @Override
@@ -72,6 +73,9 @@ public class Captive extends AbstractAnimationShape {
     private void setRandomVelocity() {
         velocityX = (AbstractAnimationShape.rand.nextDouble() - 0.5) * 5;
         velocityY = (AbstractAnimationShape.rand.nextDouble() - 0.5) * 5;
+        if ((velocityX < 0.01 && velocityX > -0.01) || (velocityY < 0.01 && velocityY > -0.01)) {
+            setRandomVelocity();
+        }
     }
 
     private void updateCollisionRectangle() {

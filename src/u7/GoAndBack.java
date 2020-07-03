@@ -8,7 +8,7 @@ import java.awt.*;
  */
 public class GoAndBack extends AbstractAnimationShape {
 
-    private double velocity;
+    private final double velocity;
     private boolean goRight;
 
     public GoAndBack() {

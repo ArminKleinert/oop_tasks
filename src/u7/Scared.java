@@ -17,7 +17,7 @@ public class Scared extends AbstractAnimationShape {
     private static final double scareRadius = 50; // The radius within which the object starts being scared.
 
     private boolean explodeOnNextCollision = false; // See onCollision()
-    private double shakeVelocity;// How fast the object shakes left and right when in proximity to another object.
+    private double shakeVelocity; // How fast the object shakes left and right when in proximity to another object.
 
     public Scared() {
         super(new Point(), normalColor, normalRadius, true);
@@ -40,7 +40,7 @@ public class Scared extends AbstractAnimationShape {
         double dist_y = Math.abs(p.y - this.center.y);
         double dist = Math.sqrt(dist_x * dist_x + dist_y * dist_y);
 
-        if (dist < (radius + closest.getRadius())) { // If nearest intersects with normalRadius
+        if (dist < (radius/2 + closest.getRadius())) { // If nearest intersects with normalRadius
             onCollision();
         } else if (dist < scareRadius + closest.getRadius()) { // If nearest intersects with scareRadius
             color = shakingColor; // Change color

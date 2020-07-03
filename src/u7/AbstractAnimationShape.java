@@ -41,17 +41,13 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
         // If the world is changed and the position of new object should be randomized, then randomize it.
         // Otherwise, just set the new world.
         // The position can't be randomized before the world is initialized because the bounds are not known.
-        if (shapesWorld != theWorld && spawnAtRandomPosition) {
-            /*
-            double additionX = AbstractAnimationShape.rand.nextInt(theWorld.getMax_X() - theWorld.getMin_X());
-            center.x = theWorld.getMin_X() + additionX;
-            center.y = theWorld.getMin_Y();
-             */
+
+        boolean isNewWorld = shapesWorld != theWorld;
+        this.shapesWorld = theWorld;
+        if (isNewWorld && spawnAtRandomPosition) {
             center.x = randomXInWorld();
             center.y = randomYInWorld();
         }
-
-        this.shapesWorld = theWorld;
     }
 
     @Override
@@ -65,6 +61,7 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
 
     @Override
     public void userTyped(char key) {
+        System.out.println(key);
     }
 
     @Override

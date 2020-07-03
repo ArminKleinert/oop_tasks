@@ -10,6 +10,7 @@ public class Stein extends AbstractAnimationShape {
 
     protected double velocityY;
     protected double velocityX;
+    protected boolean resetYOnWorldChange;
 
     static class MiniStein extends Stein {
 
@@ -21,6 +22,7 @@ public class Stein extends AbstractAnimationShape {
             center.x = x;
             center.y = y;
             this.minY = minY;
+            resetYOnWorldChange = false;
 
             velocityY = -AbstractAnimationShape.rand.nextDouble() * 10;
             double temp = AbstractAnimationShape.rand.nextDouble() * 5;
@@ -38,7 +40,7 @@ public class Stein extends AbstractAnimationShape {
                 if (ticksUntilFall > 0) { // Rise upwards
                     ticksUntilFall--;
                     velocityY *= 0.99;
-                } else  { // Fall down
+                } else { // Fall down
                     velocityY = Math.abs(velocityY) * 1.1; // Fall down faster and faster
                     if (getCenter().y > minY) {
                         // The stone reached the bottom.
@@ -53,12 +55,13 @@ public class Stein extends AbstractAnimationShape {
 
     /**
      * Helper constructor for Ministein.
+     *
      * @param radius
      */
     protected Stein(double radius) {
-        super(new Point(), Color.lightGray, radius, true);
+        super(new Point(), Color.lightGray, radius, false);
         velocityY = 0.0;
-        center.y = shapesWorld.getMin_Y();
+        resetYOnWorldChange = true;
     }
 
     public Stein() {
@@ -80,7 +83,7 @@ public class Stein extends AbstractAnimationShape {
     }
 
     /**
-     *  Shatter the stone and creates 5 Ministein objects.
+     * Shatter the stone and creates 5 Ministein objects.
      */
     private void shatter() {
         MiniStein ms;
@@ -98,4 +101,12 @@ public class Stein extends AbstractAnimationShape {
         g.fillArc((int) getCenter().x, (int) getCenter().y,
                 (int) radius, (int) radius, 0, 180);
     }
+
+    @Override
+    public void setShapesWorld(ShapesWorld theWorld) {
+        super.setShapesWorld(theWorld);
+        if (resetYOnWorldChange) {
+            center.x = randomXInWorld();
+            center.y = shapesWorld.getMin_Y();
+    }}
 }
