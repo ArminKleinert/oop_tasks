@@ -1,0 +1,2 @@
+Bearbeitet von Maria Stange und Armin Kleinert
+Wir haben eine abstrakte Klasse "AbstractAnimationShape" als Helfer hinzugefügt. Wir haben f (Feuerwerk) und g (Roboter) gelöst. Zusätzlich haben wir 2 Extra-Klassen "Blinker" und "Spawner" geschrieben.
