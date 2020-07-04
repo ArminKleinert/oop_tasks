@@ -5,6 +5,9 @@ import java.awt.*;
 /**
  * @author Armin Kleinert
  * @version 1.0
+ * <p>
+ * Spawns at a random position and starts going left or right.
+ * Upon reaching the boundries of the world, it changes direction.
  */
 public class GoAndBack extends AbstractAnimationShape {
 
@@ -15,9 +18,10 @@ public class GoAndBack extends AbstractAnimationShape {
      * Creates a new instance with randomized colors.
      */
     public GoAndBack() {
-        super(new Point(), Color.getHSBColor((float) Math.random(), (float) Math.random(),
-                (float) Math.random()), 25, true);
-        goRight = Math.random() < 0.5; // Random direction (50/50 chance of going left or right)
+        super(new Point(),
+                Color.getHSBColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat()),
+                25, true);
+        goRight = rand.nextBoolean(); // Random direction
         velocity = 3;
     }
 
@@ -44,7 +48,6 @@ public class GoAndBack extends AbstractAnimationShape {
     public void userClicked(double atX, double atY) {
         goRight = !goRight;
     }
-
 
     /**
      * The object moves left or right (determined by its goRight attribute).

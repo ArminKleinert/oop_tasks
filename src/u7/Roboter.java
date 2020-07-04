@@ -5,6 +5,10 @@ import java.awt.*;
 /**
  * @author Armin Kleinert
  * @version 1.0
+ * <p>
+ * A fun, hard to control robot. Once selected (via mouse click),
+ * 'j' and ' ' make it jump, 'a' makes it go left and 'd' makes
+ * it go right.
  */
 public class Roboter extends AbstractAnimationShape {
 
@@ -65,9 +69,9 @@ public class Roboter extends AbstractAnimationShape {
     private void fall() {
         // The robot is moving downwards
         velocity *= 1.05; // Fall faster
-        if ((center.y + radius) >= shapesWorld.getMax_Y()) { // Reached the ground
+        if ((center.y + (radius / 2)) > shapesWorld.getMax_Y()) { // Reached the ground
             // Stop falling
-            center.y = shapesWorld.getMax_Y() - radius;
+            center.y = shapesWorld.getMax_Y() - (radius / 2);
             velocity = 0;
             moving = false;
         }

@@ -5,8 +5,8 @@ import java.awt.*;
 /**
  * @author Armin Kleinert
  * @version 1.0
- * Bonus-Klasse für Bonuspunkte.
  * <p>
+ * Bonus-Klasse für Bonuspunkte.
  * A rotating Arc. It changes its color every few ticks.
  * The exact shape and rotation of the arc seems really erratic,
  * but is based on simple maths. (see the play() method)

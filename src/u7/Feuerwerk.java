@@ -3,8 +3,11 @@ package u7;
 import java.awt.*;
 
 /**
- * @author Armin Kleinert
+ * @author Maria Stange, Armin Kleinert
  * @version 1.0
+ * <p>
+ * When the user clicks on the object, it sprays sparkles/flairs into any direction.
+ * Sometimes, if there is another object in the way
  */
 public class Feuerwerk extends AbstractAnimationShape {
 
@@ -101,7 +104,7 @@ public class Feuerwerk extends AbstractAnimationShape {
         @Override
         public void draw(Graphics g) {
             g.setColor(color);
-            g.drawOval((int) center.x, (int) center.y, (int) radius, (int) radius);
+            g.drawOval((int) (center.x - (radius / 2)), (int) (center.y - (radius / 2)), (int) radius, (int) radius);
         }
     }
 
@@ -150,7 +153,7 @@ public class Feuerwerk extends AbstractAnimationShape {
     @Override
     public void draw(Graphics g) {
         g.setColor(color);
-        g.fillRect((int) center.x, (int) center.y, (int) radius, (int) radius);
+        g.fillRect((int) (center.x - (radius / 2)), (int) (center.y - (radius / 2)), (int) radius, (int) radius);
     }
 
     /**

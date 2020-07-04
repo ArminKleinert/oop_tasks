@@ -3,8 +3,11 @@ package u7;
 import java.awt.*;
 
 /**
- * @author Armin Kleinert
+ * @author Maria Stange
  * @version 1.0
+ * <p>
+ * Moves in a random direction at a random speed. When it reaches
+ * the edge of the world, a new direction and speed are calculated.
  */
 public class Captive extends AbstractAnimationShape {
 

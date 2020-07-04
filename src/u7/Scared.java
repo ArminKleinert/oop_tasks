@@ -7,6 +7,10 @@ import java.awt.*;
 /**
  * @author Armin Kleinert
  * @version 1.0
+ * <p>
+ * This object starts shaking when other objects are near. When it collides
+ * with another object, it jumps to a random position. If it teleports
+ * on top of another object, it explodes.
  */
 public class Scared extends AbstractAnimationShape {
 
@@ -32,15 +36,15 @@ public class Scared extends AbstractAnimationShape {
      * Checks the following for the object in relation to the closest shape:
      * No other shape exists
      * - Do nothing
-     * The closest shape is outside of the scare radius
-     * - Set color to normalColor.
+     * The objects collide
+     * - Call onCollision()
+     * - If the object just collided with another object, destroy it.
      * The closest shape is inside the scare radius
      * - Change color to shakingColor .
      * - Start shaking.
      * - If the object was shaking right, shake left. If it was shaking left, shake right.
-     * The objects collide
-     * - Call onCollision()
-     * - If the object just collided with another object, destroy it.
+     * The closest shape is outside of the scare radius
+     * - Set color to normalColor.
      *
      * @see #onCollision()
      */
@@ -64,7 +68,8 @@ public class Scared extends AbstractAnimationShape {
         } else if (dist < scareRadius + closest.getRadius()) { // If nearest intersects with scareRadius
             color = shakingColor; // Change color
             shakeVelocity = -shakeVelocity; // If the object was shaking right, it now shakes left or the other way around
-            moveTo(center.x + shakeVelocity, center.y + shakeVelocity); // The object shakes
+            moveTo(center.x + shakeVelocity,
+                    center.y + shakeVelocity); // The object shakes
         } else { // No collision
             color = normalColor; // Change color to normal color
         }
@@ -120,8 +125,8 @@ public class Scared extends AbstractAnimationShape {
     @Override
     public void draw(Graphics g) {
         g.setColor(getColor());
-        g.fillOval((int) (getCenter().x - getRadius() / 2),
-                (int) (getCenter().y - getRadius() / 2),
-                (int) getRadius(), (int) getRadius());
+        g.fillOval((int) (center.x - (radius / 2)),
+                (int) (center.y - (radius / 2)),
+                (int) radius, (int) radius);
     }
 }

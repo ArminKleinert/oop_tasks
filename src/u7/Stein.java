@@ -3,8 +3,11 @@ package u7;
 import java.awt.*;
 
 /**
- * @author Armin Kleinert
+ * @author Maria Stange
  * @version 1.0
+ * <p>
+ * An object which spawns at the top of the screen. It falls downward and,
+ * upon reaching the lower screen-boundry, explodes into a few smaller objects.
  */
 public class Stein extends AbstractAnimationShape {
 
@@ -119,7 +122,7 @@ public class Stein extends AbstractAnimationShape {
     @Override
     public void draw(Graphics g) {
         g.setColor(color);
-        g.fillArc((int) getCenter().x, (int) getCenter().y,
+        g.fillArc((int) (center.x - (radius / 2)), (int) (center.y),
                 (int) radius, (int) radius, 0, 180);
     }
 

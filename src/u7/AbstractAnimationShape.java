@@ -6,7 +6,8 @@ import java.util.Random;
 /**
  * @author Armin Kleinert
  * @version 1.0
- * Helper class for all my classes that implement Animation and Shaape since many methods just do the same thing.
+ * <p>
+ * Helper class for all my classes that implement Animation and Shape since many methods just do the same thing.
  */
 public abstract class AbstractAnimationShape implements Animation, Shape {
 
@@ -159,6 +160,5 @@ public abstract class AbstractAnimationShape implements Animation, Shape {
                 && (sh.getCenter().x - sh.getRadius()) >= sw.getMin_X()
                 && (sh.getCenter().y + sh.getRadius()) <= sw.getMax_Y()
                 && (sh.getCenter().y - sh.getRadius()) >= sw.getMin_Y();
-
     }
 }
