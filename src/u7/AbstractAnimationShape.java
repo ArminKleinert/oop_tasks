@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Random;
 
 /**
- * @author Armin Kleinert
+ * @author Maria Stange, Armin Kleinert
  * @version 1.0
  * <p>
  * Helper class for all my classes that implement Animation and Shape since many methods just do the same thing.

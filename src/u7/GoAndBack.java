@@ -3,7 +3,7 @@ package u7;
 import java.awt.*;
 
 /**
- * @author Armin Kleinert
+ * @author Maria Stange, Armin Kleinert
  * @version 1.0
  * <p>
  * Spawns at a random position and starts going left or right.

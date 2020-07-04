@@ -3,7 +3,7 @@ package u7;
 import java.awt.*;
 
 /**
- * @author Maria Stange
+ * @author Maria Stange, Armin Kleinert
  * @version 1.0
  * <p>
  * An object which spawns at the top of the screen. It falls downward and,
