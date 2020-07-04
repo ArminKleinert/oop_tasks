@@ -15,13 +15,11 @@ public class Stein extends AbstractAnimationShape {
     static class MiniStein extends Stein {
 
         private int ticksUntilFall; // The time that the stone rises
-        private final double minY; // The minimum y coordinate the stone can fall to
 
-        MiniStein(double x, double y, double minY, double radius) {
+        MiniStein(double x, double y, double radius) {
             super(radius);
             center.x = x;
             center.y = y;
-            this.minY = minY;
             resetYOnWorldChange = false;
 
             velocityY = -AbstractAnimationShape.rand.nextDouble() * 10;
@@ -33,6 +31,9 @@ public class Stein extends AbstractAnimationShape {
 
         /**
          * New MiniStein objects are thrust upwards for a time and then fall down.
+         * The time until the MiniStein instance starts falling is determined by its
+         * ticksUntilFall attribute.
+         * If the object falls and reaches the bottom of the screen, it stops falling and remains there.
          */
         @Override
         public void play() {
@@ -42,10 +43,14 @@ public class Stein extends AbstractAnimationShape {
                     velocityY *= 0.99;
                 } else { // Fall down
                     velocityY = Math.abs(velocityY) * 1.1; // Fall down faster and faster
-                    if (!isWithinWorldBounds()) {
+                    if (!isWithinWorldBounds(this, shapesWorld)) {
                         // The stone reached the bottom.
+                        // Snap back into bounds
                         center.y = shapesWorld.getMax_Y() - radius;
                         ticksUntilFall = 0;
+                        velocityY = 0;
+                        velocityX = 0;
+                        return;
                     }
                 }
                 moveTo(center.x + velocityX, center.y + velocityY);
@@ -75,6 +80,10 @@ public class Stein extends AbstractAnimationShape {
         this(25);
     }
 
+    /**
+     * If the object reaches the bottom of the world, call {@link #shatter()}.
+     * Otherwise, increase the velocity and keep on falling.
+     */
     @Override
     public void play() {
         if (getCenter().y >= shapesWorld.getMax_Y() - 10) {
@@ -95,13 +104,18 @@ public class Stein extends AbstractAnimationShape {
     private void shatter() {
         MiniStein ms;
         for (int i = 0; i < 5; i++) {
-            ms = new MiniStein(center.x, center.y, center.y, radius * 0.33);
+            ms = new MiniStein(center.x, center.y, radius * 0.33);
             ms.setShapesWorld(shapesWorld);
             shapesWorld.addShape(ms);
         }
         shapesWorld.removeShape(this);
     }
 
+    /**
+     * Draws the object as an arc, rounded at the top with a flat bottom.
+     *
+     * @param g
+     */
     @Override
     public void draw(Graphics g) {
         g.setColor(color);
@@ -109,11 +123,18 @@ public class Stein extends AbstractAnimationShape {
                 (int) radius, (int) radius, 0, 180);
     }
 
+    /**
+     * Similar to {@link AbstractAnimationShape#setShapesWorld(ShapesWorld)} with spawnAtRandomPosition
+     * set to true, but only randomizes the X coordinate. The Y coordinate is set to the top of the screen.
+     *
+     * @param theWorld The new shapesworld.
+     */
     @Override
     public void setShapesWorld(ShapesWorld theWorld) {
         super.setShapesWorld(theWorld);
         if (resetYOnWorldChange) {
-            center.x = randomXInWorld(radius);
+            center.x = randomXInWorld(radius, shapesWorld);
             center.y = shapesWorld.getMin_Y();
-    }}
+        }
+    }
 }

@@ -52,14 +52,16 @@ public class Feuerwerk extends AbstractAnimationShape {
                     return Color.YELLOW;
                 case 5:
                     return Color.RED;
-                case 6:
+                default: // Triggers only if the number is 6 (see docs of Random#nextInt)
                     return Color.MAGENTA;
             }
-            return null; // Will not happen, but Java will complain if it is not here.
         }
 
         /**
+         * The sparkle keeps rising until its ticksToLive attribute reaches 0.
+         * Then, it starts falling and its color darkens.
          *
+         * @see #sinkDownward()
          */
         @Override
         public void play() {
@@ -67,25 +69,33 @@ public class Feuerwerk extends AbstractAnimationShape {
                 // Slow down rising velocity every 4 ticks
                 if (ticksToLive % 4 == 0) velocityY *= 0.85;
             } else {
-                // Remove shape if it was fading for 30 ticks
-                if (ticksToLive < -30) {
-                    shapesWorld.removeShape(this);
-                    return;
-                } else if (ticksToLive == 0) {
-                    // Make velocity positive (make sparkle fall)
-                    velocityY = Math.abs(velocityY);
-                }
-                // Made dying sparkle darker every 5 ticks
-                if (ticksToLive % 5 == 0) color = color.darker();
+                sinkDownward();
             }
-            // Move sparkle, slow it down on the x-axis and decrement its livetime.
+            // Move sparkle, slow it down on the x-axis and decrement its lifetime.
             moveTo(center.x + velocityX, center.y + velocityY);
             velocityX *= 0.925;
             ticksToLive--;
         }
 
         /**
-         * Draws the sparkle as an oval
+         * Called when the sparkle moves downwards. Its color fades until it becomes black.
+         * Once it has been falling for 30 ticks, it is removed.
+         */
+        private void sinkDownward() {
+            if (ticksToLive < -30) {
+                shapesWorld.removeShape(this);
+                return;
+            } else if (ticksToLive == 0) {
+                // Make velocity positive (make sparkle fall)
+                velocityY = Math.abs(velocityY);
+            }
+            // Made dying sparkle darker every 5 ticks
+            if (ticksToLive % 5 == 0) color = color.darker();
+        }
+
+        /**
+         * Draws the sparkle as a small, un-filled oval.
+         *
          * @param g
          */
         @Override
@@ -95,6 +105,7 @@ public class Feuerwerk extends AbstractAnimationShape {
         }
     }
 
+    // The number of sparkles/flairs which will be spawned
     private static final int NUM_FLAIRS = 10;
 
     /* Keeps track of the number of spawned flairs */
@@ -105,19 +116,25 @@ public class Feuerwerk extends AbstractAnimationShape {
     private int tickCount;
 
     public Feuerwerk() {
-        super(new Point(), Color.LIGHT_GRAY, 25, true);
+        super(new Point(), Color.getHSBColor(0.1f, 0.8f, 1f), 25, true);
         spawnFlairs = false;
         flairsSpawned = 0;
     }
 
     /**
-     * If activated, spawns a new flair every 5 ticks.
+     * If activated, spawns a new flair every 5 ticks. Once {@link #NUM_FLAIRS} sparkles have
+     * been spawned, remove the object.
+     *
+     * @see FireworkSparkle#FireworkSparkle(double, double)
      */
     @Override
     public void play() {
         if (spawnFlairs && tickCount % 5 == 0) {
+            // Create new sparkle/flair
             shapesWorld.addShape(new FireworkSparkle(center.x, center.y));
             flairsSpawned++;
+
+            // If the box is empty, remove it.
             if (flairsSpawned > NUM_FLAIRS) {
                 shapesWorld.removeShape(this);
             }
@@ -127,6 +144,7 @@ public class Feuerwerk extends AbstractAnimationShape {
 
     /**
      * Draws the object as a box.
+     *
      * @param g
      */
     @Override
@@ -137,6 +155,7 @@ public class Feuerwerk extends AbstractAnimationShape {
 
     /**
      * When the object is clicked, start spawning flairs.
+     *
      * @param at_X
      * @param at_Y
      */

@@ -10,13 +10,16 @@ import java.awt.*;
  */
 public class Scared extends AbstractAnimationShape {
 
+    // Colors of instances of the Scared class.
     private static final Color normalColor = Color.blue;
     private static final Color shakingColor = Color.green; // Color when scared
 
+    // Radi of the Scared class. Normal radius is the default size, scareRadius is used
+    // to determine if another object is close enough to be spooky and scary.
     private static final double normalRadius = 25;
-    private static final double scareRadius = 40; // The radius within which the object starts being scared.
+    private static final double scareRadius = 40;
 
-    private boolean explodeOnNextCollision = false; // See onCollision()
+    private boolean explodeOnNextCollision; // See onCollision()
     private double shakeVelocity; // How fast the object shakes left and right when in proximity to another object.
 
     public Scared() {
@@ -25,6 +28,22 @@ public class Scared extends AbstractAnimationShape {
         shakeVelocity = 5;
     }
 
+    /**
+     * Checks the following for the object in relation to the closest shape:
+     * No other shape exists
+     * - Do nothing
+     * The closest shape is outside of the scare radius
+     * - Set color to normalColor.
+     * The closest shape is inside the scare radius
+     * - Change color to shakingColor .
+     * - Start shaking.
+     * - If the object was shaking right, shake left. If it was shaking left, shake right.
+     * The objects collide
+     * - Call onCollision()
+     * - If the object just collided with another object, destroy it.
+     *
+     * @see #onCollision()
+     */
     @Override
     public void play() {
         Shape closest = shapesWorld.getClosestShape(this);
@@ -40,7 +59,7 @@ public class Scared extends AbstractAnimationShape {
         double dist_y = Math.abs(p.y - this.center.y);
         double dist = Math.sqrt(dist_x * dist_x + dist_y * dist_y);
 
-        if (dist < (radius/2 + closest.getRadius())) { // If nearest intersects with normalRadius
+        if (dist < (radius / 2 + closest.getRadius())) { // If nearest intersects with normalRadius
             onCollision();
         } else if (dist < scareRadius + closest.getRadius()) { // If nearest intersects with scareRadius
             color = shakingColor; // Change color
@@ -54,6 +73,8 @@ public class Scared extends AbstractAnimationShape {
     /**
      * If the object collides with another, it is randomly teleported. If it was teleported
      * onto another object, it explodes and is removed.
+     *
+     * @see #shatter()
      */
     private void onCollision() {
         if (explodeOnNextCollision) {
@@ -63,8 +84,8 @@ public class Scared extends AbstractAnimationShape {
         } else {
             // Teleport the object
             explodeOnNextCollision = true;
-            center.x = randomXInWorld(radius);
-            center.y = randomYInWorld(radius);
+            center.x = randomXInWorld(radius, shapesWorld);
+            center.y = randomYInWorld(radius, shapesWorld);
 
             // Call play(). If the object collides again directly,
             // play() will run onCollision() recursively and the above case will be run.
@@ -76,12 +97,12 @@ public class Scared extends AbstractAnimationShape {
     }
 
     /**
-     * If the object shatters, it spawns 5 small stones
+     * If the object shatters, it spawns 5 small stones and is removed.
      */
     private void shatter() {
         Stein.MiniStein ms;
         for (int i = 0; i < 5; i++) {
-            ms = new Stein.MiniStein(center.x, center.y, shapesWorld.getMax_Y(), radius * 0.33);
+            ms = new Stein.MiniStein(center.x, center.y, radius * 0.33);
             ms.setShapesWorld(shapesWorld);
             shapesWorld.addShape(ms);
         }
@@ -91,6 +112,11 @@ public class Scared extends AbstractAnimationShape {
         shapesWorld.removeShape(this);
     }
 
+    /**
+     * Draw the object as a circle.
+     *
+     * @param g
+     */
     @Override
     public void draw(Graphics g) {
         g.setColor(getColor());

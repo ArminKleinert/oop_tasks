@@ -8,25 +8,22 @@ import java.awt.*;
  */
 public class Captive extends AbstractAnimationShape {
 
-    private final Rectangle shapesWorldRectangle;
-    private final Rectangle collisionRect;
-
+    // The velocity attributes determine both the direction and speed of the object.
     private double velocityX;
     private double velocityY;
 
     /**
-     * Creates a new rectangle with a random velocity (includes direction) and random position
+     * Creates a new rectangle with a random velocity (includes direction) and random position.
+     *
+     * @see #setRandomVelocity()
      */
     public Captive() {
         super(new Point(), Color.lightGray, 25, true);
-        setRandomVelocity();
-        collisionRect = new Rectangle();
-        shapesWorldRectangle = new Rectangle();
-        updateCollisionRectangle();
+        setRandomVelocity(); // Set random speed and direction
     }
 
     /**
-     * Draws a vaguely human shape (head and body.
+     * Draws a vaguely human shape (head and body).
      *
      * @param g
      */
@@ -45,45 +42,36 @@ public class Captive extends AbstractAnimationShape {
         g.setColor(Color.black);
     }
 
+    /**
+     * Makes the object move into the direction determined by its velocityX and
+     * velocityY attributes. If it leaves the world, it snaps back in and randomizes
+     * its velocities again.
+     *
+     * @see #setRandomVelocity()
+     */
     @Override
     public void play() {
         double oldX = getCenter().x;
         double oldY = getCenter().y;
         moveTo(getCenter().x + velocityX, getCenter().y + velocityY);
 
-        /*
-        // Update collision rectangles for the object with its new x and y coordinates
-        updateCollisionRectangle();
-
-        // Update collision rectangle of the world (might be important if it was resized.
-        shapesWorldRectangle.setBounds(
-                shapesWorld.getMin_X(), shapesWorld.getMin_Y(),
-                shapesWorld.getMax_X() - shapesWorld.getMin_X(),
-                shapesWorld.getMax_Y() - shapesWorld.getMin_Y());
-*/
         // If the object is outside the world, move it back and set a new random direction and speed.
-        if (!isWithinWorldBounds()) {
+        if (!isWithinWorldBounds(this, shapesWorld)) {
             moveTo(oldX, oldY);
             setRandomVelocity();
         }
     }
 
     /**
-     * Randomizes the direction within a certain boundry.
+     * Randomizes the direction and speed within a certain boundry.
      */
     private void setRandomVelocity() {
         velocityX = (AbstractAnimationShape.rand.nextDouble() - 0.5) * 5;
         velocityY = (AbstractAnimationShape.rand.nextDouble() - 0.5) * 5;
+
+        // If the speed is too low or too high, try again.
         if ((velocityX < 0.01 && velocityX > -0.01) || (velocityY < 0.01 && velocityY > -0.01)) {
             setRandomVelocity();
         }
-    }
-
-    private void updateCollisionRectangle() {
-        double collRecX = (getCenter().x - getRadius() / 2);
-        double collRecY = (getCenter().y - getRadius() * 0.6);
-        collisionRect.setBounds((int) collRecX, (int) collRecY,
-                (int) (getCenter().x + getRadius() / 2 - collRecX),
-                (int) (getCenter().y + getRadius() * 0.75 - collRecY));
     }
 }
