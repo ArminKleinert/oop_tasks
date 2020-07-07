@@ -1,0 +1,126 @@
+1a) "Wann ist es sinnvoll, Methoden als Klassenmethoden zu definieren? Welche
+Einschränkungen entstehen dabei?"
+
+Es macht Sinn, Klassenmethoden (Statische Methoden) zu nutzen, wenn eine der
+folgendeen Bedingungen zutrifft:
+- Die Methode verändert nichts an einer Instanz der Klasse und greift nicht auf die
+  Attribute einer Instanz zu. Dies ist zum Beispiel bei Klassen so, die exklusiv
+  unterschiedliche Sortier-Methoden bereitstellen.
+- Die Methode soll verfügbar sein, ohne eine Instanz der Klasse zu erstellen.
+- Die Methode soll im "statischen Kontext verfügbar sein.
+  Gemeint sind ``static{...}`` Blöcke und andere statische Methoden.
+- Die Methode greift auf ein oder mehr Instanzen zu, die möglicherweise null sein
+  können. Wenn eine solche Methode oft an unterschiedlichen Stellen aufgerufen wird,
+  kann das viele redundante null-Checks sparen.
+- Java hat ein Feature, das man ``static import`` nennt. Dadurch können Methoden aus
+  anderen Dateien aufgerufen werden, ohne die Urkunft der Methode anzugeben.
+  ZB könnte man ``Math`` statisch importieren und dann statt ``Math.abs(num)`` einfach
+  ``abs(num)`` schreiben.
+  Ob das gut oder schlecht ist, muss der Entwickler/die Entwicklerin für sich
+  entscheiden.
+- Das Erstellen einer neuen Instanz via ``new`` ist sehr langsam. Mit statischen
+  Methoden ist das, falls nur statische Variablen und -Methoden benötigt werden,
+  nicht notwendig.
+- Java unterstützt ``nested classes`` (Unterklassen, wie sie in der ``Stein`` Klasse
+  aus Übung 7 genutzt werden können). Diese werden in den meisten Fällen als statisch
+  deklariert, um viel Overhead zu vermeiden. Statische, nested Klassen können nur auf
+  statische Methoden und Variablen der Überklasse zugreifen. Hier macht es also Sinn,
+  statische Methoden zu nutzen.
+
+Klassenmethoden haben wenige, aber starke Einschränkungen:
+- Klassenmethoden können nicht auf die nicht-statischen Attribute der Klasse zugreifen,
+  wenn keine Instanz im statischen Kontext verfügbar ist, in der Methode erstellt wird
+  oder als Parameter übergeben wird.
+- Wegen der Reihenfolge, in der Klassen geladen werden, kann es vorkommen, dass eine
+  Methode nicht auf statische Variablen oder Methoden einer anderen Klasse zugreifen kann.
+  Dadurch kann es zu Fehlern kommen, bevor das Programm überhaupt gestartet hat!
+- Der Aufruf statischer Methoden kann (auch wenn man den Overhead des ``new``
+  Schlüsselwortes ignoriert) schneller sein als der Aufruf einer Instanz-Methode.
+
+Fun Fact:
+Viele der Schwächen von static lassen sich vermeiden, indem man beispielsweise das
+"Singleton"-Pattern verwendet. Dann wird nur eine Instanz der Klasse erstellt.
+Dadurch ist nur eine Instanz der Klasse notwendig (daher wird nur einmal ``new``
+genutzt).
+
+1b) "Warum macht es keinen Sinn, lokale Variablen als private zu deklarieren? Können
+Klassenmethoden als private deklariert werden? Wenn ja: wann wäre das sinnvoll?"
+
+Die Frage ist "Warum macht es keinen Sinn, lokale Variablen als private zu
+deklarieren?".
+Wir vermuten, dass mit "lokal" hier der Bereich innerhalb einer Methode gemeint ist.
+In Java ist es aber gar nicht möglich, dort eine Variable als private zu deklarieren.
+
+Variablen innerhalb einer Methode sind so oder so nicht von außen verfügbar,
+während die Methode noch läuft. (Die Variable kann natürlich in einer anderen
+Klasse gespeichert oder via ``return`` zurückgegeben werden, aber das ist hier
+nicht wichtig.)
+
+Klassenmethoden können als private deklariert werden. Das ist sinnvoll, wenn nur
+Instanzen der Klasse oder die Klasse selbst auf die Methode zugreifen soll.
+
+1c) "Was passiert, wenn in einer Klassendefinition kein Konstruktor definiert wird?
+Können Konstruktoren vererbt werden? Können Konstruktoren als private deklariert
+werden?"
+
+Wenn kein Konstruktor explizit deklariert wird, erhält die Klasse einen standard-
+Konstruktor, der keine Argumente erhält und nichts tut. Die Variablen der Klasse
+erhalten ihre normalen Initialwerte. Wenn sie nicht explizit mit Wert definiert wurden,
+werden Referenz-Typen als Null, Booleans als false und Zahlentypen als 0 initialisiert.
+
+In der objektorientierten Programmierung werden folgende Eigenschaften vererbt:
+- fields (Variablen)
+- Methoden
+- Nested classes (Unterklassen)
+Konstruktoren gehören zu keiner dieser Gruppen. Die können aber von Subklassen
+aufgerufen werden.
+Quelle: https://docs.oracle.com/javase/tutorial/java/IandI/subclasses.html
+
+Konstruktoren können als private deklariert werden. In diesem Fall ist der
+Konstruktor nur in der Klasse selbst und in nested Klassen sichtbar. Private
+Konstruktoren werden beim oben genannten Singleton-Pattern und bei Klassen
+verwendet, die nur statische Methoden enthalten, wie die Klasse ``java.lang.Math``.
+
+1d) "Wo sind Instanzvariablen sichtbar, wenn diese als protected deklariert werden?
+Können Konstruktoren als protected deklariert werden?"
+
+Variablen, Methoden und Konstruktoren, die als protected deklariert werden, sind in
+Kind-Klassen und für andere Klassen im selbeen Package sichtbar.
+Im Falle der Kindklassen ist es egal, in welcher Package sich diese befinden.
+
+
+
+Hier ist eine Tabelle der Sichtbarkeiten:
+https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html
+
+Modifier  | Class | Package | Subclass | Global
+-----------------------------------------------
+public    | Y     | Y       | Y        | Y
+protected | Y     | Y       | Y        | N
+<non>     | Y     | Y       | N        | N
+private   | Y     | N       | N        | N
+
+(Ich habe diese getestet und bin ein wenig schockiert, dass protected Members
+allen Klassen im selben Package zur Verfügung stehen.)
+
+1e) "Was sind abstrakte Klassen? Wozu sind sie gut? Können Variablen einer abstrakten
+Klasse deklariert werden?"
+
+1f) "Können Objekte einer abstrakten Klasse erzeugt werden? Kann man Konstruktoren
+in abstrakten Klassen definieren?"
+
+1g) "Kann eine Variable vom Typ A einem Objekt der Klasse B zugewiesen werden,
+wenn A eine Unterklasse von B ist? Begründen Sie Ihre Antwort."
+
+1h) "Können Variablen einer Klassen in Unterklassen überschrieben werden?"
+
+1i) "Was ist automatisches boxing/unboxing? Warum wurde das in Java eingeführt?
+Welche Probleme gibt es in Java damit?"
+
+1j) "Was ist eine generische Klasse? Wozu sind diese gut?"
+
+1k) "Was verstehen Sie unter Vererbungspolymorphie?"
+
+1l) "Was sind Ausnahmefehler? Was ist der Unterschied zwischen Runtime-Exceptions und
+allgemeinen Exceptions in Java?"
+
