@@ -1,6 +1,7 @@
 package u8;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
 public class MugUnitTest {
@@ -52,7 +53,7 @@ public class MugUnitTest {
     }
 
     @Test
-    public void testTakeOut() throws NotEnoughCapacityException {
+    public void testTakeOut() {
         Mug<Water> mug = new Mug<>(new Water(), 500);
         assertEquals(mug.getCapacity(), 500);
         assertEquals(mug.getAmount(), 0);
@@ -60,7 +61,7 @@ public class MugUnitTest {
         assertThrows(NotEnoughLiquidException.class, () -> mug.takeOut(1));
         assertDoesNotThrow(() -> mug.takeOut(0));
 
-            mug.pour(100);
+        assertDoesNotThrow(() -> mug.pour(100));
         assertEquals(mug.getAmount(), 100);
         assertDoesNotThrow(() -> mug.takeOut(99));
         assertEquals(mug.getAmount(), 1);
@@ -69,33 +70,33 @@ public class MugUnitTest {
     }
 
     @Test
-    public void testDrink() throws NotEnoughCapacityException {
+    public void testDrink() {
         Mug<Water> mug = new Mug<>(new Water(), 500);
-        mug.pour(500);
-        assertEquals( 500, mug.getAmount());
+        assertDoesNotThrow(() -> mug.pour(500));
+        assertEquals(500, mug.getAmount());
         assertDoesNotThrow(() -> mug.drink(500));
         assertEquals(0, mug.getAmount());
         assertThrows(NotEnoughLiquidException.class, () -> mug.drink(1));
 
         Mug<CoughSyrup> mug1 = new Mug<>(new CoughSyrup(), 500);
-        mug1.pour(500);
+        assertDoesNotThrow(() -> mug1.pour(500));
         assertEquals(500, mug1.getAmount());
         assertThrows(UndrinkableException.class, () -> mug1.drink(500));
         assertEquals(500, mug1.getAmount());
     }
 
     @Test
-    public void testEmpty() throws NotEnoughCapacityException {
-        Mug <Water> mug = new Mug<>(new Water(), 500);
+    public void testEmpty() {
+        Mug<Water> mug = new Mug<>(new Water(), 500);
 
-        assertEquals(0,mug.getAmount());
-        assertEquals(0,mug.empty());
-        assertEquals(0,mug.getAmount());
+        assertEquals(0, mug.getAmount());
+        assertEquals(0, mug.empty());
+        assertEquals(0, mug.getAmount());
 
-        mug.pour(500);
-        assertEquals(500,mug.getAmount() );
-        assertEquals(500,mug.empty());
-        assertEquals(0,mug.getAmount());
+        assertDoesNotThrow(() -> mug.pour(500));
+        assertEquals(500, mug.getAmount());
+        assertEquals(500, mug.empty());
+        assertEquals(0, mug.getAmount());
     }
 
     @Test
@@ -113,7 +114,7 @@ public class MugUnitTest {
     public void testIsHot() {
         Water water = new Water();
 
-        Mug<Water> mug = new Mug<> (water, 500);
+        Mug<Water> mug = new Mug<>(water, 500);
         assertFalse(mug.isHot());
         mug.getLiquid().hitUp(1);
         assertFalse(mug.isHot());

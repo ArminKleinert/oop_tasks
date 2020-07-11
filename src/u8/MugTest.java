@@ -1,249 +1,249 @@
 package u8;
 
+
 public class MugTest {
 
-    private static void testMugConstructor() {
-        try {
-            new Mug<>(null, 0);
-            assert (false);
-        } catch (IllegalArgumentException ignored) {
-        }
+    public interface MyRunnable {
+        void run() throws Throwable;
+    }
 
-        try {
-            new Mug<>(new Water(), -1);
-            assert( false);
-        } catch (IllegalArgumentException ignored) {
+    public static void assertTrue(boolean b) {
+        if (!b) {
+            throw new RuntimeException();
         }
+    }
+
+    public static void assertFalse(boolean b) {
+        if (b) {
+            throw new RuntimeException();
+        }
+    }
+
+    public static void assertEquals(int o1, int o2) {
+        if (o1 != o2) {
+            throw new RuntimeException();
+        }
+    }
+
+    public static void assertThrows(Class<? extends Throwable> exceptionClass, MyRunnable runnable) {
+        try {
+            runnable.run();
+        } catch (Throwable t) {
+            if (!exceptionClass.isInstance(t)) {
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    public static void assertDoesNotThrow(MyRunnable runnable) {
+        try {
+            runnable.run();
+        } catch (Throwable t) {
+            throw new RuntimeException();
+        }
+    }
+
+    public static void testMugConstructor() {
+        assertThrows(IllegalArgumentException.class, () -> new Mug<>(null, 0));
+        assertThrows(IllegalArgumentException.class, () -> new Mug<>(new Water(), -1));
 
         Water water = new Water();
         int cap = 0;
         Mug<Liquid> mug = new Mug<>(water, cap);
-
-        assert (water != mug.getLiquid());
-        assert (cap != mug.getCapacity());
-        assert (0 != mug.getAmount());
-
-        System.out.println("testMugConstructor -> Success!");
+        assertTrue(water == mug.getLiquid());
+        assertEquals(cap, mug.getCapacity());
+        assertEquals(0, mug.getAmount());
     }
 
-    private static void testMugGenerity() {
+    public static void testMugGenerity() {
         Mug<Liquid> mug = new Mug<>(new Water(), 0);
-        assert (mug.getLiquid() instanceof Liquid);
-        assert (mug.getLiquid() instanceof Water);
+        assertTrue(mug.getLiquid() instanceof Liquid);
+        assertTrue(mug.getLiquid() instanceof Water);
 
         mug = new Mug<>(new CoughSyrup(), 0);
-        assert (mug.getLiquid() instanceof Liquid);
-        assert (mug.getLiquid() instanceof CoughSyrup);
-
-        System.out.println("testMugGenerity -> Success!");
+        assertTrue(mug.getLiquid() instanceof Liquid);
+        assertTrue(mug.getLiquid() instanceof CoughSyrup);
     }
 
-    private static void testPour() {
+    public static void testPour() {
         Mug<Water> mug = new Mug<>(new Water(), 500);
-        assert (mug.getCapacity() == 500);
-        assert (mug.getAmount() == 0);
+        assertEquals(mug.getCapacity(), 500);
+        assertEquals(mug.getAmount(), 0);
 
-        try {
-            mug.pour(0);
-            mug.pour(100);
-            mug.pour(400);
-        } catch (NotEnoughCapacityException nece) {
-            nece.printStackTrace();
-            return;
-        }
-        assert (500 == mug.getAmount());
+        assertDoesNotThrow(() -> mug.pour(0));
+        assertDoesNotThrow(() -> mug.pour(100));
+        assertDoesNotThrow(() -> mug.pour(400));
+        assertEquals(500, mug.getAmount());
 
-        try {
+        assertThrows(NotEnoughCapacityException.class, () -> {
             mug.pour(1);
-            assert( false);
-        } catch (NotEnoughCapacityException nece) {
-        }
-        assert (mug.getAmount() == 500);
+        });
+        assertEquals(mug.getAmount(), 500);
 
         Mug<?> mug1 = new Mug<>(new Water(), 0);
-        assert (0 == mug1.getAmount());
-        assert (0 == mug1.getCapacity());
-
-        try {
-            mug1.pour(0);
-        } catch (NotEnoughCapacityException nece) {
-            nece.printStackTrace();
-            return;
-        }
-
-        try {
-            mug1.pour(1);
-            assert (false);
-        } catch (NotEnoughCapacityException ignored) {
-        }
-
-        assert (0 == mug1.getAmount());
-
-        System.out.println("testPour -> Success!");
+        assertEquals(0, mug1.getAmount());
+        assertEquals(0, mug1.getCapacity());
+        assertDoesNotThrow(() -> mug1.pour(0));
+        assertThrows(NotEnoughCapacityException.class, () -> mug1.pour(1));
+        assertEquals(0, mug1.getAmount());
     }
 
-    private static void testTakeOut() {
+    public static void testTakeOut() {
         Mug<Water> mug = new Mug<>(new Water(), 500);
-        assert (mug.getCapacity() == 500);
-        assert (mug.getAmount() == 0);
+        assertEquals(mug.getCapacity(), 500);
+        assertEquals(mug.getAmount(), 0);
 
-        try {
-            mug.takeOut(1);
-            assert (false);
-        } catch (NotEnoughLiquidException ignored) {
-        }
-
-        try {
-            mug.takeOut(0);
-        } catch (NotEnoughLiquidException nece) {
-            nece.printStackTrace();
-            return;
-        }
+        assertThrows(NotEnoughLiquidException.class, () -> mug.takeOut(1));
+        assertDoesNotThrow(() -> mug.takeOut(0));
 
         try {
             mug.pour(100);
-        } catch (NotEnoughCapacityException nece) {
-            nece.printStackTrace();
+        } catch (NotEnoughCapacityException e) {
+            e.printStackTrace();
             return;
         }
-
-        assert (mug.getAmount() == 100);
-
-        try {
-            mug.takeOut(99);
-        } catch (NotEnoughLiquidException nece) {
-            nece.printStackTrace();
-            return;
-        }
-
-        assert (mug.getAmount() == 1);
-
-        try {
-            mug.takeOut(2);
-            assert (false);
-        } catch (NotEnoughLiquidException ignored) {
-        }
-
-        assert (mug.getAmount() == 1);
-
-        System.out.println("testTakeOut -> Success!");
+        assertEquals(mug.getAmount(), 100);
+        assertDoesNotThrow(() -> mug.takeOut(99));
+        assertEquals(mug.getAmount(), 1);
+        assertThrows(NotEnoughLiquidException.class, () -> mug.takeOut(2));
+        assertEquals(mug.getAmount(), 1);
     }
 
-    private static void testDrink() {
+    public static void testDrink() {
         Mug<Water> mug = new Mug<>(new Water(), 500);
-
         try {
             mug.pour(500);
-        } catch (NotEnoughCapacityException nece) {
-            nece.printStackTrace();
+        } catch (NotEnoughCapacityException e) {
+            e.printStackTrace();
             return;
         }
-
-        assert (500 == mug.getAmount());
-
-        try {
-            mug.drink(500);
-        } catch (NotEnoughLiquidException | UndrinkableException nece) {
-            nece.printStackTrace();
-            return;
-        }
-
-        assert (0 == mug.getAmount());
-
-        try {
-            mug.drink(1);
-            assert (false);
-        } catch (NotEnoughLiquidException | UndrinkableException ignored) {
-        }
+        assertEquals(500, mug.getAmount());
+        assertDoesNotThrow(() -> mug.drink(500));
+        assertEquals(0, mug.getAmount());
+        assertThrows(NotEnoughLiquidException.class, () -> mug.drink(1));
 
         Mug<CoughSyrup> mug1 = new Mug<>(new CoughSyrup(), 500);
-
         try {
-            mug.pour(500);
-        } catch (NotEnoughCapacityException nece) {
-            nece.printStackTrace();
+            mug1.pour(500);
+        } catch (NotEnoughCapacityException e) {
+            e.printStackTrace();
             return;
         }
-
-        assert (500 == mug1.getAmount());
-
-        try {
-            mug.drink(500);
-            assert (false);
-        } catch (NotEnoughLiquidException | UndrinkableException ignored) {
-        }
-
-        assert (500 == mug1.getAmount());
-
-        System.out.println("testDrink -> Success!");
+        assertEquals(500, mug1.getAmount());
+        assertThrows(UndrinkableException.class, () -> mug1.drink(500));
+        assertEquals(500, mug1.getAmount());
     }
 
-    private static void testEmpty() {
+    public static void testEmpty() {
         Mug<Water> mug = new Mug<>(new Water(), 500);
 
-        assert (0 == mug.getAmount());
-        int temp = mug.empty();
-        assert (temp == 0);
-        assert (0 == mug.getAmount());
+        assertEquals(0, mug.getAmount());
+        assertEquals(0, mug.empty());
+        assertEquals(0, mug.getAmount());
 
         try {
             mug.pour(500);
-        } catch (NotEnoughCapacityException nece) {
-            nece.printStackTrace();
+        } catch (NotEnoughCapacityException e) {
+            e.printStackTrace();
             return;
         }
-
-        assert (500 == mug.getAmount());
-        temp = mug.empty();
-        assert (temp == 0);
-        assert (0 == mug.getAmount());
-
-        System.out.println("testEmpty -> Success!");
+        assertEquals(500, mug.getAmount());
+        assertEquals(500, mug.empty());
+        assertEquals(0, mug.getAmount());
     }
 
-    private static void testIsEmpty() {
+    public static void testIsEmpty() {
         Mug<Water> mug = new Mug<>(new Water(), 500);
 
-        assert (mug.isEmpty());
-
+        assertTrue(mug.isEmpty());
         try {
             mug.pour(500);
-        } catch (NotEnoughCapacityException nece) {
-            nece.printStackTrace();
+        } catch (NotEnoughCapacityException e) {
+            e.printStackTrace();
             return;
         }
-
-        assert (!mug.isEmpty());
+        assertFalse(mug.isEmpty());
         mug.empty();
-        assert (mug.isEmpty());
-
-        System.out.println("testIsEmpty-> Success!");
+        assertTrue(mug.isEmpty());
     }
 
-    private static void testIsHot() {
+    public static void testIsHot() {
         Water water = new Water();
 
         Mug<Water> mug = new Mug<>(water, 500);
-        assert (!mug.isHot());
+        assertFalse(mug.isHot());
         mug.getLiquid().hitUp(1);
-        assert (!mug.isHot());
+        assertFalse(mug.isHot());
         mug.getLiquid().hitUp(10000);
-        assert (mug.isHot());
+        assertTrue(mug.isHot());
 
         mug = new Mug<>(water, 500);
-        assert (mug.isHot());
-
-        System.out.println("testIsHot -> Success!");
+        assertTrue(mug.isHot());
     }
 
     public static void main(String[] args) {
-        testMugConstructor();
-        testMugGenerity();
-        testPour();
-        testTakeOut();
-        testDrink();
-        testEmpty();
-        testIsEmpty();
-        testIsHot();
+        try {
+            System.out.println("testMugConstructor()");
+            testMugConstructor();
+            System.out.println("  -> Success");
+        } catch (RuntimeException re) {
+            re.printStackTrace();
+        }
+
+        try {
+            System.out.println("testMugGenerity()");
+            testMugGenerity();
+            System.out.println("  -> Success");
+        } catch (RuntimeException re) {
+            re.printStackTrace();
+        }
+
+        try {
+            System.out.println("testPour()");
+            testPour();
+            System.out.println("  -> Success");
+        } catch (RuntimeException re) {
+            re.printStackTrace();
+        }
+
+        try {
+            System.out.println("testTakeOut()");
+            testTakeOut();
+            System.out.println("  -> Success");
+        } catch (RuntimeException re) {
+            re.printStackTrace();
+        }
+
+        try {
+            System.out.println("testDrink()");
+            testDrink();
+            System.out.println("  -> Success");
+        } catch (RuntimeException re) {
+            re.printStackTrace();
+        }
+
+        try {
+            System.out.println("testEmpty()");
+            testEmpty();
+            System.out.println("  -> Success");
+        } catch (RuntimeException re) {
+            re.printStackTrace();
+        }
+
+        try {
+            System.out.println("testIsEmpty()");
+            testIsEmpty();
+            System.out.println("  -> Success");
+        } catch (RuntimeException re) {
+            re.printStackTrace();
+        }
+
+        try {
+            System.out.println("testIsHot()");
+            testIsHot();
+            System.out.println("  -> Success");
+        } catch (RuntimeException re) {
+            re.printStackTrace();
+        }
     }
 }
