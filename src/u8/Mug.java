@@ -7,14 +7,16 @@ public class Mug<T extends Liquid> {
     private int amountMl;
 
     public Mug(T liquid, int capacityMl) {
+        if (liquid == null || capacityMl < 0) {
+            throw new IllegalArgumentException("liquid must not be null and capacity must be positive.");
+        }
+
         this.liquid = liquid;
         this.capacityMl = capacityMl;
         amountMl = 0;
 
-        System.out.println(liquid.nname());
+        System.out.println(liquid.getName());
     }
-
-
 
     public void pour(int ml) throws NotEnoughCapacityException {
         if (capacityMl < amountMl + ml) {
@@ -49,5 +51,17 @@ public class Mug<T extends Liquid> {
 
     public boolean isHot() {
         return liquid.temperature > 80;
+    }
+
+    public T getLiquid() {
+        return liquid;
+    }
+
+    public int getCapacity() {
+        return capacityMl;
+    }
+
+    public int getAmount() {
+        return amountMl;
     }
 }

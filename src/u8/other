@@ -49,7 +49,7 @@ Klassenmethoden als private deklariert werden? Wenn ja: wann wäre das sinnvoll?
 Die Frage ist "Warum macht es keinen Sinn, lokale Variablen als private zu
 deklarieren?".
 Wir vermuten, dass mit "lokal" hier der Bereich innerhalb einer Methode gemeint ist.
-In Java ist es aber gar nicht möglich, dort eine Variable als private zu deklarieren.
+In Java ist es aber gar nicht möglist jch, dort eine Variable als private zu deklarieren.
 
 Variablen innerhalb einer Methode sind so oder so nicht von außen verfügbar,
 während die Methode noch läuft. (Die Variable kann natürlich in einer anderen
@@ -88,8 +88,6 @@ Variablen, Methoden und Konstruktoren, die als protected deklariert werden, sind
 Kind-Klassen und für andere Klassen im selbeen Package sichtbar.
 Im Falle der Kindklassen ist es egal, in welcher Package sich diese befinden.
 
-
-
 Hier ist eine Tabelle der Sichtbarkeiten:
 https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html
 
@@ -112,7 +110,13 @@ in abstrakten Klassen definieren?"
 1g) "Kann eine Variable vom Typ A einem Objekt der Klasse B zugewiesen werden,
 wenn A eine Unterklasse von B ist? Begründen Sie Ihre Antwort."
 
+Ich schätze, dass folgendes Gemeint ist:
+A v = new B();
+Diese Zuweisung ist nicht "legal",
+
 1h) "Können Variablen einer Klassen in Unterklassen überschrieben werden?"
+
+Variablen einer Klasse können nicht überschrieben sondern nur "geschattet" werden.
 
 1i) "Was ist automatisches boxing/unboxing? Warum wurde das in Java eingeführt?
 Welche Probleme gibt es in Java damit?"
