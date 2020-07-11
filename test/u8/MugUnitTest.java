@@ -3,10 +3,10 @@ package u8;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-public class MugTest {
+public class MugUnitTest {
 
     @Test
-    private void testMugConstructor() {
+    public void testMugConstructor() {
         assertThrows(IllegalArgumentException.class, () -> new Mug<>(null, 0));
         assertThrows(IllegalArgumentException.class, () -> new Mug<>(new Water(), -1));
 
@@ -19,7 +19,7 @@ public class MugTest {
     }
 
     @Test
-    private void testMugGenerity() {
+    public void testMugGenerity() {
         Mug<Liquid> mug = new Mug<>(new Water(), 0);
         assertTrue(mug.getLiquid() instanceof Liquid);
         assertTrue(mug.getLiquid() instanceof Water);
@@ -30,30 +30,29 @@ public class MugTest {
     }
 
     @Test
-    private void testPour() {
+    public void testPour() {
         Mug<Water> mug = new Mug<>(new Water(), 500);
         assertEquals(mug.getCapacity(), 500);
         assertEquals(mug.getAmount(), 0);
 
-        assertEquals(mug.getAmount(), 0);
         assertDoesNotThrow(() -> mug.pour(0));
         assertDoesNotThrow(() -> mug.pour(100));
         assertDoesNotThrow(() -> mug.pour(400));
-        assertEquals(mug.getAmount(), 500);
+        assertEquals(500, mug.getAmount());
 
         assertThrows(NotEnoughCapacityException.class, () -> mug.pour(1));
         assertEquals(mug.getAmount(), 500);
 
         Mug<?> mug1 = new Mug<>(new Water(), 0);
-        assertEquals(mug.getAmount(), 0);
-        assertEquals(mug.getCapacity(),0);
+        assertEquals(0, mug1.getAmount());
+        assertEquals(0, mug1.getCapacity());
         assertDoesNotThrow(() -> mug1.pour(0));
         assertThrows(NotEnoughCapacityException.class, () -> mug1.pour(1));
-        assertEquals(mug.getAmount(), 0);
+        assertEquals(0, mug1.getAmount());
     }
 
     @Test
-    private void testTakeOut() throws NotEnoughCapacityException {
+    public void testTakeOut() throws NotEnoughCapacityException {
         Mug<Water> mug = new Mug<>(new Water(), 500);
         assertEquals(mug.getCapacity(), 500);
         assertEquals(mug.getAmount(), 0);
@@ -70,37 +69,37 @@ public class MugTest {
     }
 
     @Test
-    private void testDrink() throws NotEnoughCapacityException {
+    public void testDrink() throws NotEnoughCapacityException {
         Mug<Water> mug = new Mug<>(new Water(), 500);
         mug.pour(500);
-        assertEquals(mug.getAmount(), 500);
+        assertEquals( 500, mug.getAmount());
         assertDoesNotThrow(() -> mug.drink(500));
-        assertEquals(mug.getAmount(), 0);
+        assertEquals(0, mug.getAmount());
         assertThrows(NotEnoughLiquidException.class, () -> mug.drink(1));
 
         Mug<CoughSyrup> mug1 = new Mug<>(new CoughSyrup(), 500);
         mug1.pour(500);
-        assertEquals(mug.getAmount(), 500);
+        assertEquals(500, mug1.getAmount());
         assertThrows(UndrinkableException.class, () -> mug1.drink(500));
-        assertEquals(mug.getAmount(), 500);
+        assertEquals(500, mug1.getAmount());
     }
 
     @Test
-    private void testEmpty() throws NotEnoughCapacityException {
+    public void testEmpty() throws NotEnoughCapacityException {
         Mug <Water> mug = new Mug<>(new Water(), 500);
 
-        assertEquals(mug.getAmount(), 0);
-        assertEquals(mug.empty(), 0);
-        assertEquals(mug.getAmount(), 0);
+        assertEquals(0,mug.getAmount());
+        assertEquals(0,mug.empty());
+        assertEquals(0,mug.getAmount());
 
         mug.pour(500);
-        assertEquals(mug.getAmount(), 500);
-        assertEquals(mug.empty(), 500);
-        assertEquals(mug.getAmount(), 0);
+        assertEquals(500,mug.getAmount() );
+        assertEquals(500,mug.empty());
+        assertEquals(0,mug.getAmount());
     }
 
     @Test
-    private void testIsEmpty() throws NotEnoughCapacityException {
+    public void testIsEmpty() throws NotEnoughCapacityException {
         Mug<Water> mug = new Mug<>(new Water(), 500);
 
         assertTrue(mug.isEmpty());
@@ -111,7 +110,7 @@ public class MugTest {
     }
 
     @Test
-    private void testIsHot() {
+    public void testIsHot() {
         Water water = new Water();
 
         Mug<Water> mug = new Mug<> (water, 500);

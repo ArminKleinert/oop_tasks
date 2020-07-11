@@ -14,8 +14,6 @@ public class Mug<T extends Liquid> {
         this.liquid = liquid;
         this.capacityMl = capacityMl;
         amountMl = 0;
-
-        System.out.println(liquid.getName());
     }
 
     public void pour(int ml) throws NotEnoughCapacityException {
