@@ -104,8 +104,17 @@ allen Klassen im selben Package zur Verfügung stehen.)
 1e) "Was sind abstrakte Klassen? Wozu sind sie gut? Können Variablen einer abstrakten
 Klasse deklariert werden?"
 
+Abstrakte Klassen sind Klassen, die mit dem ``abstract`` markiert wurden. Sie können Methoden, Konstruktoren, Felder und genestete Klassen enthalten. Methoden könnenn als abstrakt markiert werden.
+Abstrakte Methoden enthalten keine Instruktionen, nur ihre Signatur. Diese Methoden müssen von allen Kind-Klassen der Klasse überschrieben werden.
+
+Durch abstrakte Klassen kann man, wie mit Interfaces, eine Abstraktion für anderen Code darstellen (Polymorphie). Der Vorteil gegenüber Interfaces ist, das abstrakte Klassen auch Methoden mit Körper oder Felder enthalten können.
+
+Variablen können nicht als abstract markiert werden, da es nicht möglich ist, Variablen zu überschreiben (Wie in 1h beschrieben).
+
 1f) "Können Objekte einer abstrakten Klasse erzeugt werden? Kann man Konstruktoren
 in abstrakten Klassen definieren?"
+
+// TODO
 
 1g) "Kann eine Variable vom Typ A einem Objekt der Klasse B zugewiesen werden,
 wenn A eine Unterklasse von B ist? Begründen Sie Ihre Antwort."
@@ -114,17 +123,26 @@ Ich schätze, dass folgendes Gemeint ist:
 A v = new B();
 Diese Zuweisung ist nicht "legal",
 
+// TODO
+
 1h) "Können Variablen einer Klassen in Unterklassen überschrieben werden?"
 
-Variablen einer Klasse können nicht überschrieben sondern nur "geschattet" werden.
+Variablen einer Klasse können nicht überschrieben sondern nur "geschattet" werden. Das heißt, dass es eine neue Variable mit demselben Namen gibt Die alte Variable existiert aber immer noch.
 
 1i) "Was ist automatisches boxing/unboxing? Warum wurde das in Java eingeführt?
 Welche Probleme gibt es in Java damit?"
 
+// TODO
+
 1j) "Was ist eine generische Klasse? Wozu sind diese gut?"
 
+// TODO
+
 1k) "Was verstehen Sie unter Vererbungspolymorphie?"
+
+// TODO
 
 1l) "Was sind Ausnahmefehler? Was ist der Unterschied zwischen Runtime-Exceptions und
 allgemeinen Exceptions in Java?"
 
+// TODO
