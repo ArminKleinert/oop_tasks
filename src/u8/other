@@ -109,7 +109,7 @@ Abstrakte Methoden enthalten keine Instruktionen, nur ihre Signatur. Diese Metho
 
 Durch abstrakte Klassen kann man, wie mit Interfaces, eine Abstraktion für anderen Code darstellen (Polymorphie). Der Vorteil gegenüber Interfaces ist, das abstrakte Klassen auch Methoden mit Körper oder Felder enthalten können.
 
-Variablen können nicht als abstract markiert werden, da es nicht möglich ist, Variablen zu überschreiben (Wie in 1h beschrieben).
+Es ist möglich, Variablen mit einem abstrakten Typ deklariert werden. Diesen können das Objekte aller erbenden Klassen zugewiesen werden.
 
 1f) "Können Objekte einer abstrakten Klasse erzeugt werden? Kann man Konstruktoren in abstrakten Klassen definieren?"
 
