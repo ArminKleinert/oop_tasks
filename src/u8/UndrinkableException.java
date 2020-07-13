@@ -1,5 +1,8 @@
 package u8;
 
+/**
+ * @author Maria Stange
+ */
 public class UndrinkableException extends Exception {
 
     public UndrinkableException() {

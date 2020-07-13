@@ -1,5 +1,10 @@
 package u8;
 
+/**
+ *
+ * @param <T>
+ * @author Armin Kleinert
+ */
 public class Mug<T extends Liquid> {
 
     private final T liquid;

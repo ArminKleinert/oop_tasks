@@ -2,6 +2,11 @@ package u8;
 
 import java.awt.*;
 
+/**
+ * Test-implementation for {@link Liquid}.
+ *
+ * @author Maria Stange
+ */
 public class Water extends Liquid {
 
     public Water() {

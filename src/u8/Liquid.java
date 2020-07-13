@@ -2,6 +2,9 @@ package u8;
 
 import java.awt.Color;
 
+/**
+ * @author Maria Stange
+ */
 public abstract class Liquid {
     final protected Color color;
     final protected boolean drinkable;

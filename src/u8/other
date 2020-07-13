@@ -111,13 +111,29 @@ Durch abstrakte Klassen kann man, wie mit Interfaces, eine Abstraktion für ande
 
 Variablen können nicht als abstract markiert werden, da es nicht möglich ist, Variablen zu überschreiben (Wie in 1h beschrieben).
 
-1f) "Können Objekte einer abstrakten Klasse erzeugt werden? Kann man Konstruktoren
-in abstrakten Klassen definieren?"
+1f) "Können Objekte einer abstrakten Klasse erzeugt werden? Kann man Konstruktoren in abstrakten Klassen definieren?"
 
-// TODO
+public abstract class Liquid { public Liquid(int i) {...} public abstract String name(); }
 
-1g) "Kann eine Variable vom Typ A einem Objekt der Klasse B zugewiesen werden,
-wenn A eine Unterklasse von B ist? Begründen Sie Ihre Antwort."
+Das Erstellen einer neuen Instanz dieser Klasse ohne eine neue Klasse, die die abstrakte Klasse erweitert, ist unmöglich.
+Etwas ähnliches kann aber auf zwei Wegen gemacht werden:
+- In einer neuen Datei (Der normale, langweilige Weg)
+- Mit inline Syntax.
+
+Das Inlining einer neuen Implementation der Klasse von oben sieht wie folgt aus:
+  new Liquid (n) {
+    @Override
+    public String name() { ... }
+  }
+
+Dadurch wird trotzdem eine neue Klasse erstellt. Diese muss, wie üblich, alle abstrakten Methoden der Superklasse überschreiben.
+Sie darf keinen eigenen Konstruktor implementieren.
+
+Eine abstrakte Klasse kann eigene Konstruktoren implementieren. Diese müssen mit dem Befehl
+    super(...)
+aufgerufen werden.
+
+1g) "Kann eine Variable vom Typ A einem Objekt der Klasse B zugewiesen werden, wenn A eine Unterklasse von B ist? Begründen Sie Ihre Antwort."
 
 Ich schätze, dass folgendes Gemeint ist:
 A v = new B();
@@ -127,22 +143,76 @@ Diese Zuweisung ist nicht "legal",
 
 1h) "Können Variablen einer Klassen in Unterklassen überschrieben werden?"
 
-Variablen einer Klasse können nicht überschrieben sondern nur "geschattet" werden. Das heißt, dass es eine neue Variable mit demselben Namen gibt Die alte Variable existiert aber immer noch.
+Variablen einer Klasse können nicht überschrieben sondern nur "geschattet" werden. Das heißt, dass es eine neue Variable mit demselben Namen gibt. Die alte Variable existiert aber immer noch.
 
-1i) "Was ist automatisches boxing/unboxing? Warum wurde das in Java eingeführt?
-Welche Probleme gibt es in Java damit?"
+1i) "Was ist automatisches boxing/unboxing? Warum wurde das in Java eingeführt? Welche Probleme gibt es in Java damit?"
 
-// TODO
+Java hat "primitive" Datentypen wie int, char oder double. Diese erben nicht von Object und werden direkt "by value" statt "by object-reference" referenziert.
+Unter bestimmten Umständen kann eine Variable eines primitiven Datentyps automatisch in ein Objekt umgewandelt werden.
+    int -> Integer
+    short -> Short
+    boolean -> Boolean
+    usw.
+Solche Objekte erben von Object.
+
+Dise Umwandlung wurde eingeführt, damit auch Methoden wie
+    String foo(Object)
+mit einem int als Parameter instanziiert werden kann. (``foo(1)``)
+In diesem Fall findet ein automatischen Boxing statt.
+Im umgekehrten Fall kann auch ein automatisches Unboxing stattfinden:
+    int zero = Integer.valueOf(0);
+
+Außerdem funktionieren generische Klassen in Java nicht mit primitiven Datentypen. Also kann es keine ArrayList<int> geben. Stattdessen muss eine ArrayList<Integer> erstellt werden.
+Vielleicht ändert sich das in der Zukunft. Siehe Projekt "Valhalla".
+    https://openjdk.java.net/projects/valhalla/
+
+Probleme damit gibt es für:
+- Performanceprobleme durch unerwartetes Boxing
+  In Java ist es relativ leicht einzuschätzen, wann Boxing/Unboxing auftritt. In Sprachen wie Kotlin, die versuchen, dieses Verhalten zu verbergen, kann es aber zu massiven Problemen führen.
+- Vergleiche mit '==' und '!='
+  Die Primitiven Typen werden per Wert verglichen.
+    (0xFFFFFFFF == 0xFFFFFFFF) ist immer true.
+  Objekte werden bei '==' und '!=' durch ihre Referenz verglichen.
+    (Integer.valueOf(0xFFFFFFFF) == Integer.valueOf(0xFFFFFFFF)) ist false!
 
 1j) "Was ist eine generische Klasse? Wozu sind diese gut?"
 
-// TODO
+In a nutshell, generics enable types (classes and interfaces) to be parameters when defining classes, interfaces and methods.
+Much like the more familiar formal parameters used in method declarations, type parameters provide a way for you to re-use
+the same code with different inputs. The difference is that the inputs to formal parameters are values, while the inputs to
+type parameters are types.
+
+- Elimieren von überflüssigen Tasks gegenüber rohen Typen.
+  Bei rohen Collections müssen alle Objekte gecastet werden:
+    List os = ...;
+    String s = (String) os.get(1);
+  Mit generischen Typen ist das nicht notwendig.
+    List<String> os = ...;
+    String s = os.get(1);
+- Besseres Checken des Typs zur Compile-Zeit.
+  Der Java-Compiler kann das oben genannte Szenario des überflüssigen Casts nicht leicht eliminieren.
+- Weniger Code.
+  Um das Problem von vielen Casts mit rohen Collections zu umgehen, haben manche Bibliotheken einfach dutzende verschiedene Typen erstellt, die das gleiche für unterschiedliche Typen tun.
+  Beispiel:
+    StringList
+    FileList
+    NumberList
+    ...
+  Durch Generics kann das stark abgekürzt werden:
+    List<...>
 
 1k) "Was verstehen Sie unter Vererbungspolymorphie?"
 
 // TODO
 
-1l) "Was sind Ausnahmefehler? Was ist der Unterschied zwischen Runtime-Exceptions und
-allgemeinen Exceptions in Java?"
+1l) "Was sind Ausnahmefehler? Was ist der Unterschied zwischen Runtime-Exceptions und allgemeinen Exceptions in Java?"
 
-// TODO
+Ausnahmefehler (Im folgenden "Exception" genannt) sind Events, die während des Ablaufs eines Programmes in unerwünschten Fällen auftreten. Sie unterbrechen den Ablauf des aktuellen Scopes und springen zum nächsten ``try{...}catch(...) {...}`` Block, der ihren Typ behandelt.
+Wenn der Fehler nicht behandelt wird, also aus ``main`` ausbricht, wird der Fehler ausgegeben und das Programm terminiert.
+Im Gegensatz zu Errors beschreiben Exceptions zwar einen Fehlerfall, aber nicht unbedingt einen kritischen Fehler.
+
+Normale Exceptions erben von von Exception und müssen durch einen try-catch Block aufgefangen werden oder die Methode muss in ihrer Signatur den spezifischen Typ angeben:
+  public void foo(int ml) throws Exception
+
+Runtime-Exceptions erben von RuntimeException und müssen nicht durch einen try-catch Block aufgefangen werden und nicht in der Signatur der Methode angegeben werden.
+Dazu gehören Fehler wie die Teilung durch 0 oder das Aufrufen einer Methode auf null.

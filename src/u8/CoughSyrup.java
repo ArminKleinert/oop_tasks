@@ -2,6 +2,11 @@ package u8;
 
 import java.awt.*;
 
+/**
+ * Test-implementation for {@link Liquid}.
+ *
+ * @author Armin Kleinet
+ */
 public class CoughSyrup extends Liquid {
 
         public CoughSyrup() {
