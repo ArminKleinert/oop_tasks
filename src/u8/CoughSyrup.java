@@ -10,12 +10,12 @@ import java.awt.*;
 public class CoughSyrup extends Liquid {
 
         public CoughSyrup() {
-            super(Color.lightGray, false);
+            super("Cough syrup", Color.lightGray, false);
         }
 
         @Override
         public String getName() {
-            return "Cough syrup";
+            return name;
         }
 
         @Override

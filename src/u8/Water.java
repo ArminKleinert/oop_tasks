@@ -10,12 +10,12 @@ import java.awt.*;
 public class Water extends Liquid {
 
     public Water() {
-        super(Color.BLUE, true);
+        super("Water", Color.BLUE, true);
     }
 
     @Override
     public String getName() {
-        return "Water";
+        return name;
     }
 
     @Override

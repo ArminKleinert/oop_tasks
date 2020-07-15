@@ -6,11 +6,13 @@ import java.awt.Color;
  * @author Maria Stange
  */
 public abstract class Liquid {
+    final protected String name;
     final protected Color color;
     final protected boolean drinkable;
     protected int temperature = 18;
 
-    protected Liquid(Color color, boolean drinkable) {
+    protected Liquid(String name, Color color, boolean drinkable) {
+        this.name = name;
         this.color = color;
         this.drinkable = drinkable;
     }
