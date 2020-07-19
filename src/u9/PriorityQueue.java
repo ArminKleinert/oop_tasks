@@ -1,14 +1,6 @@
 package u9;
 
 /*
-# SUBSECT 2b
-
-"""
-random priority -> O(log(N)) where N is the number of bits in an integer
-timestamp       -> O(1)
-tuple creation  -> O(3)
-                => O(log(N))
-"""
 def next_message():
     while True:
         # Random priority of 0 to 5 (inclusive). We chose this number so
@@ -17,105 +9,6 @@ def next_message():
         timestamp = time.time()         # O(1)
         yield (priority, timestamp, "") # O(n) (n = 3)
 
-# SUBSECT 2c
-
-# SUBSECT Helpers for heap-structure
-
-def heap_size(H):
-    return H[0]
-
-"""
-O(1+1)
-= O(1)
-"""
-def dec_heap_size(H):
-    H[0] = H[0]-1
-
-# O(1) # Same as above
-def inc_heap_size(H):
-    H[0] = H[0]+1
-
-# O(1)
-def parent(i):
-    return i//2
-
-# O(1)
-def left(i):
-    return i*2
-
-# O(1)
-def right(i):
-    return i*2+1
-
-"""
-Comparison function for 2 message-tuples.
-
-If the priorities (at m1[0] and m2[0]) are equal, the timestamps (at m1[1] and m2[1]) are compared.
-
-Complexity: O(1)
-"""
-def prio(m1, m2):
-    if m1[0] == m2[0]: # O(1)
-        if m1[1] == m2[1]: # O(1)
-            return 0
-        else:
-            return -1 if m1[1] < m2[1] else 1 # O(1)
-    else:
-        return -1 if m1[0] < m2[0] else 1 # O(1)
-
-"""
-Typical max_heapify modified to use the function prio(...) from above
-
-Complexity: O(n)
-"""
-def max_heapify(H, pos):
-    left_t = left(pos)
-    right_t = right(pos)
-    if left_t <= heap_size(H) and prio(H[left_t], H[pos]) > 0:
-        biggest = left_t
-    else:
-        biggest = pos
-
-    if right_t <= heap_size(H) and prio(H[right_t], H[pos]) > 0:
-        biggest = right_t
-
-    if biggest != pos:
-        H[pos], H[biggest] = H[biggest], H[pos]
-        max_heapify(H, biggest)
-
-"""
-max_heapify is ran n/2 times, where n is the result of heap_size(H)
-
-(n/2) * max_heapify
-O((n/2) * n)
-= O(n)
-"""
-def build_max_heap(H):
-    H[0] = len(H) - 1
-    for i in range(heap_size(H) // 2, 0, -1):
-        max_heapify(H, i)
-
-"""
-2 Operationen:
-- is_empty -> O(1)
-- pqueue[1] -> O(1)
-O(1)
-"""
-def peek(pqueue):
-    if is_empty(pqueue):
-        return None
-    return pqueue[1]
-
-"""
-The while-loop runs a maximum of n/2 times.
-index starts at the heap_size(pqueue) (which I will call n for convenience).
-With each iteration, index is halved (by setting it to the parent index).
-
-All other operations are trivial.
-
-Complexity: O(n/2)
-= O(n)
-"""
 def reorder_for_last_message(pqueue):
     index = heap_size(pqueue)
     par_idx = parent(index)
@@ -232,7 +125,8 @@ import java.util.Collection;
 import java.util.Map;
 
 public class PriorityQueue<P extends Comparable<P>, Data> {
-    public static final class PQEntry<P extends Comparable<P>, Data> {
+
+    public final class PQEntry {
         final P prio;
         final Data data;
 
@@ -254,7 +148,7 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         heap[0] = init.length;
 
         for (int i = 0; i < init.length; i++) {
-            heap[i + 1] = new PQEntry<>(init[i]);
+            heap[i + 1] = new PQEntry(init[i]);
         }
 
         // TODO Sort
@@ -282,5 +176,110 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         this(16);
     }
 
+    public int size() {
+        return ((Number) heap[0]).intValue();
+    }
 
+    public Data peek() {
+        if (size() == 0) {
+            return null;
+        }
+        return ((PQEntry) heap[1]).data;
+    }
+
+    public void add(P prio, Data data) {
+        if (size() == heap.length - 1) {
+            // TODO Queue is full, resize now!
+        }
+        heap[size()] = new PQEntry(prio, data);
+        incHeapSize();
+        reorderForLastMessage();
+        maxHeapify(1);
+    }
+
+    private void reorderForLastMessage() {
+        int index = size();
+        int parentIdx = parent(index);
+        while (index > 1 && compareAt(parentIdx, index) < 0) {
+            Object temp = heap[parentIdx];
+            heap[parentIdx] = heap[index];
+            heap[index] = temp;
+            index = parentIdx;
+            parentIdx = parent(index);
+        }
+    }
+
+    public Data delete() {
+        if (isEmpty()) return null;
+
+        PQEntry result = (PQEntry) heap[1];
+        heap[1] = heap[size()];
+        decHeapSize();
+        maxHeapify(1);
+        return result.data;
+    }
+
+    private Object[] sortMessages() {
+        int hsize = size();
+        if (hsize < 2) return heap;
+        maxHeapify(1);
+        return heap;
+    }
+
+    private boolean isEmpty() {
+        return size() == 0;
+    }
+
+    private void decHeapSize() {
+        heap[0] = ((Number) heap[0]).intValue() - 1;
+    }
+
+    private void incHeapSize() {
+        heap[0] = ((Number) heap[0]).intValue() + 1;
+    }
+
+    private int parent(int i) {
+        return i / 2;
+    }
+
+    private int left(int i) {
+        return i * 2;
+    }
+
+    private int right(int i) {
+        return i * 2 + 1;
+    }
+
+    private int compareAt(int index0, int index1) {
+        Comparable prioElem0 = ((PQEntry) heap[index0]).prio;
+        Comparable<P> prioElem1 = ((PQEntry) heap[index1]).prio;
+        return prioElem0.compareTo(prioElem1);
+    }
+
+    private void maxHeapify(int pos) {
+        int leftIndex = left(pos);
+        int rightIndex = right(pos);
+        int biggest;
+
+        if (leftIndex <= size() && compareAt(leftIndex, pos) > 0) {
+            biggest = leftIndex;
+        } else if (rightIndex <= size() && compareAt(rightIndex, pos) > 0) {
+            biggest = rightIndex;
+        } else {
+            biggest = pos;
+        }
+
+        if (biggest != pos) {
+            Object temp = heap[pos];
+            heap[pos] = heap[biggest];
+            heap[biggest] = temp;
+            maxHeapify(biggest);
+        }
+    }
+
+    private void buildMaxHeap() {
+        for (int i = size() / 2; i > 0; i--) {
+            maxHeapify(i);
+        }
+    }
 }
