@@ -1,0 +1,25 @@
+1a) Was sind Iteratoren? Wozu sind sie gut?
+Iteratoren bieten ein einheitliches Interface, um Collections abzulaufen. Jeder Typ von Collection hat eine eigene Implementation für Iteratoren.
+Jeder von ihnen muss folgende FUnktionalitäten bereitstellen:
+boolean hasNext()
+- Kontrolliert, ob mehr Elemente in der Collection sind.
+T next()
+- Generische Methode, die das nächste Element der Collection zurückgibt und den aktuellen "Pointer" auf das nächste Element zeigen lässt. Wenn kein weiteres Element vorhanden ist, wird eine NoSuchElementException geworfen.
+void remove()
+- Löscht das aktuelle Element. Diese Methode kann von jedem Iterator aufgerufen werden, aber viele werfen nur eine UnsupportedOperationException.
+
+1b) Was sind abstrakte Datentypen?
+
+
+1c) Was verstehen Sie unter dynamische Datenstrukturen?
+Dynamischee Datenstrukturen sind Sammlungstypen (Sets, Maps, Listen, Bags, Heaps, Cons-Cells, ...), die ihre Größe ihrem Inhalt anpassen können.
+Beispielsweise wird eine Liste, die mithilfe eines statischen Arrays implementiert wurde, mit einer Kapazität (Größe des Arrays) von 16 Elementen initialisiert. Wenn das 17. Element eingefügt werden soll, wird zuerst die Kapazität verdoppelt.
+
+1d) Was ist eine allgemein akzeptierte Klassifizierung von ADT-Operationen?
+
+1e) Was ist eine innere Klassendefinition wann ist es von Vorteil innere Klassen zu definieren?
+
+1f) Was ist der Unterschied zwischen einer Elementklasse und einer lokalen Klasse in Java?
+
+1g) Warum werden Dummy-Knoten bei der Implementierung von verketteten Listen verwendet?
+

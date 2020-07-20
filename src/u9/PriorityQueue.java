@@ -151,7 +151,7 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
             heap[i + 1] = new PQEntry(init[i]);
         }
 
-        // TODO Sort
+// TODO Sort
     }
 
     public PriorityQueue(Collection<Map.Entry<P, Data>> init) {
@@ -164,7 +164,7 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
             i++;
         }
 
-        // TODO Sort
+// TODO Sort
     }
 
     public PriorityQueue(int initSize) {
@@ -180,9 +180,9 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         return ((Number) heap[0]).intValue();
     }
 
-    public Data peek() {
+    public Data highest() throws EmptyQueueException {
         if (size() == 0) {
-            return null;
+            throw new EmptyQueueException();
         }
         return ((PQEntry) heap[1]).data;
     }
@@ -209,8 +209,8 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         }
     }
 
-    public Data delete() {
-        if (isEmpty()) return null;
+    public Data dequeue() throws EmptyQueueException {
+        if (empty()) throw new EmptyQueueException();
 
         PQEntry result = (PQEntry) heap[1];
         heap[1] = heap[size()];
@@ -226,7 +226,7 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         return heap;
     }
 
-    private boolean isEmpty() {
+    private boolean empty() {
         return size() == 0;
     }
 
@@ -238,15 +238,15 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         heap[0] = ((Number) heap[0]).intValue() + 1;
     }
 
-    private int parent(int i) {
+    private static int parent(int i) {
         return i / 2;
     }
 
-    private int left(int i) {
+    private static int left(int i) {
         return i * 2;
     }
 
-    private int right(int i) {
+    private static int right(int i) {
         return i * 2 + 1;
     }
 
