@@ -31,6 +31,8 @@ public class ArrayQueue<T> implements Queue<T>, Iterable<T> {
                     || queue.size() != oldSize) {
                 throw new ConcurrentModificationException();
             }
+            class C {}
+            var c = new C();
             return queue.hasElementAt(index + 1);
         }
 

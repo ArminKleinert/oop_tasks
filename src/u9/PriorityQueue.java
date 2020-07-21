@@ -121,6 +121,9 @@ def sim_message_traffic():
 
  */
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -131,20 +134,39 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         final Data data;
 
         public PQEntry(P prio, Data data) {
+            assert prio != null;
+
             this.prio = prio;
             this.data = data;
         }
 
         public PQEntry(Map.Entry<P, Data> pd) {
+            assert pd != null && pd.getKey() != null;
+
             this.prio = pd.getKey();
             this.data = pd.getValue();
         }
+
+        @Override
+        public String toString() {
+            return "(" +
+                    prio +
+                    ", " + data +
+                    ')';
+        }
     }
 
+    private int firstElementPos = 1;
     private Object[] heap;
 
     public PriorityQueue(Map.Entry<P, Data>[] init) {
-        this(init.length);
+        assert init != null;
+
+        if (init == null) {
+            throw new IllegalArgumentException();
+        }
+
+        initToSize(init.length);
         heap[0] = init.length;
 
         for (int i = 0; i < init.length; i++) {
@@ -154,8 +176,13 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
 // TODO Sort
     }
 
-    public PriorityQueue(Collection<Map.Entry<P, Data>> init) {
-        this(init.size());
+    public PriorityQueue(@NotNull Collection<Map.Entry<P, Data>> init) {
+        assert init != null;
+        if (init == null) {
+            throw new IllegalArgumentException();
+        }
+
+        initToSize(init.size() + 1);
         heap[0] = init.size();
 
         int i = 1;
@@ -168,7 +195,11 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
     }
 
     public PriorityQueue(int initSize) {
-        heap = new Object[initSize + 1];
+        assert initSize >= 0;
+        if (initSize < 0) {
+            throw new IllegalArgumentException();
+        }
+        initToSize(initSize + 1);
         heap[0] = 0;
     }
 
@@ -176,7 +207,12 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         this(16);
     }
 
+    private void initToSize(int initSize) {
+        heap = new Object[initSize + 1];
+    }
+
     public int size() {
+        assert heap[0] instanceof Number;
         return ((Number) heap[0]).intValue();
     }
 
@@ -184,22 +220,36 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         if (size() == 0) {
             throw new EmptyQueueException();
         }
-        return ((PQEntry) heap[1]).data;
+        return ((PQEntry) heap[firstElementPos]).data;
     }
 
     public void add(P prio, Data data) {
-        if (size() == heap.length - 1) {
-            // TODO Queue is full, resize now!
+        assert prio != null;
+        assert data != null;
+
+        if ((firstElementPos + size()) >= (heap.length - 1)) {
+            Object[] temp = new Object[heap.length << 1];
+            temp[0] = heap[0];
+            System.arraycopy(heap, firstElementPos, temp, 1, size());
+            heap = temp;
+            firstElementPos = 1;
         }
-        heap[size()] = new PQEntry(prio, data);
+
+        assert heap.length > size();
+        heap[size() + firstElementPos] = new PQEntry(prio, data);
+
         incHeapSize();
         reorderForLastMessage();
-        maxHeapify(1);
+        maxHeapify(firstElementPos);
     }
 
     private void reorderForLastMessage() {
         int index = size();
         int parentIdx = parent(index);
+
+        assert index >= 1;
+        assert parentIdx > 0;
+
         while (index > 1 && compareAt(parentIdx, index) < 0) {
             Object temp = heap[parentIdx];
             heap[parentIdx] = heap[index];
@@ -212,11 +262,44 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
     public Data dequeue() throws EmptyQueueException {
         if (empty()) throw new EmptyQueueException();
 
-        PQEntry result = (PQEntry) heap[1];
-        heap[1] = heap[size()];
+        PQEntry result = (PQEntry) heap[firstElementPos];
+        assert heap.length > size();
+        heap[firstElementPos] = heap[size()];
         decHeapSize();
         maxHeapify(1);
+        //firstElementPos++;
         return result.data;
+    }
+
+    /*
+    public String toString1() {
+        StringBuilder sb = new StringBuilder("Queue{");
+        for (int i = firstElementPos; i < size() + firstElementPos; i++) {
+            sb.append(heap[i]);
+            if (i != size()) sb.append(", ");
+        }
+        sb.append('}');
+        return sb.toString();
+    }
+     */
+
+    public String toString() {
+        PriorityQueue<P, Data> pqueue = new PriorityQueue<>();
+        for (int i = 1; i <= size(); i++) {
+            PQEntry pqe = (PQEntry) heap[i];
+            pqueue.add(pqe.prio, pqe.data);
+        }
+
+        StringBuilder sb = new StringBuilder("Queue{");
+        while (!pqueue.empty()) {
+            sb.append(pqueue.heap[1]);
+            pqueue.dequeue();
+            if (!pqueue.empty()) {
+                sb.append(", ");
+            }
+        }
+        sb.append('}');
+        return sb.toString();
     }
 
     private Object[] sortMessages() {
@@ -226,15 +309,19 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         return heap;
     }
 
-    private boolean empty() {
+    public boolean empty() {
         return size() == 0;
     }
 
     private void decHeapSize() {
+        assert heap[0] instanceof Number;
+        assert ((Number) heap[0]).intValue() - 1 >= 0;
         heap[0] = ((Number) heap[0]).intValue() - 1;
     }
 
     private void incHeapSize() {
+        assert heap[0] instanceof Number;
+        assert ((Number) heap[0]).intValue() - 1 < Integer.MAX_VALUE;
         heap[0] = ((Number) heap[0]).intValue() + 1;
     }
 
@@ -251,6 +338,9 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
     }
 
     private int compareAt(int index0, int index1) {
+        assert heap[index0] != null && heap[index0].getClass().equals(PQEntry.class);
+        assert heap[index1] != null && heap[index1].getClass().equals(PQEntry.class);
+
         Comparable prioElem0 = ((PQEntry) heap[index0]).prio;
         Comparable<P> prioElem1 = ((PQEntry) heap[index1]).prio;
         return prioElem0.compareTo(prioElem1);
@@ -260,6 +350,9 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         int leftIndex = left(pos);
         int rightIndex = right(pos);
         int biggest;
+
+        assert leftIndex < Integer.MAX_VALUE;
+        assert rightIndex < Integer.MAX_VALUE;
 
         if (leftIndex <= size() && compareAt(leftIndex, pos) > 0) {
             biggest = leftIndex;
