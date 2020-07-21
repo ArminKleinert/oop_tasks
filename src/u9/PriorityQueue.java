@@ -129,7 +129,7 @@ import java.util.Map;
 
 public class PriorityQueue<P extends Comparable<P>, Data> {
 
-    public final class PQEntry {
+    public final class PQEntry implements Comparable<PQEntry> {
         final P prio;
         final Data data;
 
@@ -153,6 +153,11 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
                     prio +
                     ", " + data +
                     ')';
+        }
+
+        @Override
+        public int compareTo(@NotNull PriorityQueue<P, Data>.PQEntry pDataPQEntry) {
+            return prio.compareTo(pDataPQEntry.prio);
         }
     }
 
@@ -195,8 +200,8 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
     }
 
     public PriorityQueue(int initSize) {
-        assert initSize >= 0;
-        if (initSize < 0) {
+        assert initSize > 0;
+        if (initSize <= 0) {
             throw new IllegalArgumentException();
         }
         initToSize(initSize + 1);
@@ -259,19 +264,27 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         }
     }
 
+    // FIXME Current complexity is O(n*log(n)), but must be O(log(n))!
     public Data dequeue() throws EmptyQueueException {
         if (empty()) throw new EmptyQueueException();
 
         PQEntry result = (PQEntry) heap[firstElementPos];
         assert heap.length > size();
         heap[firstElementPos] = heap[size()];
+        heap[size()] = null;
         decHeapSize();
-        maxHeapify(1);
+        //reorderForLastMessage();
+        maxHeapify(firstElementPos); // Re-sort. Complexity: O(n*log(n))
+
+        //buildMaxHeap();
+
         //firstElementPos++;
         return result.data;
     }
 
     /*
+    // Also creates a String-representation, but shows the heap directly,
+    // which is not very helpful.
     public String toString1() {
         StringBuilder sb = new StringBuilder("Queue{");
         for (int i = firstElementPos; i < size() + firstElementPos; i++) {
@@ -283,6 +296,12 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
     }
      */
 
+    /**
+     * Creates a String-representation for the queue. It is ordered by priority.
+     *
+     * @return
+     */
+    @Override
     public String toString() {
         PriorityQueue<P, Data> pqueue = new PriorityQueue<>();
         for (int i = 1; i <= size(); i++) {
@@ -299,13 +318,18 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
             }
         }
         sb.append('}');
+
+        sb.append("\n(Raw: ");
+        sb.append(Arrays.toString(heap));
+        sb.append(')');
+
         return sb.toString();
     }
 
     private Object[] sortMessages() {
         int hsize = size();
         if (hsize < 2) return heap;
-        maxHeapify(1);
+        maxHeapify(firstElementPos);
         return heap;
     }
 
@@ -341,9 +365,10 @@ public class PriorityQueue<P extends Comparable<P>, Data> {
         assert heap[index0] != null && heap[index0].getClass().equals(PQEntry.class);
         assert heap[index1] != null && heap[index1].getClass().equals(PQEntry.class);
 
-        Comparable prioElem0 = ((PQEntry) heap[index0]).prio;
-        Comparable<P> prioElem1 = ((PQEntry) heap[index1]).prio;
-        return prioElem0.compareTo(prioElem1);
+//        Comparable prioElem0 = ((PQEntry) heap[index0]).prio;
+//        Comparable<P> prioElem1 = ((PQEntry) heap[index1]).prio;
+        return ((PQEntry) heap[index0]).compareTo((PQEntry) heap[index1]);
+//        return prioElem0.compareTo(prioElem1);
     }
 
     private void maxHeapify(int pos) {

@@ -46,7 +46,9 @@ public class SimulateMessageTraffic {
     private void simulateMessageTraffic(PriorityQueue<Integer, Object> pqueue, int actions) {
         for (int i = 0; i < actions; i++) {
             if (rand.nextInt(3) < 2) {
-                pqueue.add(newPriority(), i);
+                int np = newPriority();
+                pqueue.add(np, i);
+                System.out.println("Added (" + np + ", " + i + ")");
             } else {
                 try {
                     Object removed = pqueue.dequeue();
@@ -66,7 +68,7 @@ public class SimulateMessageTraffic {
     }
 
     public static void main(String[] args) {
-        PriorityQueue<Integer, Object> pqueue = new PriorityQueue<>(32);
+        PriorityQueue<Integer, Object> pqueue = new PriorityQueue<>(1);
         (new SimulateMessageTraffic()).simulateMessageTraffic(pqueue, 30);
     }
 }
