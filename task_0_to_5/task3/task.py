@@ -523,7 +523,7 @@ Pseudocode:
 
 def f(list1, list2)
   sortiere list1                # O(nlogn)
-  sortiere list1                # O(nlogn)
+  sortiere list2                # O(nlogn)
   result := []                  # O(1)
   for x in list1                # 
     if binary_search(list2, x)  # O(logn) -> O(nlogn)

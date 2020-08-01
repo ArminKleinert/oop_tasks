@@ -1,0 +1,59 @@
+- Was ist ein Datentyp und was tut er
+    - Daten klassifizieren
+    - Programm besser strukturieren
+    - Geben vor, welche Operationen man benutzen kann.
+- Was ist eine Variable, was ist eine Klassenvariable, was ist eine Instanzvariable
+    - Name
+- Was ist eine Klasse, Instanz und Referenz?
+    - Klasse ist der Bauplan
+    - Objekt ist die Instanz des Bauplans
+    - Referenz ist die Variable auf dem Stack, die auf die Adresse im Heap zeigt, wo das eigentliche Abjekt liegt.
+- this zeigt auf das aktuelle Object
+- Mit super kann 
+
+- Erläutern sie die Beziehung zwischen Klasse, Objekt und Referenz
+- Welche Bedeutung haben 'this' und 'super'
+- Welche Beutung hat 'static' in Bezug auf Methoden und wieso ist es wichtig
+
+- Erläutern sie die Begriffe Rekursion, Endrekursion und Iteration
+- Schreiben sie eine Python-Funktion, die mit Hilfe einer rekursiven Hilfsfunktion die Zahl PI mittels der Leibnitz-Reihe berechnet
+  R(n) = (4 * (1 - 1/3 + 1/5 - 1/7 + 1/9 - ...))
+def summ(n):
+    if n == 0:
+        return 1
+    return summ (n -1) +  (1/(2*n + 1) *(-1)**n)
+
+def pi(n):
+    return 4*summ(n)
+
+- Schreiben Sie unter Verwendung einer while-Schleife eine iterative Python-Funktion, die bei Eingabe von n die Summe der ersten n Folgegliederm also R(n) berechnet und als Ergebnis zurückgibt
+
+def pi(n):
+    res = 0
+    while  n >= 0:
+        res  +=  (-1)**n * 1/(2*n+1)
+        n -= 1
+    return 4*res
+
+- Gegeben ist folgender Sortier-Algorithmus:
+	def xx_sort(list):
+		swap = True
+		stop = len(list)-1
+		while swap:
+			swap = False
+			for i in range(stop):
+				if list[i] > list[i+1]:
+					list[i], list[i+1] = list[i+1], list[i]
+					swap = True
+			stop = stop - 1
+	Welcher Algorithmus ist das und welche Idee steckt dahinter?
+	(Es ist Bubblesort; Sehr einfach und gut für verkettete Listen)
+- Wie würde der Algorithmus folgende Liste sortieren? (Schritt für Schritt)
+  [3 1 6 5 7 3]
+  [1 3 6 5 7 3]
+  [1 3 5 6 7 3]
+  [1 3 5 6 3 7]
+  [1 3 5 3 6 7]
+  [1 3 3 5 6 7]
+- Welche Eigenschaften hat der Algorithmus? Vergleichen Sie ihn mit Quicksort
+´
