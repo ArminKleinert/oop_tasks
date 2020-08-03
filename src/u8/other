@@ -35,7 +35,7 @@ Klassenmethoden haben wenige, aber starke Einschränkungen:
   Methode nicht auf statische Variablen oder Methoden einer anderen Klasse zugreifen kann.
   Dadurch kann es zu Fehlern kommen, bevor das Programm überhaupt gestartet hat!
 - Der Aufruf statischer Methoden kann (auch wenn man den Overhead des ``new``
-  Schlüsselwortes ignoriert) schneller sein als der Aufruf einer Instanz-Methode.
+  Schlüsselwortes ignoriert) langsamer sein als der Aufruf einer Instanz-Methode.
 
 Fun Fact:
 Viele der Schwächen von static lassen sich vermeiden, indem man beispielsweise das
@@ -192,7 +192,7 @@ Much like the more familiar formal parameters used in method declarations, type 
 the same code with different inputs. The difference is that the inputs to formal parameters are values, while the inputs to
 type parameters are types.
 
-- Elimieren von überflüssigen Tasks gegenüber rohen Typen.
+- Elimieren von überflüssigen Casts gegenüber rohen Typen.
   Bei rohen Collections müssen alle Objekte gecastet werden:
     List os = ...;
     String s = (String) os.get(1);
