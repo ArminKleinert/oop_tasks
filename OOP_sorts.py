@@ -520,10 +520,12 @@ Heapsort (Vorlesung 8)
 Counting Sort
 - Stabil
 - Not in-place
+- O(N) best case (alle Zahlen sind gleich)
 - O(N+k) worst case (performance und space)
 - Nimmt zwei Parameter: Einen Array A und eine Zahl K
   - K ist der größte wert in A
   - A kann nur ganze, positive Zahlen enthalten
+
 
 Radix sort
 - Keine Vergleiche
