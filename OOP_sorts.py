@@ -270,14 +270,6 @@ def mergesort(lst):
 
 # Shell-Sort
 
-def shellSort(A):
-    seg_size = len(A) // 2
-    while seg_size > 0:
-        for start_i in range(seg_size):
-            jump_insertsort(A, start_i, seg_size)
-        seg_size = seg_size // 2
-
-
 def jump_insertsort(A, start, step):
     for i in range(start + step, len(A), step):
         value = A[i]
@@ -286,6 +278,15 @@ def jump_insertsort(A, start, step):
             A[j] = A[j - step]
             j = j - step
         A[j] = value
+
+
+def shellSort(A):
+    print(A)
+    seg_size = len(A) // 2
+    while seg_size > 0:
+        for start_i in range(seg_size):
+            jump_insertsort(A, start_i, seg_size)
+        seg_size = seg_size // 2
 
 
 # ------------------------------------------------
