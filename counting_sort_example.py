@@ -30,7 +30,7 @@ def counting_sort(arr, k):
         print()
     return output
 
-a = [2, 0, 3, 0, 1, 1, 2, 3, 1]
+a = [0, 2, 3, 1, 0, 1, 2, 0, 0, 2]
 
 counting_sort(a, 3)
 

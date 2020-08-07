@@ -198,6 +198,4 @@ public class ArrayQueue<T> implements Queue<T>, Iterable<T> {
         }
         return dest;
     }
-
-
 }

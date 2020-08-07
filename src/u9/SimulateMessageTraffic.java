@@ -34,6 +34,7 @@ def sim_message_traffic():
     return pqueue
  */
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class SimulateMessageTraffic {
@@ -68,7 +69,10 @@ public class SimulateMessageTraffic {
     }
 
     public static void main(String[] args) {
-        PriorityQueue<Integer, Object> pqueue = new PriorityQueue<>(1);
-        (new SimulateMessageTraffic()).simulateMessageTraffic(pqueue, 30);
+        //PriorityQueue<Integer, Object> pqueue = new PriorityQueue<>(1);
+        //(new SimulateMessageTraffic()).simulateMessageTraffic(pqueue, 30);
+
+        CharSequence[] v = new String[5];
+        System.out.println(Arrays.toString(v));
     }
 }

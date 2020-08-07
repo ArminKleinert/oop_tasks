@@ -1,0 +1,79 @@
+b) Hier die Pivot-Funktion:
+def partition(A, low, high):
+    pivot = A[low]
+    i = low
+    for j in range(low + 1, high + 1):
+        print(pivot, i, low, high, A, A[i], A[j], A[j] < pivot)
+        if (A[j] < pivot):
+            i = i + 1
+            A[i], A[j] = A[j], A[i]
+    A[i], A[low] = A[low], A[i]
+    print(A)
+    return i
+
+In der Zeile "if (A[j] < pivot):" werden Zahlen, die gleich dem Pivot sind, nicht besonders beachtet, sondern einfach mit Werten, die größer als der Pivot sind, gebündelt. Um Quicksort stabil zu machen, müsste man sie gesondert behandeln.
+
+a)
+Beim ersten durchlauf wird 
+
+def partition(A, low, high):
+    pivot = A[low]
+     i = low
+     for j in range(low + 1, high + 1):
+         print(pivot, i, low, high, A, A[i], A[j], A[j] < pivot)
+         if (A[j] < pivot):
+             i = i + 1
+             A[i], A[j] = A[j], A[i]
+     A[i], A[low] = A[low], A[i]
+     print(A)
+     return i
+
+a = [5, 6, 5, 2, 7, 1, 9, 0, 5]
+quicksort(a, 0, len(a)-1)
+
+Zuerst wird 5 (erstes Element im Array) als Pivot gewählt. Dann wird der Pivot mit der 6 und der 2. 5 verglichen. Bei beiden muss nicht getauscht werden. Bei der nächsten Zahl, 2 (an index 3), wird getauscht, da 2 < 5 ist. 
+[5, 2, 5, 6, 7, 1, 9, 0, 5] << Hier werden die 6 und die Zwei (Indices 1 und 3) getauscht.
+"i" (der niedrige Index) wird inkrementiert. Bei weiteren Tauschen wird dieser Index genutzt.
+Die 5 (nun an index 3) wird mit der 7 (Index 4) verglichen. Es ist kein Tausch nötig.
+Dann werden die Zahlen 5 und 1 getauscht (Indizes 2 und 5), da 1 < 5 ist. i wird inkrementiert.
+[5, 2, 1, 6, 7, 5, 9, 0, 5] << Die neue Liste.
+Nun rückt die 0 an die Stelle der 6 (Indices 7 und 3 werden getauscht).
+Das letzte Element der Liste(die 5) wird nicht getauscht, da 5 nicht kleiner als 5 ist.
+Am Ende des ersten Durchlaufs der partition-Funktion sieht der Array so aus:
+[0, 2, 1, 5, 7, 5, 9, 6, 5]
+
+
+Countingsort wird aufgerufen:
+countingsort(a, 3)
+Es werden 2 neue Listen erstellt: counter (Größe 4 (3+1)) und output (Größe 10).
+Loop 1: Zuerst werden die Zahlen in counter "übernommen":
+[1, 0, 0, 0] (0, a)
+[1, 0, 1, 0] (2,‘b') 
+[1, 0, 1, 1] (3,’e’) 
+[1, 1, 1, 1] (1,’j’) 
+[2, 1, 1, 1] (0,’m') 
+[2, 2, 1, 1] (1,’n') 
+[2, 2, 2, 1] (2,’p’) 
+[3, 2, 2, 1] (0,’q') 
+[4, 2, 2, 1] (0,’x') 
+[4, 2, 3, 1] (2,’z’ ) 
+Ergebnis:
+[4, 2, 3, 1] (Da die Eingabe 4 0en, 2 1en, 3 2en und eine 3 enthält, werden die passenden Indizes so beschrieben.
+
+Loop 2: Dann werden die Werte in counter anders berechnet, um als Indizes zu dienen:
+[4, (4+2), 3, 1]
+[4, 6, (6+3), 1]
+[4, 6, 9, (9+1)]
+[4, 6, 9, 10]
+
+Loop 3: Dann wird die Liste output beschrieben:
+[0, 0, 0, 0, 0, 0, 0, 0, 2, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 2, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 2, 0]
+[0, 0, 0, 0, 0, 0, 0, 2, 2, 0]
+[0, 0, 0, 0, 0, 1, 0, 2, 2, 0]
+[0, 0, 0, 0, 0, 1, 0, 2, 2, 0]
+[0, 0, 0, 0, 1, 1, 0, 2, 2, 0]
+[0, 0, 0, 0, 1, 1, 0, 2, 2, 3]
+[0, 0, 0, 0, 1, 1, 2, 2, 2, 3]
+[0, 0, 0, 0, 1, 1, 2, 2, 2, 3] << Ergebnis Liste
